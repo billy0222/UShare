@@ -3,6 +3,12 @@ package lix5.ushare;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -40,7 +46,53 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ViewPager vp_pages= (ViewPager) findViewById(R.id.vp_pages);
+        PagerAdapter pagerAdapter=new FragmentAdapter(getSupportFragmentManager());
+        vp_pages.setAdapter(pagerAdapter);
+
+        TabLayout tbl_pages= (TabLayout) findViewById(R.id.tabLayout);
+        tbl_pages.setupWithViewPager(vp_pages);
+
+
     }
+
+
+    class FragmentAdapter extends FragmentPagerAdapter {
+
+        public FragmentAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position){
+                case 0:
+                    return new RequestFragment();
+                case 1:
+                    return new OfferFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position){
+                case 0:return "Request";
+                case 1:return "Offer";
+                default:return null;
+            }
+        }
+    }
+
+
+
 
     @Override
     public void onBackPressed() {
