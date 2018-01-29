@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "282698757134",
+    "firebase_url": "https://ridesharing-46453.firebaseio.com",
+    "project_id": "ridesharing-46453",
+    "storage_bucket": "ridesharing-46453.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282698757134:android:1a11c7810f368a2d",
+        "android_client_info": {
+          "package_name": "lix5.ushare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "282698757134-ffas5hg88dhq1vlv2nbl41nohth2ion0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lix5.ushare",
+            "certificate_hash": "8cbe05bcfef7b68f75b64eefe7c3902af6418f9f"
+          }
+        },
+        {
+          "client_id": "282698757134-fioidqp08cc64euku5kija5kfruktd9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLnHo5ofw98zt9QoeRiSW8HkZoj701zfo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "282698757134-fioidqp08cc64euku5kija5kfruktd9e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
