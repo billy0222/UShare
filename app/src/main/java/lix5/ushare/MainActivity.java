@@ -18,9 +18,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private FirebaseAuth mAuth; //instance of FirebaseAuth
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // updateUI(currentUser);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +42,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAuth = FirebaseAuth.getInstance();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -53,8 +68,6 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tbl_pages= (TabLayout) findViewById(R.id.tabLayout);
         tbl_pages.setupWithViewPager(vp_pages);
-
-
     }
 
 
