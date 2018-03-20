@@ -6,4 +6,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/car_sharing"
+        android:title="@string/sharing_event"
+        app:showAsAction="ifRoom"/>
 </menu>
