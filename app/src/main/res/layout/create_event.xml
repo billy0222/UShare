@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/route"
+        style="@style/sectionHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/route"/>
+
+    <LinearLayout
+        android:id="@+id/route_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/route"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/pick_up"
+            android:inputType="text"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/drop_off"
+            android:inputType="text"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/depart_in_30_minutes"
+            android:inputType="datetime"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/type"
+        style="@style/sectionHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/route_input"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/type" />
+
+    <CheckBox
+        android:id="@+id/isRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/type"
+        android:text="@string/request"/>
+
+    <LinearLayout
+        android:id="@+id/type_select"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/type"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/taxi_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/taxi"
+            android:onClick="onTypeSelected"
+            app:srcCompat="@drawable/taxi_sign_gray" />
+
+        <ImageButton
+            android:id="@+id/car_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/private_car"
+            android:onClick="onTypeSelected"
+            app:srcCompat="@drawable/ic_directions_car_gray_48dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/seats"
+        style="@style/sectionHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/type_select"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/available_seats" />
+
+    <ImageView
+        android:id="@+id/people"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/remove_seat"
+        android:layout_below="@id/seats"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@+string/people"
+        android:src="@drawable/people" />
+
+    <ImageView
+        android:id="@+id/remove_seat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seats"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/people"
+        android:layout_toRightOf="@id/people"
+        android:src="@drawable/ic_remove_circle_outline_gray_18dp"/>
+
+    <EditText
+        android:id="@+id/number_of_seats"
+        android:layout_width="24dp"
+        android:layout_height="12dp"
+        android:layout_alignBottom="@+id/remove_seat"
+        android:layout_below="@id/seats"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/remove_seat"
+        android:layout_toRightOf="@id/remove_seat"
+        android:background="@android:color/transparent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:inputType="number"
+        android:text="@string/_1" />
+
+    <ImageView
+        android:id="@+id/add_seat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seats"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/number_of_seats"
+        android:layout_toRightOf="@id/number_of_seats"
+        android:src="@drawable/ic_add_circle_outline_black_18dp"/>
+
+    <TextView
+        android:id="@+id/remarks"
+        style="@style/sectionHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/people"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/remarks" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/remarks"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/boys"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/boys_only"
+            android:onClick="onCheckboxClicked"/>
+        <CheckBox
+            android:id="@+id/girls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/girls_only"
+            android:onClick="onCheckboxClicked"/>
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/remarks_input"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@id/radioGroup"
+        android:hint="@string/type_something"
+        android:gravity="top"
+        android:maxLines="6"
+        android:background="@android:color/transparent"/>
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@id/remarks_input"
+        android:text="@string/create"/>
+
+
+</RelativeLayout>
