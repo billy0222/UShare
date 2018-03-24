@@ -1,6 +1,5 @@
 package lix5.ushare;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CarFragment extends Fragment {
     ArrayList<String> myDataset;
 
@@ -26,10 +24,6 @@ public class CarFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
         myDataset = new ArrayList<>();
         for(int i=0;i<10;i++){
             myDataset.add(i+"");
