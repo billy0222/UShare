@@ -9,6 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA" />
+
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -21,9 +27,9 @@
         <activity
             android:name=".CreateActivity"
             android:label="@string/create_event">
-
-
         </activity>
+
+
 
         <activity
             android:name=".LoginActivity"

@@ -5,15 +5,15 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     tools:context="lix5.ushare.MainActivity">
 
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="240dp"
         android:theme="@style/AppTheme.AppBarOverlay">
         <!--app:expanded="false">-->
 
@@ -21,53 +21,71 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             android:background="@color/colorPrimary"
+            android:fitsSystemWindows="true"
             app:contentScrim="@color/colorPrimaryDark"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:titleEnabled="false">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="70dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:orientation="vertical">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:hint="@string/pick_up"/>
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:hint="@string/drop_off"/>
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
+                <TextView
+                    android:id="@+id/search_pick_up"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fitsSystemWindows="false">
-                <EditText
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginRight="50dp"
+                    android:background="@android:color/white"
+                    android:hint="@string/pick_up"
+                    android:lines="1"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/search_drop_off"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="time"
-                    android:hint="@string/pick_up_time"/>
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_below="@id/search_pick_up"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:color/white"
+                    android:hint="@string/drop_off"
+                    android:lines="1"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/search_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/search_drop_off"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:color/white"
+                    android:hint="@string/pick_up_time"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="20sp" />
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/up_down_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/icons8_up_down_arrow_50" />
+
+            </RelativeLayout>
 
 
             <android.support.v7.widget.Toolbar
@@ -87,9 +105,9 @@
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
                 android:background="@color/colorPrimary"
-                app:tabTextColor="#FFFFFF"
+                app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/colorAccent"
-                app:tabMode="fixed"/>
+                app:tabTextColor="#FFFFFF"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -104,6 +122,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@drawable/fab_add" />
 
 </android.support.design.widget.CoordinatorLayout>

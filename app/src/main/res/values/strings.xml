@@ -8,10 +8,7 @@
     <string name="private_car">Private Car</string>
     <string name="taxi">Taxi</string>
     <string name="name">Name</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_login">LoginActivity</string>
-    <string name="UShare"></string>
     <string name="pick_up">Pick up</string>
     <string name="drop_off">Drop off</string>
     <string name="pick_up_time">Pick up time</string>
@@ -28,7 +25,7 @@
     <string name="boys_only">Boys only</string>
     <string name="girls_only">Girls only</string>
     <string name="remarks">Remarks</string>
-    <string name="type_something">Type something...</string>
+    <string name="type_something">Type something…</string>
     <string name="create">create</string>
     <string name="request">Request</string>
     <string name="sharing_event">sharing_event</string>
