@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -36,7 +37,11 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +53,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private FirebaseAuth mAuth; //instance of FirebaseAuth
+    private DatabaseReference mDatabase; //instance of Database
     private Toolbar toolbar;
     private TabLayout tbl_pages;
     private ViewPager vp_pages;
@@ -58,14 +64,8 @@ public class MainActivity extends AppCompatActivity
     private ImageView up_down_arrow;
     String date_time = "";
     int mYear, mMonth, mDay, mHour, mMinute;
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        // updateUI(currentUser);
-    }
+    private TextView uName;
+    private TextView uEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,31 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference("users/");
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View HeaderView = navigationView.getHeaderView(0);      //initialize name, email in navigation bar
+        uName = HeaderView.findViewById(R.id.uname);
+        uEmail = HeaderView.findViewById(R.id.uemail);
+        mDatabase.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    uName.setText(dataSnapshot.child("username").getValue(String.class));   //set the name
+                    uEmail.setText(dataSnapshot.child("email").getValue(String.class));    //set the email
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(v->{
@@ -86,14 +111,6 @@ public class MainActivity extends AppCompatActivity
 
         setupSearchBar();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         vp_pages = (ViewPager) findViewById(R.id.vp_pages);
         setupViewPager(vp_pages);
         tbl_pages = (TabLayout) findViewById(R.id.tabLayout);
@@ -101,6 +118,13 @@ public class MainActivity extends AppCompatActivity
         setupTabIcons();
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        // FirebaseUser currentUser = mAuth.getCurrentUser();
+        // updateUI(currentUser);
+    }
 
     private void datePicker() {
         final Calendar c = Calendar.getInstance();
@@ -309,17 +333,18 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view taxi_item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_profile) {
+            // Handle the profile action
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        } else if (id == R.id.nav_follow) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.liveView) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_scheduler) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_trip) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_logout) {
 
         }
 

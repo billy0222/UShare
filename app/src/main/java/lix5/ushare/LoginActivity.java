@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
-
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -49,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
     private void signIn(String email, String password){
@@ -57,8 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()){
-                        // Sign in success, update UI with the signed-in user's information
-                        if(checkIfEmailVerified()){
+                        FirebaseUser user = mAuth.getInstance().getCurrentUser();
+                        if(user.isEmailVerified()){
                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
@@ -76,11 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
         // [END sign_in_with_email]
-    }
-
-    private boolean checkIfEmailVerified(){
-        FirebaseUser user = mAuth.getCurrentUser();
-        return user.isEmailVerified();
     }
 
     private boolean loginCheck(String email_, String pw_){
