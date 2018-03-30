@@ -26,7 +26,7 @@
     <string name="type_something">Type something…</string>
     <string name="create">create</string>
     <string name="request">Request</string>
-    <string name="sharing_event">sharing_event</string>
+    <string name="sharing_event">Sharing event</string>
     <string name="title_activity_profile_edit">Edit you profile</string>
     <string name="display_name">Display name</string>
     <string name="Name">Name</string>
@@ -38,4 +38,10 @@
     <string name="avatar">Avatar</string>
     <string name="choose_your_avatar">Choose your avatar</string>
     <string name="edit">Edit</string>
+    <string name="title_activity_event">EventActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="passenger">Passenger</string>
 </resources>
