@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/host"
+            style="@style/sectionHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="host" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/host_pic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@id/host"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="10dp"
+            android:src="@drawable/profile_icon"
+            app:civ_border_color="#FFFFFFFF"
+            app:civ_border_width="3dp" />
+
+
+        <TextView
+            android:id="@+id/hostName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/host"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@id/host_pic"
+            android:text="Name" />
+
+        <!--if not exist, visibility = invisible-->
+        <TextView
+            android:id="@+id/hostPlate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hostName"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@id/host_pic"
+            android:text="Plate"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/host"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="16dp"
+            android:layout_toRightOf="@id/host_pic"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-20dp"
+                android:src="@drawable/star_filled" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-20dp"
+                android:src="@drawable/star_filled" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-20dp"
+                android:src="@drawable/star_filled" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-20dp"
+                android:src="@drawable/star_filled" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-10dp"
+                android:src="@drawable/star_half" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/passenger"
+            style="@style/sectionHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/host_pic"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/passenger" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_passenger"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/passenger"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:scrollbars="vertical" />
+
+
+
+    </RelativeLayout>
+</ScrollView>

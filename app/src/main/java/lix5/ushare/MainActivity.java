@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -206,8 +207,8 @@ public class MainActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new TaxiFragment(), "Taxi");
-        adapter.addFrag(new CarFragment(), "Private car");
+        adapter.addFrag(new FragmentTaxi(), "Taxi");
+        adapter.addFrag(new FragmentCar(), "Private car");
         viewPager.setAdapter(adapter);
     }
 
@@ -309,6 +310,13 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        for(int i = 0; i < menu.size(); i++){
+            Drawable drawable = menu.getItem(i).getIcon();
+            if(drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
         return true;
     }
 
@@ -321,6 +329,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_event){
+            startActivity(new Intent(MainActivity.this, EventActivity.class));
             return true;
         }
 
@@ -340,7 +352,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_follow) {
 
         } else if (id == R.id.liveView) {
-
+            startActivity(new Intent(MainActivity.this, LiveView.class));
         } else if (id == R.id.nav_scheduler) {
 
         } else if (id == R.id.nav_trip) {
@@ -353,6 +365,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

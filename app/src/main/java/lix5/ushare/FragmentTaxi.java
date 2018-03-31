@@ -1,5 +1,6 @@
 package lix5.ushare;
 
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,13 +14,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarFragment extends Fragment {
+public class FragmentTaxi extends Fragment {
     ArrayList<String> myDataset;
 
-    public CarFragment() {
+    public FragmentTaxi() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +28,7 @@ public class CarFragment extends Fragment {
         for(int i=0;i<10;i++){
             myDataset.add(i+"");
         }
+
     }
 
     @Nullable
@@ -39,10 +40,10 @@ public class CarFragment extends Fragment {
         rv.setAdapter(new rvAdapter(myDataset));
         return rv;
 
-
         // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_car, container, false);
+        //return inflater.inflate(R.layout.fragment_taxi, container, false);
     }
+
 
     public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
         private List<String> mData;
@@ -62,7 +63,7 @@ public class CarFragment extends Fragment {
         @Override
         public rvAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.car_item, parent, false);
+                    .inflate(R.layout.taxi_item, parent, false);
             ViewHolder vh = new ViewHolder(v);
             return vh;
         }
@@ -70,6 +71,7 @@ public class CarFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.mTextView.setText(mData.get(position));
+
         }
 
         @Override
