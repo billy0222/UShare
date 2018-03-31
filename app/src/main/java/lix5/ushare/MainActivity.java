@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_follow) {
 
         } else if (id == R.id.liveView) {
-
+            startActivity(new Intent(MainActivity.this, LiveView.class));
         } else if (id == R.id.nav_scheduler) {
 
         } else if (id == R.id.nav_trip) {
