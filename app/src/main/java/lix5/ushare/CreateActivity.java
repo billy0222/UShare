@@ -94,8 +94,10 @@ public class CreateActivity extends AppCompatActivity {
                 startActivityForResult(intent, PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE);
             } catch (GooglePlayServicesRepairableException e) {
                 // TODO: Handle the error.
+                Log.i("Repairable Exception", "Error");
             } catch (GooglePlayServicesNotAvailableException e) {
                 // TODO: Handle the error.
+                Log.i("NotAvailable Exception", "Error");
             }
         });
         createDropoff = (TextView) findViewById(R.id.create_drop_off);

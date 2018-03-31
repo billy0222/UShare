@@ -336,6 +336,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             // Handle the profile action
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            item.setChecked(false);
         } else if (id == R.id.nav_follow) {
 
         } else if (id == R.id.liveView) {
