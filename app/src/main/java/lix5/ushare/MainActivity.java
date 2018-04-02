@@ -38,6 +38,7 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,6 +50,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity
     int mYear, mMonth, mDay, mHour, mMinute;
     private TextView uName;
     private TextView uEmail;
+    private ArrayList<String> carEventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference("users/");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         View HeaderView = navigationView.getHeaderView(0);      //initialize name, email in navigation bar
         uName = HeaderView.findViewById(R.id.uname);
         uEmail = HeaderView.findViewById(R.id.uemail);
-        mDatabase.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("users/").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                     uName.setText(dataSnapshot.child("username").getValue(String.class));   //set the name

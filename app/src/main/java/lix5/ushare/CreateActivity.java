@@ -5,14 +5,17 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -27,6 +31,13 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,22 +47,29 @@ import static lix5.ushare.MainActivity.DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE;
 import static lix5.ushare.MainActivity.PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE;
 
 public class CreateActivity extends AppCompatActivity {
-    private EditText seats;
+    private FirebaseAuth mAuth; //instance of FirebaseAuth
+    private DatabaseReference mDatabase; //instance of Database
+    private EditText seats, remarks_input;
     private ImageView add, remove;
     private ImageButton taxiButton, carButton;
     private CheckBox boys, girls, isRequest;
-    private TextView createPickup, createDropoff, createTime;
+    private TextView createPickup, createDropoff, createTime, errorMessage;
     private String TAG = "Create Autocomplete";
+    private Button create;
     String date_time = "";
     int mYear, mMonth, mDay, mHour, mMinute;
+    Boolean typeIsCar, typeIsTaxi, boysOnly = false , girlsOnly = false, eventIsRequest = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         seats = (EditText) findViewById(R.id.number_of_seats);
+        remarks_input = findViewById(R.id.remarks_input);
         add = (ImageView) findViewById(R.id.add_seat);
         remove = (ImageView) findViewById(R.id.remove_seat);
         taxiButton = (ImageButton) findViewById(R.id.taxi_button);
@@ -59,9 +77,10 @@ public class CreateActivity extends AppCompatActivity {
         boys = (CheckBox) findViewById(R.id.boys);
         girls = (CheckBox) findViewById(R.id.girls);
         isRequest = (CheckBox) findViewById(R.id.isRequest);
+        create = findViewById(R.id.create);
+        errorMessage = findViewById(R.id.errorMessage_createEvent);
 
         setupRouteInputBar();
-
 
         seats.setFilters(new InputFilter[]{new InputFilterMinMax("1", "10")});
         add.setOnClickListener(v->{
@@ -81,7 +100,27 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        create.setOnClickListener(v->{
+            if(!validEventCheck()) {
+                mDatabase.child("users/").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Event event = new Event(dataSnapshot.child("username").getValue().toString(), createPickup.getText().toString(), createDropoff.getText().toString(), createTime.getText().toString(),
+                                seats.getText().toString(), typeToString(typeIsTaxi, typeIsCar), boysOnly.toString(), girlsOnly.toString(),
+                                remarks_input.getText().toString(), eventIsRequest.toString());
+                        mDatabase.child("events").push().setValue(event);
+                        Toast.makeText(getApplicationContext(), "Your event has been created", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(CreateActivity.this, MainActivity.class));
+                        finish();
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(getApplicationContext(), "DB Error: Event creation failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     private void setupRouteInputBar() {
@@ -154,11 +193,22 @@ public class CreateActivity extends AppCompatActivity {
         if(view.getId()==R.id.taxi_button){
             taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_icon));
             carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_gray_48dp));
+            taxiButton.setSelected(true);
+            isRequest.setChecked(true);
+            isRequest.setClickable(false);
+            typeIsTaxi = true;
+            typeIsCar = false;
         }
         if(view.getId()==R.id.car_button){
             carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_black_48dp));
             taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_gray));
+            carButton.setSelected(true);
             //TODO if no car plate -> isRequest.setChecked(true);
+            if(!isRequest.isClickable()){
+                isRequest.setClickable(true);
+            }
+            typeIsTaxi = false;
+            typeIsCar = true;
         }
     }
 
@@ -240,10 +290,22 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void onCheckboxClicked(View view) {
-        if(view.getId()==R.id.boys)
+        if(view.getId()==R.id.boys) {
             girls.setChecked(false);
-        if(view.getId()==R.id.girls)
+            boysOnly = true;
+            girlsOnly = false;
+        }
+        if(view.getId()==R.id.girls) {
             boys.setChecked(false);
+            boysOnly = false;
+            girlsOnly = true;
+        }
+    }
+
+    public void onCheckboxClickedRequest(View view){
+        if(view.getId() == R.id.isRequest){
+            eventIsRequest = isRequest.isChecked();
+        }
     }
 
     @Override
@@ -284,4 +346,39 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
+    public String typeToString(Boolean taxi, Boolean car){
+        if(taxi && !car) {
+            return "Taxi";
+        }
+        else if(car && !taxi) {
+            return "Car";
+        }
+        return "No such type";
+    }
+
+    public boolean validEventCheck(){
+        Boolean haveError = false;
+        if(TextUtils.isEmpty(createPickup.getText().toString())){
+            createPickup.setError("Please enter pick up station");
+            createPickup.requestFocus();
+            haveError = true;
+        }
+        if(TextUtils.isEmpty(createDropoff.getText().toString())){
+            createDropoff.setError("Please enter drop off station");
+            createDropoff.requestFocus();
+            haveError = true;
+        }
+        if(TextUtils.isEmpty(createTime.getText().toString())){
+            createTime.setError("Please enter depart time");
+            createTime.requestFocus();
+            haveError = true;
+        }
+        if(!taxiButton.isSelected() && !carButton.isSelected()){
+            errorMessage.setVisibility(View.VISIBLE);
+            haveError = true;
+        }else{
+            errorMessage.setVisibility(View.GONE);
+        }
+        return haveError;
+    }
 }
