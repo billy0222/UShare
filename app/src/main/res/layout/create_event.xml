@@ -79,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/type"
             android:layout_centerHorizontal="true"
+            android:onClick="onCheckboxClickedRequest"
             android:text="@string/request" />
 
         <LinearLayout
@@ -114,6 +115,16 @@
                 app:srcCompat="@drawable/ic_directions_car_gray_48dp" />
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/errorMessage_createEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please select type(taxi/car)"
+            android:layout_below="@id/type_select"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            android:textColor="#FF0000"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/seats"

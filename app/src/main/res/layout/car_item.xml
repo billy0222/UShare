@@ -9,26 +9,175 @@
     card_view:cardCornerRadius="4dp"
     android:layout_margin="5dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_directions_car_black_48dp"
-            android:layout_margin="5dp"
-            android:layout_gravity="center"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/ic_directions_car_black_48dp" />
+
+        <ImageView
+            android:id="@+id/passenger"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/passenger" />
+
+        <ImageView
+            android:id="@+id/gender_carItem"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="75dp"
+            android:layout_marginTop="25dp"
+            android:layout_toRightOf="@id/passenger"
+            android:src="@drawable/man" />
 
         <TextView
-            android:id="@+id/info_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:layout_margin="4dp"
-            android:gravity="center"
-            />
-    </LinearLayout>
+            android:id="@+id/hostText_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/remark_carItem"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/remark_carItem"
+            android:lines="1"
+            android:text="[NAME]"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/host_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/hostText_carItem"
+            android:layout_toRightOf="@+id/hostText_carItem"
+            android:text=" 's RideShare"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/vacancy_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="140dp"
+            android:layout_below="@id/passenger"
+            android:text="@string/vacancy"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/vacancyText_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/passenger"
+            android:layout_toRightOf="@id/vacancy_carItem"
+            android:text="[##]"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/genderText_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gender_carItem"
+            android:layout_marginLeft="290dp"
+            android:text="@string/men_only"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/from_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/fromText_carItem"
+            android:layout_alignBottom="@+id/fromText_carItem"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="From: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/to_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fromText_carItem"
+            android:text="To: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/fromText_carItem"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="130dp"
+            android:lines="2"
+            android:text="[From..........................] " />
+
+        <TextView
+            android:id="@+id/toText_carItem"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/fromText_carItem"
+            android:layout_alignStart="@+id/fromText_carItem"
+            android:lines="2"
+            android:layout_below="@+id/fromText_carItem"
+            android:text="[To..............................] " />
+
+        <TextView
+            android:id="@+id/dateTime_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/toText_carItem"
+            android:text="DateTime: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dateTimeText_carItem"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/dateTime_carItem"
+            android:layout_alignBottom="@+id/dateTime_carItem"
+            android:layout_alignLeft="@+id/toText_carItem"
+            android:layout_alignStart="@+id/toText_carItem"
+            android:text="[DateTime]" />
+
+        <TextView
+            android:id="@+id/remark_carItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remark:"
+            android:textStyle="bold"
+            android:layout_below="@id/dateTime_carItem"
+            android:layout_marginTop="9dp"/>
+
+        <TextView
+            android:id="@+id/message_carItem"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/remark_carItem"
+            android:layout_alignBottom="@+id/remark_carItem"
+            android:layout_alignLeft="@+id/dateTimeText_carItem"
+            android:layout_alignStart="@+id/dateTimeText_carItem"
+            android:text="message........................"
+            android:textColor="#FF0000"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/request_carItem"
+            android:layout_width="153dp"
+            android:layout_height="89dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/request" />
+    </RelativeLayout>
+
 </android.support.v7.widget.CardView>
