@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -26,7 +27,7 @@
         </activity>
         <activity
             android:name=".CreateActivity"
-            android:label="@string/create_event"/>
+            android:label="@string/create_event" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +52,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LiveView"
-            android:label="Bus Station Live View"/>
+            android:label="Bus Station Live View" />
+        <activity android:name=".AutocompleteActivity"></activity>
     </application>
 
 </manifest>
