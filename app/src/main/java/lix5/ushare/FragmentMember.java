@@ -32,6 +32,8 @@ public class FragmentMember extends Fragment {
     private TextView hostPlate;
     private ImageView star1,star2,star3,star4,star5;
 
+    
+
     public FragmentMember(){}
 
     @Override
