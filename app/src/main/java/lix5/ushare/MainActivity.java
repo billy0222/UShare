@@ -7,6 +7,8 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -31,14 +33,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,13 +49,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private FirebaseAuth mAuth; //instance of FirebaseAuth
     private DatabaseReference mDatabase; //instance of Database
+    private Geocoder geocoder;
+    private List<Address> addresses;
     private Toolbar toolbar;
     private TabLayout tbl_pages;
     private ViewPager vp_pages;
@@ -68,13 +66,13 @@ public class MainActivity extends AppCompatActivity
     private ImageView up_down_arrow;
     String date_time = "";
     int mYear, mMonth, mDay, mHour, mMinute;
-    private TextView uName;
-    private TextView uEmail;
+    private TextView uName, uEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -176,13 +174,14 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode) {
             case PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(this, data);
-                    CharSequence result = place.getAddress();//.toString() + place.getName();
+                    CharSequence result = null;
+                    Bundle results = data.getExtras();
+                    if (results != null)
+                        result = results.getCharSequence("result");
                     searchPickup.setText(result);
-                    Log.i(TAG, "Place: " + place.getName());
+                    Log.i(TAG, "Place: " + result);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(this, data);
-                    // TODO: Handle the error.
                     Log.i(TAG, status.getStatusMessage());
 
                 } else if (resultCode == RESULT_CANCELED) {
@@ -191,13 +190,14 @@ public class MainActivity extends AppCompatActivity
                 break;
             case DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(this, data);
-                    CharSequence result = place.getAddress();//.toString() + place.getName();
+                    CharSequence result = null;
+                    Bundle results = data.getExtras();
+                    if (results != null)
+                        result = results.getCharSequence("result");
                     searchDropoff.setText(result);
-                    Log.i(TAG, "Place: " + place.getName());
+                    Log.i(TAG, "Place: " + result);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(this, data);
-                    // TODO: Handle the error.
                     Log.i(TAG, status.getStatusMessage());
 
                 } else if (resultCode == RESULT_CANCELED) {
@@ -233,25 +233,13 @@ public class MainActivity extends AppCompatActivity
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry("HK").build();
         searchPickup = (TextView) findViewById(R.id.search_pick_up);
         searchPickup.setOnClickListener(v->{
-            try {
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(MainActivity.this);
-                startActivityForResult(intent, PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE);
-            } catch (GooglePlayServicesRepairableException e) {
-                // TODO: Handle the error.
-            } catch (GooglePlayServicesNotAvailableException e) {
-                // TODO: Handle the error.
-            }
+            Intent intent = new Intent(MainActivity.this, AutocompleteActivity.class);
+            startActivityForResult(intent, PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
         searchDropoff = (TextView) findViewById(R.id.search_drop_off);
         searchDropoff.setOnClickListener(v->{
-            try {
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(MainActivity.this);
-                startActivityForResult(intent, DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE);
-            } catch (GooglePlayServicesRepairableException e) {
-                // TODO: Handle the error.
-            } catch (GooglePlayServicesNotAvailableException e) {
-                // TODO: Handle the error.
-            }
+            Intent intent = new Intent(MainActivity.this, AutocompleteActivity.class);
+            startActivityForResult(intent, DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
         up_down_arrow = (ImageView) findViewById(R.id.up_down_arrow);
         up_down_arrow.setOnClickListener(v->{
