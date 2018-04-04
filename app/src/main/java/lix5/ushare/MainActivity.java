@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity
     int mYear, mMonth, mDay, mHour, mMinute;
     private TextView uName;
     private TextView uEmail;
-    private ArrayList<String> carEventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

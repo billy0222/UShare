@@ -105,7 +105,7 @@ public class CreateActivity extends AppCompatActivity {
                 mDatabase.child("users/").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Event event = new Event(dataSnapshot.child("username").getValue().toString(), createPickup.getText().toString(), createDropoff.getText().toString(), createTime.getText().toString(),
+                        Event event = new Event(mAuth.getUid(), dataSnapshot.child("username").getValue().toString(), createPickup.getText().toString(), createDropoff.getText().toString(), createTime.getText().toString(),
                                 seats.getText().toString(), typeToString(typeIsTaxi, typeIsCar), boysOnly.toString(), girlsOnly.toString(),
                                 remarks_input.getText().toString(), eventIsRequest.toString());
                         mDatabase.child("events").push().setValue(event);
