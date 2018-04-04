@@ -5,9 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -25,13 +24,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -128,27 +123,13 @@ public class CreateActivity extends AppCompatActivity {
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry("HK").build();
         createPickup = (TextView) findViewById(R.id.create_pick_up);
         createPickup.setOnClickListener(v->{
-            try {
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(CreateActivity.this);
-                startActivityForResult(intent, PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE);
-            } catch (GooglePlayServicesRepairableException e) {
-                // TODO: Handle the error.
-                Log.i("Repairable Exception", "Error");
-            } catch (GooglePlayServicesNotAvailableException e) {
-                // TODO: Handle the error.
-                Log.i("NotAvailable Exception", "Error");
-            }
+            Intent intent = new Intent(CreateActivity.this, AutocompleteActivity.class);
+            startActivityForResult(intent, PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
         createDropoff = (TextView) findViewById(R.id.create_drop_off);
         createDropoff.setOnClickListener(v->{
-            try {
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(CreateActivity.this);
-                startActivityForResult(intent, DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE);
-            } catch (GooglePlayServicesRepairableException e) {
-                // TODO: Handle the error.
-            } catch (GooglePlayServicesNotAvailableException e) {
-                // TODO: Handle the error.
-            }
+            Intent intent = new Intent(CreateActivity.this, AutocompleteActivity.class);
+            startActivityForResult(intent, DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
         createTime = (TextView) findViewById(R.id.create_time);
         createTime.setOnClickListener(v-> datePicker());
@@ -258,13 +239,14 @@ public class CreateActivity extends AppCompatActivity {
         switch (requestCode) {
             case PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(this, data);
-                    CharSequence result = place.getAddress();//.toString() + place.getName();
+                    CharSequence result = null;
+                    Bundle results = data.getExtras();
+                    if (results != null)
+                        result = results.getCharSequence("result");
                     createPickup.setText(result);
-                    Log.i(TAG, "Place: " + place.getName());
+                    Log.i(TAG, "Place: " + result);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(this, data);
-                    // TODO: Handle the error.
                     Log.i(TAG, status.getStatusMessage());
 
                 } else if (resultCode == RESULT_CANCELED) {
@@ -273,13 +255,14 @@ public class CreateActivity extends AppCompatActivity {
                 break;
             case DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(this, data);
-                    CharSequence result = place.getAddress();//.toString() + place.getName();
+                    CharSequence result = null;
+                    Bundle results = data.getExtras();
+                    if (results != null)
+                        result = results.getCharSequence("result");
                     createDropoff.setText(result);
-                    Log.i(TAG, "Place: " + place.getName());
+                    Log.i(TAG, "Place: " + result);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(this, data);
-                    // TODO: Handle the error.
                     Log.i(TAG, status.getStatusMessage());
 
                 } else if (resultCode == RESULT_CANCELED) {
