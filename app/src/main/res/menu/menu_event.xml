@@ -3,15 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="lix5.ushare.EventActivity">
     <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_menu_share"
+        android:orderInCategory="1"
+        android:title="Share"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/join_event"
+        android:orderInCategory="2"
+        android:title="Join"
+        android:icon="@drawable/join_event"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/exit_event"
-        android:orderInCategory="100"
+        android:orderInCategory="3"
         android:title="Exit"
         android:icon="@drawable/exit"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/share"
-        android:orderInCategory="0"
-        android:title="Share"
-        android:icon="@drawable/ic_menu_share"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always" />
 </menu>

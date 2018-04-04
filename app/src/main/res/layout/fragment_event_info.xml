@@ -28,7 +28,7 @@
             android:layout_marginTop="8dp"
             android:hint="Pick up info"
             android:lines="1"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
         <TextView
             android:id="@+id/info_drop_off"
             android:layout_width="match_parent"
@@ -51,7 +51,6 @@
             android:hint="Event time"
             android:lines="1"
             android:textSize="20sp" />
-
 
         <TextView
             android:id="@+id/remark"

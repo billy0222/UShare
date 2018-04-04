@@ -67,7 +67,7 @@
             android:id="@+id/vacancy_taxiItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="140dp"
+            android:layout_marginLeft="155dp"
             android:layout_below="@id/passenger_taxiItem"
             android:text="@string/vacancy"
             android:textStyle="bold" />
@@ -87,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/gender_taxiItem"
+            android:gravity="center"
             android:layout_marginLeft="290dp"
             android:text="@string/men_only"
             android:textStyle="bold" />

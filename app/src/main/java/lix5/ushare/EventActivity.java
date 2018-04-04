@@ -14,14 +14,25 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EventActivity extends AppCompatActivity {
 
@@ -31,14 +42,19 @@ public class EventActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private int[] iconID = {R.drawable.selector_info, R.drawable.selector_member, R.drawable.selector_chatroom};
 
+    private FirebaseAuth mAuth; //instance of FirebaseAuth
+    private DatabaseReference mDatabase; //instance of Database
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -79,24 +95,78 @@ public class EventActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.exit_event) {
-            new AlertDialog.Builder(EventActivity.this)
-                    .setMessage("Are you sure you want to exit this event?")
-                    .setPositiveButton("YES", (dialog, which) -> exitEvent())
-                    .setNegativeButton("NO", (dialog, which) ->{})
-                    .show();
+            Event event = (Event)getIntent().getSerializableExtra("event");
+            String event_key = (String)getIntent().getStringExtra("event_key");
+            if(event.getHostID().equals(mAuth.getUid())){       // You are the host and you want to disband the event
+                new AlertDialog.Builder(EventActivity.this)
+                        .setMessage("Are you sure you want to disband this sharing event?")
+                        .setPositiveButton("YES", (dialog, which) -> disbandEvent(event_key))
+                        .setNegativeButton("NO", (dialog, which) ->{})
+                        .show();
+            }
+            else if(event.getPassengers().contains(mAuth.getUid())){        // You are the passenger and you want to quit the event
+                new AlertDialog.Builder(EventActivity.this)
+                        .setMessage("Are you sure you want to quit this sharing event?")
+                        .setPositiveButton("YES", (dialog, which) -> quitEvent(event, event_key))
+                        .setNegativeButton("NO", (dialog, which) ->{})
+                        .show();
+            }
+            else{       // You are not the host or the passenger
+                new AlertDialog.Builder(EventActivity.this).setMessage("You are not the host or the passenger!").show();
+            }
             return true;
         }else if(id == R.id.share){
             //TODO share event
             return true;
-        }
+        }else if(id == R.id.join_event){
+            Event event = (Event)getIntent().getSerializableExtra("event");
+            String event_key = (String)getIntent().getStringExtra("event_key");
+            if(event.getHostID().equals(mAuth.getUid())){        // You are the host! Why do you have to join the event again?
+                new AlertDialog.Builder(EventActivity.this).setMessage("You are the host!").show();
+            }
+            else {
+                mDatabase.child("events").child(event_key).child("passengers").orderByValue().equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {      // have already joined the event
+                            new AlertDialog.Builder(EventActivity.this).setMessage("You have already joined this event!").show();
+                        } else {       // have not joined the event yet
+                            event.getPassengers().add(mAuth.getUid());
+                            Map<String, Object> postValues = event.toMapEvent();
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put(event_key, postValues);
+                            mDatabase.child("events").updateChildren(childUpdates);
+                            new AlertDialog.Builder(EventActivity.this).setMessage("Join event success").show();
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            return true;
+        }else if(id == R.id.homeAsUp){
+            this.finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
-    private void exitEvent() {
-        startActivity(new Intent(EventActivity.this, MainActivity.class));
-        //TODO exit event
+    private void disbandEvent(String event_key){
+        mDatabase.child("events/").child(event_key).removeValue();
+        Toast.makeText(getApplicationContext(), "Your event has been disbanded", Toast.LENGTH_SHORT).show();
+        finish();
+    }
 
+    private void quitEvent(Event event, String event_key){
+        event.getPassengers().remove(mAuth.getUid());
+        Map<String, Object> postValues = event.toMapEvent();
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(event_key, postValues);
+        mDatabase.child("events").updateChildren(childUpdates);
+        new AlertDialog.Builder(EventActivity.this).setMessage("You have quited the event").show();
     }
 
     public static class PlaceholderFragment extends Fragment {
@@ -125,8 +195,6 @@ public class EventActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_event_info, container, false);
-
-
             return rootView;
         }
     }

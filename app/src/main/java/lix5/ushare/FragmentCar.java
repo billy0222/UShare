@@ -1,5 +1,6 @@
 package lix5.ushare;
 
+import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -123,6 +124,13 @@ public class FragmentCar extends Fragment {
                 dateTimeText = v.findViewById(R.id.dateTimeText_carItem);
                 message = v.findViewById(R.id.message_carItem);
                 isRequest = v.findViewById(R.id.request_carItem);
+
+                v.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("event", mData.get(getAdapterPosition()));
+                    bundle.putString("event_key", myDatasetID.get(getAdapterPosition()));
+                    startActivity(new Intent(getActivity(), EventActivity.class).putExtras(bundle));
+                });
             }
         }
 
@@ -140,7 +148,7 @@ public class FragmentCar extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.hostText.setText(mData.get(position).getHostID());
+            holder.hostText.setText(mData.get(position).getHostName());
             holder.vacancyText.setText(mData.get(position).getNumOfSeat());
             if(mData.get(position).getBoyOnly().equals("true") && mData.get(position).getGirlOnly().equals("false")){
                 holder.gender.setImageResource(R.drawable.man);

@@ -139,7 +139,7 @@ public class FragmentTaxi extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.hostText.setText(mData.get(position).getHostID());
+            holder.hostText.setText(mData.get(position).getHostName());
             holder.vacancyText.setText(mData.get(position).getNumOfSeat());
             if(mData.get(position).getBoyOnly().equals("true") && mData.get(position).getGirlOnly().equals("false")){
                 holder.gender.setImageResource(R.drawable.man);
