@@ -1,6 +1,7 @@
 package lix5.ushare;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -17,12 +18,18 @@ public class LoginActivity extends AppCompatActivity {
     private AppCompatButton b1;
     private EditText ed1,ed2;
     private TextView b2;
+    private SharedPreferences mPrefs;
 
     private FirebaseAuth mAuth; //instance of FirebaseAuth
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPrefs = getSharedPreferences("login", MODE_PRIVATE);
+        if (mPrefs.getBoolean("is_logged_in",false)) {
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(i);
+        }
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
@@ -58,6 +65,11 @@ public class LoginActivity extends AppCompatActivity {
                         FirebaseUser user = mAuth.getInstance().getCurrentUser();
                         if(user.isEmailVerified()){
                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
+                            mPrefs = getSharedPreferences("login", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = mPrefs.edit();
+//                            editor.putString("userID", user.getUid());
+                            editor.putBoolean("is_logged_in",true);
+                            editor.apply();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }

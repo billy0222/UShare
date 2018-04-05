@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -293,7 +294,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            moveTaskToBack(true);
         }
     }
 
@@ -339,7 +340,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             // Handle the profile action
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-            item.setChecked(false);
+//            item.setChecked(false);
         } else if (id == R.id.nav_follow) {
 
         } else if (id == R.id.liveView) {
@@ -349,14 +350,25 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_trip) {
 
         } else if (id == R.id.nav_logout) {
-
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
+    private void logout() {
+        SharedPreferences mPrefs = getSharedPreferences("login", MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean("is_logged_in", false);
+        editor.apply();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        finish();
+    }
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

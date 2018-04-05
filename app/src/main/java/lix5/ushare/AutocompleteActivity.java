@@ -101,7 +101,7 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
                 if (places.getStatus().isSuccess() && places.getCount() > 0) {
                     for(int i=0; i< places.getCount(); i++){
                         recentPlaceName[i] = places.get(i).getAddress().toString()+ " " + places.get(i).getName();
-                        Log.i(TAG, "Recent  Place found: " + places.get(i).getName()+ i);
+                        Log.i(TAG, "Recent  Place found: " + places.get(i).getName());
                     }
                     int k = 0;
                     for(int i = recentPlaceID.size()-1; i>=0;i--){
