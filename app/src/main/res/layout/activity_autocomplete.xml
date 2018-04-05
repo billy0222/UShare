@@ -28,12 +28,22 @@
             android:text="Current location"
             android:textSize="20sp"/>
 
+        <Button
+            android:id="@+id/placePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/current"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Select place on map"/>
+
         <TextView
             android:id="@+id/recommend"
             style="@style/sectionHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/current"
+            android:layout_below="@id/placePicker"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="Recommended location" />
