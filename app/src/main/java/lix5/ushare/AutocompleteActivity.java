@@ -45,11 +45,11 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
         setContentView(R.layout.activity_autocomplete);
         readData();
         current = (TextView) findViewById(R.id.current);
-        recentTextView[0] =(TextView) findViewById(R.id.recent5);
-        recentTextView[1] =(TextView) findViewById(R.id.recent4);
+        recentTextView[0] =(TextView) findViewById(R.id.recent1);
+        recentTextView[1] =(TextView) findViewById(R.id.recent2);
         recentTextView[2] =(TextView) findViewById(R.id.recent3);
-        recentTextView[3] =(TextView) findViewById(R.id.recent2);
-        recentTextView[4] =(TextView) findViewById(R.id.recent1);
+        recentTextView[3] =(TextView) findViewById(R.id.recent4);
+        recentTextView[4] =(TextView) findViewById(R.id.recent5);
         recommend[0] = (TextView) findViewById(R.id.ch);
         recommend[1] = (TextView) findViewById(R.id.hh);
         recommend[2] = (TextView) findViewById(R.id.north);
@@ -97,17 +97,21 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
         if (!recentPlaceID.isEmpty()) {
             String[] array = recentPlaceID.toArray(new String[0]);
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, array);
-            placeResult.setResultCallback(places -> {
+            placeResult.setResultCallback((PlaceBuffer places) -> {
                 if (places.getStatus().isSuccess() && places.getCount() > 0) {
-                    for(int i=0; i<places.getCount(); i++){
+                    for(int i=0; i< places.getCount(); i++){
+                        recentPlaceName[i] = places.get(i).getAddress().toString()+ " " + places.get(i).getName();
+                        Log.i(TAG, "Recent  Place found: " + places.get(i).getName());
+                    }
+                    int k = 0;
+                    for(int i = recentPlaceID.size()-1; i>=0;i--){
                         int j = i;
-                        recentTextView[i].setOnClickListener(v->{
+                        recentTextView[k].setOnClickListener(v->{
                             returnResult(places.get(j));
                             places.release();
                         });
-                        recentPlaceName[i] = places.get(i).getAddress().toString()+ " " + places.get(i).getName();
-                        recentTextView[i].setText(recentPlaceName[i]);
-                        Log.i(TAG, "Recent  Place found: " + places.get(i).getName());
+                        recentTextView[k].setText(recentPlaceName[i]);
+                        k++;
                     }
                 } else {
                     Log.e(TAG, "Place not found");
