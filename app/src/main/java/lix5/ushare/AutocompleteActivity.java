@@ -10,9 +10,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
@@ -22,6 +25,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.ArrayList;
@@ -29,9 +33,11 @@ import java.util.Arrays;
 
 public class AutocompleteActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
     private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final int PLACE_PICKER_REQUEST = 3;
     private GoogleApiClient mGoogleApiClient;
     private String TAG = "Search";
     private TextView current;
+    private Button placePicker;
     private TextView[] recommend = new TextView[4];
     private TextView[] recentTextView = new TextView[5];
     private String[] recommendID = new String[4];
@@ -45,6 +51,7 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
         setContentView(R.layout.activity_autocomplete);
         readData();
         current = (TextView) findViewById(R.id.current);
+        placePicker = (Button) findViewById(R.id.placePicker);
         recentTextView[0] =(TextView) findViewById(R.id.recent1);
         recentTextView[1] =(TextView) findViewById(R.id.recent2);
         recentTextView[2] =(TextView) findViewById(R.id.recent3);
@@ -93,6 +100,15 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
+        placePicker.setOnClickListener(v->{
+                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(intentBuilder.build(AutocompleteActivity.this), PLACE_PICKER_REQUEST);
+            } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
+        });
+
         // get recent place by id
         if (!recentPlaceID.isEmpty()) {
             String[] array = recentPlaceID.toArray(new String[0]);
@@ -138,6 +154,15 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(this, data);
+                returnResult(place);
+        }
+    }
+
 
     public void returnResult(Place place){
         Intent intent = new Intent();
