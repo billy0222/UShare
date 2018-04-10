@@ -40,20 +40,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="50dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="75dp"
                     android:background="@android:color/white"
                     android:hint="@string/pick_up"
                     android:lines="1"
                     android:textColor="@android:color/black"
                     android:textColorHint="@android:color/darker_gray"
                     android:textSize="20sp" />
+                <ImageView
+                    android:id="@+id/search_pick_up_cancel"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/up_down_arrow"
+                    android:layout_toStartOf="@+id/up_down_arrow"
+                    android:src="@drawable/cross"
+                    android:elevation="5dp"/>
                 <TextView
                     android:id="@+id/search_drop_off"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/search_pick_up"
                     android:layout_marginEnd="50dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="75dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/white"
                     android:hint="@string/drop_off"
@@ -61,19 +70,38 @@
                     android:textColor="@android:color/black"
                     android:textColorHint="@android:color/darker_gray"
                     android:textSize="20sp" />
+                <ImageView
+                    android:id="@+id/search_drop_off_cancel"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_above="@+id/search_time"
+                    android:layout_alignLeft="@+id/search_pick_up_cancel"
+                    android:layout_alignStart="@+id/search_pick_up_cancel"
+                    android:src="@drawable/cross"
+                    android:elevation="5dp"/>
                 <TextView
                     android:id="@+id/search_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/search_drop_off"
                     android:layout_marginEnd="50dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="75dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/white"
                     android:hint="@string/pick_up_time"
                     android:textColor="@android:color/black"
                     android:textColorHint="@android:color/darker_gray"
                     android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/search_time_cancel"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignLeft="@+id/search_drop_off_cancel"
+                    android:layout_alignStart="@+id/search_drop_off_cancel"
+                    android:layout_alignTop="@+id/search_time"
+                    android:src="@drawable/cross"
+                    android:elevation="5dp"/>
 
                 <ImageView
                     android:id="@+id/up_down_arrow"
@@ -120,7 +148,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/sendMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

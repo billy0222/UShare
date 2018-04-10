@@ -163,11 +163,13 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
         }
     }
 
-
     public void returnResult(Place place){
         Intent intent = new Intent();
         CharSequence result = place.getAddress().toString() + " " + place.getName();
         intent.putExtra("result", result);
+        intent.putExtra("placeID", place.getId());
+        intent.putExtra("latitude", place.getLatLng().latitude);
+        intent.putExtra("longitude", place.getLatLng().longitude);
         setResult(RESULT_OK, intent);
         Log.i(TAG, "Place: " + place.getName());
 

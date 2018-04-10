@@ -49,7 +49,7 @@ public class EventActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -128,12 +128,19 @@ public class EventActivity extends AppCompatActivity {
                         if (dataSnapshot.exists()) {      // have already joined the event
                             new AlertDialog.Builder(EventActivity.this).setMessage("You have already joined this event!").show();
                         } else {       // have not joined the event yet
-                            event.getPassengers().add(mAuth.getUid());
-                            Map<String, Object> postValues = event.toMapEvent();
-                            Map<String, Object> childUpdates = new HashMap<>();
-                            childUpdates.put(event_key, postValues);
-                            mDatabase.child("events").updateChildren(childUpdates);
-                            new AlertDialog.Builder(EventActivity.this).setMessage("Join event success").show();
+                            if(Integer.parseInt(event.getNumOfSeat()) > 0) {        // have vacancy
+                                event.getPassengers().add(mAuth.getUid());
+                                int remaining_seat = Integer.parseInt(event.getNumOfSeat()) - 1;
+                                event.setNumOfSeat(String.valueOf(remaining_seat));
+                                Map<String, Object> postValues = event.toMapEvent();
+                                Map<String, Object> childUpdates = new HashMap<>();
+                                childUpdates.put(event_key, postValues);
+                                mDatabase.child("events").updateChildren(childUpdates);
+                                new AlertDialog.Builder(EventActivity.this).setMessage("Join event success").show();
+                            }
+                            else{
+                                new AlertDialog.Builder(EventActivity.this).setMessage("Sorry, the event is currently full!").show();
+                            }
                         }
                     }
 
@@ -159,6 +166,8 @@ public class EventActivity extends AppCompatActivity {
 
     private void quitEvent(Event event, String event_key){
         event.getPassengers().remove(mAuth.getUid());
+        int remaining_seat = Integer.parseInt(event.getNumOfSeat()) + 1;
+        event.setNumOfSeat(String.valueOf(remaining_seat));
         Map<String, Object> postValues = event.toMapEvent();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(event_key, postValues);
