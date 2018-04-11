@@ -1,11 +1,13 @@
 package lix5.ushare;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +22,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 import static android.view.View.GONE;
@@ -30,6 +40,9 @@ public class FragmentCar extends Fragment {
     private DatabaseReference mDatabase; //instance of Database
     private ArrayList<Event> myDataset;
     private ArrayList<String> myDatasetID;
+    private RecyclerView rv;
+    private ArrayList<String> placeIDNearPickUp;
+    private ArrayList<String> placeIDNearDropOff;
 
     public FragmentCar() {
         // Required empty public constructor
@@ -48,7 +61,7 @@ public class FragmentCar extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        RecyclerView rv = new RecyclerView(getContext());
+        rv = new RecyclerView(getContext());
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(new rvAdapter(myDataset));
 
@@ -64,6 +77,15 @@ public class FragmentCar extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 // event changed
+                String key = dataSnapshot.getKey();
+                Event tempEvent = dataSnapshot.getValue(Event.class);
+                int index = myDatasetID.indexOf(key);
+                if (index > -1){
+                    myDataset.set(index, tempEvent);
+                    rv.getAdapter().notifyItemChanged(index);
+                }else{
+                    Log.w(TAG, "onChildChanged:unknown_child:" + index);
+                }
             }
 
             @Override
@@ -93,6 +115,151 @@ public class FragmentCar extends Fragment {
         // Inflate the layout for this fragment
         // return inflater.inflate(R.layout.fragment_car, container, false);
         return rv;
+    }
+
+    public void filter(String pickUpID, String dropOffID, CharSequence time, double pickUpLat, double pickUpLng, double dropOffLat, double dropOffLng){
+        ArrayList<Event> tempEventList = new ArrayList<>();
+        tempEventList.addAll(myDataset);
+        Iterator<Event> itr = tempEventList.iterator();
+        DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
+        Date searchDateTime30minutesBefore = null;
+        Date searchDateTime30minutesAfter = null;
+
+        if(!pickUpID.equals("")){
+            placeIDNearPickUp = new ArrayList<>();      //ArrayList for PlaceID near pick up location;
+            findPickUpNear(pickUpLat, pickUpLng);
+        }
+
+        if(!dropOffID.equals("")){
+            placeIDNearDropOff = new ArrayList<>();       //ArrayList for PlaceID near drop off location
+            findDropOffNear(dropOffLat, dropOffLng);
+        }
+
+        if(!TextUtils.isEmpty(time)) {
+            Date searchDateTime = null;
+            try {
+                searchDateTime = formatter.parse(time.toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Calendar searchDateTimeToCalender = Calendar.getInstance();
+            searchDateTimeToCalender.setTime(searchDateTime);
+            searchDateTime30minutesBefore = new Date(searchDateTimeToCalender.getTimeInMillis() - (31 * 60000));   // 30mins before
+            searchDateTime30minutesAfter = new Date(searchDateTimeToCalender.getTimeInMillis() + (31 * 60000));    // 30mins after
+        }
+
+        if(!pickUpID.equals("") && dropOffID.equals("") && TextUtils.isEmpty(time)){    // pickUp, "", ""
+            while(itr.hasNext()){
+                Event event = itr.next();
+                if(!(event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID()))){
+                    itr.remove();
+                }
+            }
+        }
+        else if(pickUpID.equals("") && !dropOffID.equals("") && TextUtils.isEmpty(time)){   // "", dropOff, ""
+            while(itr.hasNext()){
+                Event event = itr.next();
+                if(!(event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID()))){
+                    itr.remove();
+                }
+            }
+        }
+        else if(pickUpID.equals("") && dropOffID.equals("") && !TextUtils.isEmpty(time)){   // "", "", time
+            try {
+                while(itr.hasNext()){
+                    Event event = itr.next();
+                    Date eventDateTime = formatter.parse(event.getDateTime());
+                    if(!(eventDateTime.after(searchDateTime30minutesBefore) && eventDateTime.before(searchDateTime30minutesAfter))){
+                        itr.remove();
+                    }
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(!pickUpID.equals("") && !dropOffID.equals("") && TextUtils.isEmpty(time)){  // pickUP, dropOff, ""
+            while(itr.hasNext()){
+                Event event = itr.next();
+                if(!((event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID()))
+                        && (event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID())))){
+                    itr.remove();
+                }
+            }
+        }
+        else if(!pickUpID.equals("") && dropOffID.equals("") && !TextUtils.isEmpty(time)){  // pickUp, "", time
+            try {
+                while(itr.hasNext()){
+                    Event event = itr.next();
+                    Date eventDateTime = formatter.parse(event.getDateTime());
+                    if(!(eventDateTime.after(searchDateTime30minutesBefore)
+                            && eventDateTime.before(searchDateTime30minutesAfter)
+                            && (event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID())))){
+                        itr.remove();
+                    }
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(pickUpID.equals("") && !dropOffID.equals("") && !TextUtils.isEmpty(time)){   // "", dropOff, time
+            try {
+                while(itr.hasNext()){
+                    Event event = itr.next();
+                    Date eventDateTime = formatter.parse(event.getDateTime());
+                    if(!(eventDateTime.after(searchDateTime30minutesBefore)
+                            && eventDateTime.before(searchDateTime30minutesAfter)
+                            && (event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID())))){
+                        itr.remove();
+                    }
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(!pickUpID.equals("") && !dropOffID.equals("") && !TextUtils.isEmpty(time)){  //  pickUP, dropOff, time
+            try {
+                while(itr.hasNext()){
+                    Event event = itr.next();
+                    Date eventDateTime = formatter.parse(event.getDateTime());
+                    if(!(eventDateTime.after(searchDateTime30minutesBefore)
+                            && eventDateTime.before(searchDateTime30minutesAfter)
+                            && (event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID()))
+                            && (event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID())))){
+                        itr.remove();
+                    }
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(pickUpID.equals("") && dropOffID.equals("") && TextUtils.isEmpty(time)){    // "", "", ""
+            tempEventList = myDataset;
+        }
+        rv.setAdapter(new rvAdapter(tempEventList));
+        rv.getAdapter().notifyDataSetChanged();
+    }
+
+    private void findPickUpNear(double lat, double lng){
+        PlaceService service = new PlaceService("AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA");
+        ArrayList<String> nearPlaceID = new ArrayList<>();
+
+        @SuppressLint("RestrictedApi")
+        List<Place> findPlaces = service.findPlaces(lat, lng);
+        for (int i = 0; i < findPlaces.size(); i++) {
+            nearPlaceID.add(findPlaces.get(i).getId());
+        }
+        placeIDNearPickUp = nearPlaceID;
+    }
+
+    private void findDropOffNear(double lat, double lng){
+        PlaceService service = new PlaceService("AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA");
+        ArrayList<String> nearPlaceID = new ArrayList<>();
+
+        @SuppressLint("RestrictedApi") List<Place> findPlaces = service.findPlaces(lat, lng);
+        for(int i = 0 ; i < findPlaces.size() ; i++){
+            nearPlaceID.add(findPlaces.get(i).getId());
+        }
+        placeIDNearDropOff = nearPlaceID;
     }
 
     public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{

@@ -24,12 +24,14 @@ public class Event implements Serializable{
     private String message;
     private String isRequest;
     private List<ChatMessage> chatMessages = new ArrayList<>();
+    private String pickUpID;
+    private String dropOffID;
 
     public Event(){
 
     }
 
-    public Event(String hostID, String hostName, String pickUP, String dropOff, String dateTime, String numOfSeat, String type, String boyOnly, String girlOnly, String message, String isRequest){
+    public Event(String hostID, String hostName, String pickUP, String dropOff, String dateTime, String numOfSeat, String type, String boyOnly, String girlOnly, String message, String isRequest, String pickUpID, String dropOffID){
         this.hostID = hostID;
         this.hostName = hostName;
         this.passengers = new ArrayList<>();
@@ -43,6 +45,8 @@ public class Event implements Serializable{
         this.message = message;
         this.isRequest = isRequest;
         this.chatMessages = new ArrayList<>();
+        this.pickUpID = pickUpID;
+        this.dropOffID = dropOffID;
     }
 
     public List<ChatMessage> getChatMessages() {
@@ -81,6 +85,10 @@ public class Event implements Serializable{
         return numOfSeat;
     }
 
+    public void setNumOfSeat(String numOfSeat){
+        this.numOfSeat = numOfSeat;
+    }
+
     public List<String> getPassengers() {
         return passengers;
     }
@@ -91,6 +99,14 @@ public class Event implements Serializable{
 
     public String getType() {
         return type;
+    }
+
+    public String getPickUpID() {
+        return pickUpID;
+    }
+
+    public String getDropOffID() {
+        return dropOffID;
     }
 
     public Map<String, Object> toMapEvent(){
@@ -108,6 +124,8 @@ public class Event implements Serializable{
         result.put("message", message);
         result.put("isRequest", isRequest);
         result.put("chatMessages", chatMessages);
+        result.put("pickUpID", pickUpID);
+        result.put("dropOffID", dropOffID);
         return result;
     }
 }

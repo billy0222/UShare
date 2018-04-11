@@ -1,5 +1,6 @@
 package lix5.ushare;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -37,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import static lix5.ushare.MainActivity.DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE;
 import static lix5.ushare.MainActivity.PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE;
@@ -54,8 +56,10 @@ public class CreateActivity extends AppCompatActivity {
     String date_time = "";
     int mYear, mMonth, mDay, mHour, mMinute;
     Boolean typeIsCar, typeIsTaxi, boysOnly = false , girlsOnly = false, eventIsRequest = false;
+    private String pickUpID, dropOffID;
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +106,7 @@ public class CreateActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Event event = new Event(mAuth.getUid(), dataSnapshot.child("username").getValue().toString(), createPickup.getText().toString(), createDropoff.getText().toString(), createTime.getText().toString(),
                                 seats.getText().toString(), typeToString(typeIsTaxi, typeIsCar), boysOnly.toString(), girlsOnly.toString(),
-                                remarks_input.getText().toString(), eventIsRequest.toString());
+                                remarks_input.getText().toString(), eventIsRequest.toString(), pickUpID, dropOffID);
                         mDatabase.child("events").push().setValue(event);
                         Toast.makeText(getApplicationContext(), "Your event has been created", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(CreateActivity.this, MainActivity.class));
@@ -227,7 +231,7 @@ public class CreateActivity extends AppCompatActivity {
             if(date.before(c.getTime()))
                 new AlertDialog.Builder(CreateActivity.this).setMessage("The pick up time can only be future.").setPositiveButton("OK", (dialog, which) -> datePicker()).show();
             else
-                date_time = (date.getYear()+1900 == c.get(Calendar.YEAR) ? new SimpleDateFormat("EE, dd MMMM, HH:mm").format(date) : new SimpleDateFormat("EE, dd MMMM yyyy, HH:mm").format(date));
+                date_time = (date.getYear()+1900 == c.get(Calendar.YEAR) ? new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US).format(date) : new SimpleDateFormat("EE, dd MMMM yyyy, HH:mm", Locale.US).format(date));
             createTime.setText(date_time);
 
         }, mHour, mMinute, true);
@@ -241,8 +245,10 @@ public class CreateActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     CharSequence result = null;
                     Bundle results = data.getExtras();
-                    if (results != null)
+                    if (results != null) {
                         result = results.getCharSequence("result");
+                        pickUpID = results.getString("placeID");
+                    }
                     createPickup.setText(result);
                     Log.i(TAG, "Place: " + result);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
@@ -257,8 +263,10 @@ public class CreateActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     CharSequence result = null;
                     Bundle results = data.getExtras();
-                    if (results != null)
+                    if (results != null) {
                         result = results.getCharSequence("result");
+                        dropOffID = results.getString("placeID");
+                    }
                     createDropoff.setText(result);
                     Log.i(TAG, "Place: " + result);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {

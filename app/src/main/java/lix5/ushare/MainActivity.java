@@ -1,6 +1,7 @@
 package lix5.ushare;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -23,6 +24,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,6 +53,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -60,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private TabLayout tbl_pages;
     private ViewPager vp_pages;
+    private ViewPagerAdapter adapter;
     private TextView searchPickup, searchDropoff, searchTime;
     static final int PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     static final int DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
@@ -68,12 +75,15 @@ public class MainActivity extends AppCompatActivity
     String date_time = "";
     int mYear, mMonth, mDay, mHour, mMinute;
     private TextView uName, uEmail;
+    private ImageView search_pick_up_cancel, search_drop_off_cancel, search_time_cancel;
+    private String pickUpID = "", dropOffID = "";
+    private Double pickUpLat = 0.0, pickUpLng = 0.0, dropOffLat = 0.0, dropOffLng = 0.0;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -104,7 +114,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.sendMessage);
         fab.setOnClickListener(v->{
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, CreateActivity.class);
@@ -177,8 +187,12 @@ public class MainActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK) {
                     CharSequence result = null;
                     Bundle results = data.getExtras();
-                    if (results != null)
+                    if (results != null) {
                         result = results.getCharSequence("result");
+                        pickUpID = results.getString("placeID");
+                        pickUpLat = results.getDouble("latitude");
+                        pickUpLng = results.getDouble("longitude");
+                    }
                     searchPickup.setText(result);
                     Log.i(TAG, "Place: " + result);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
@@ -193,10 +207,15 @@ public class MainActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK) {
                     CharSequence result = null;
                     Bundle results = data.getExtras();
-                    if (results != null)
+                    if (results != null) {
                         result = results.getCharSequence("result");
+                        dropOffID = results.getString("placeID");
+                        dropOffLat = results.getDouble("latitude");
+                        dropOffLng = results.getDouble("longitude");
+                    }
                     searchDropoff.setText(result);
                     Log.i(TAG, "Place: " + result);
+                    //filtering the event
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(this, data);
                     Log.i(TAG, status.getStatusMessage());
@@ -210,7 +229,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new FragmentTaxi(), "Taxi");
         adapter.addFrag(new FragmentCar(), "Private car");
         viewPager.setAdapter(adapter);
@@ -244,6 +263,9 @@ public class MainActivity extends AppCompatActivity
         });
         up_down_arrow = (ImageView) findViewById(R.id.up_down_arrow);
         up_down_arrow.setOnClickListener(v->{
+            String temp = pickUpID;
+            pickUpID = dropOffID;
+            dropOffID = temp;
             CharSequence dummy = searchPickup.getText();
             searchPickup.setText(searchDropoff.getText());
             searchDropoff.setText(dummy);
@@ -251,6 +273,10 @@ public class MainActivity extends AppCompatActivity
         searchTime = (TextView) findViewById(R.id.search_time);
         searchTime.setOnClickListener(v-> datePicker());
 
+        //set up cancel icon
+        search_pick_up_cancel = findViewById(R.id.search_pick_up_cancel);
+        search_drop_off_cancel = findViewById(R.id.search_drop_off_cancel);
+        search_time_cancel = findViewById(R.id.search_time_cancel);
         // Set icons
         searchPickup.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -258,8 +284,9 @@ public class MainActivity extends AppCompatActivity
                     public void onGlobalLayout() {
                         Drawable img = MainActivity.this.getResources().getDrawable(
                                 R.drawable.current_location);
+                        Drawable cancel = MainActivity.this.getResources().getDrawable(R.drawable.cross);
                         img.setBounds(0, 0, img.getIntrinsicWidth() * searchPickup.getMeasuredHeight() / img.getIntrinsicHeight(), searchPickup.getMeasuredHeight());
-                        searchPickup.setCompoundDrawables(img, null, null, null);
+                        searchPickup.setCompoundDrawables(img, null, null,null);
                         searchPickup.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 });
@@ -287,6 +314,77 @@ public class MainActivity extends AppCompatActivity
                         searchTime.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 });
+
+        search_pick_up_cancel.setOnClickListener(view -> {
+            pickUpID = "";
+            searchPickup.setText("");
+        });
+        search_drop_off_cancel.setOnClickListener(view -> {
+            dropOffID = "";
+            searchDropoff.setText("");
+        });
+        search_time_cancel.setOnClickListener(view -> searchTime.setText(""));
+
+        //filtering
+        searchPickup.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                FragmentCar car = (FragmentCar)adapter.getItem(1);
+                FragmentTaxi taxi = (FragmentTaxi)adapter.getItem(0);
+                car.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
+                taxi.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
+            }
+        });
+
+        searchDropoff.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                FragmentCar car = (FragmentCar)adapter.getItem(1);
+                FragmentTaxi taxi = (FragmentTaxi)adapter.getItem(0);
+                car.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
+                taxi.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
+            }
+        });
+
+        searchTime.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                FragmentCar car = (FragmentCar)adapter.getItem(1);
+                FragmentTaxi taxi = (FragmentTaxi)adapter.getItem(0);
+                car.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
+                taxi.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
+            }
+        });
     }
     @Override
     public void onBackPressed() {
@@ -369,7 +467,6 @@ public class MainActivity extends AppCompatActivity
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         finish();
     }
-
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
