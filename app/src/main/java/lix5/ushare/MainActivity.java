@@ -25,7 +25,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,8 +52,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -115,12 +112,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.sendMessage);
-        fab.setOnClickListener(v->{
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, CreateActivity.class);
-                startActivity(intent);
-                finish();
-            });
+        fab.setOnClickListener(v-> startActivity(new Intent(MainActivity.this, CreateActivity.class)));
 
         setupSearchBar();
 
@@ -444,7 +436,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.liveView) {
             startActivity(new Intent(MainActivity.this, LiveView.class));
         } else if (id == R.id.nav_scheduler) {
-
+            startActivity(new Intent(MainActivity.this, SchedulerActivity.class));
         } else if (id == R.id.nav_trip) {
 
         } else if (id == R.id.nav_logout) {

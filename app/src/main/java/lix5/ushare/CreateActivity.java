@@ -12,7 +12,6 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -297,17 +296,6 @@ public class CreateActivity extends AppCompatActivity {
         if(view.getId() == R.id.isRequest){
             eventIsRequest = isRequest.isChecked();
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            Intent intent = new Intent();
-            intent = new Intent(CreateActivity.this, MainActivity.class);
-            startActivity(intent);
-            this.finish();
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     public class InputFilterMinMax implements InputFilter {

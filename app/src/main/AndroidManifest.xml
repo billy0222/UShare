@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -49,11 +49,18 @@
         <activity
             android:name=".EventActivity"
             android:label="@string/title_activity_event"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".LiveView"
             android:label="Bus Station Live View" />
-        <activity android:name=".AutocompleteActivity"></activity>
+        <activity android:name=".AutocompleteActivity" />
+        <activity android:name=".SchedulerActivity" />
+        <activity android:name=".AddScheduleActivity"/>
+
+        <service
+            android:name=".SchedulerService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

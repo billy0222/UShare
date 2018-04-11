@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TimePicker
+                android:id="@+id/daytime_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:theme="@style/Theme.AppCompat.Light" />
+
+            <TimePicker
+                android:id="@+id/nighttime_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:theme="@style/nightTheme"
+                android:visibility="invisible" />
+
+            <RelativeLayout
+                android:id="@+id/rl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/daytime_picker"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/repeat"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Repeat"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/repeat_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/repeat"
+                    android:text="No days selected" />
+
+                <CheckBox
+                    android:id="@+id/twice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@+id/day_night_switch"
+                    android:text="Twice a day" />
+
+                <com.mahfa.dnswitch.DayNightSwitch
+                    android:id="@+id/day_night_switch"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center" />
+            </RelativeLayout>
+
+            <ViewStub
+                android:id="@+id/weekdays_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl"
+                android:layout_margin="10dp" />
+
+            <fragment
+                android:id="@+id/advanced"
+                android:name="lix5.ushare.FragmentScheduler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weekdays_buttons" />
+
+
+            <!--<TextView
+                android:id="@+id/advance"
+                style="@style/sectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weekdays_stub"
+                android:layout_margin="10dp"
+                android:text="Advanced"/>
+
+            <ListView
+                android:id="@+id/fp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/advance">
+
+                <TextView
+                    android:id="@+id/f1"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/advance"
+                    android:layout_margin="8dp"
+                    android:text="First starting location"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/fPickup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/f1" />
+            </ListView>
+
+
+            <TextView
+                android:id="@+id/f2"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fp"
+                android:layout_margin="8dp"
+                android:text="First destination"
+                android:textColor="#000000"/>
+
+
+
+            <TextView
+                android:id="@+id/s1"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/f2"
+                android:layout_margin="8dp"
+                android:text="Second starting location"
+                android:textColor="#000000"/>
+
+
+            <TextView
+                android:id="@+id/s2"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/s1"
+                android:layout_margin="8dp"
+                android:text="Second destination"
+                android:textColor="#000000"/>
+
+            <CheckBox
+                android:id="@+id/re"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/s2"
+                android:layout_margin="8dp"
+                android:text="Use reversed location for second schedule"/>-->
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cancel" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+    </LinearLayout>
+
+</LinearLayout>
