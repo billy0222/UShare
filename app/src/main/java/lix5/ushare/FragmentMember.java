@@ -21,9 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -36,15 +34,16 @@ public class FragmentMember extends Fragment {
     private CircleImageView hostPic;
     private TextView hostName;
     private TextView hostPlate;
-    private ImageView star1,star2,star3,star4,star5;
+    private ImageView star1, star2, star3, star4, star5;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<User> myDataset;
     private ArrayList<String> myDatasetID;
-    
 
-    public FragmentMember(){}
+
+    public FragmentMember() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,11 +98,11 @@ public class FragmentMember extends Fragment {
                 String key = dataSnapshot.getKey();
                 System.out.println(key);
                 int index = myDatasetID.indexOf(key);
-                if (index > -1){
+                if (index > -1) {
                     myDatasetID.remove(index);
                     myDataset.remove(index);
                     mRecyclerView.getAdapter().notifyItemRemoved(index);
-                }else{
+                } else {
                     Log.w(TAG, "onChildRemoved:unknown_child:" + index);
                 }
             }
@@ -122,19 +121,18 @@ public class FragmentMember extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState){
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Event event = (Event)getActivity().getIntent().getSerializableExtra("event");
+        Event event = (Event) getActivity().getIntent().getSerializableExtra("event");
         mDatabase.child("users/").child(event.getHostID()).addListenerForSingleValueEvent(new ValueEventListener() {    //Host details
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(hostPic);
                 hostName.setText(dataSnapshot.child("username").getValue(String.class));
-                if(dataSnapshot.hasChild("drive")){
+                if (dataSnapshot.hasChild("drive")) {
                     hostPlate.setText(dataSnapshot.child("drive").getValue(String.class));
                     hostPlate.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     hostPlate.setVisibility(View.INVISIBLE);
                 }
                 String rating = dataSnapshot.child("rating").getValue(String.class);
@@ -148,15 +146,114 @@ public class FragmentMember extends Fragment {
         });
     }
 
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+    public void showStarFromRating(String rating, ImageView star1, ImageView star2, ImageView star3, ImageView star4, ImageView star5) {
+        if (rating.equals("")) {       // user hasn't received any rating now
+            star1.setVisibility(View.INVISIBLE);
+            star2.setVisibility(View.INVISIBLE);
+            star3.setVisibility(View.INVISIBLE);
+            star4.setVisibility(View.INVISIBLE);
+            star5.setVisibility(View.INVISIBLE);
+        } else {       // user has rating
+            double user_rating = Double.parseDouble(rating);
+            if (user_rating == 5.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_filled);
+                star3.setImageResource(R.drawable.star_filled);
+                star4.setImageResource(R.drawable.star_filled);
+                star5.setImageResource(R.drawable.star_filled);
+            } else if (user_rating > 4.0 && user_rating < 5.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_filled);
+                star3.setImageResource(R.drawable.star_filled);
+                star4.setImageResource(R.drawable.star_filled);
+                star5.setImageResource(R.drawable.star_half);
+            } else if (user_rating == 4.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_filled);
+                star3.setImageResource(R.drawable.star_filled);
+                star4.setImageResource(R.drawable.star_filled);
+                star5.setImageResource(R.drawable.star_none);
+            } else if (user_rating > 3.0 && user_rating < 4.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_filled);
+                star3.setImageResource(R.drawable.star_filled);
+                star4.setImageResource(R.drawable.star_half);
+                star5.setImageResource(R.drawable.star_none);
+            } else if (user_rating == 3.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_filled);
+                star3.setImageResource(R.drawable.star_filled);
+                star4.setImageResource(R.drawable.star_none);
+                star5.setImageResource(R.drawable.star_none);
+            } else if (user_rating > 2.0 && user_rating < 3.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_filled);
+                star3.setImageResource(R.drawable.star_half);
+                star4.setImageResource(R.drawable.star_none);
+                star5.setImageResource(R.drawable.star_none);
+            } else if (user_rating == 2.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_filled);
+                star3.setImageResource(R.drawable.star_none);
+                star4.setImageResource(R.drawable.star_none);
+                star5.setImageResource(R.drawable.star_none);
+            } else if (user_rating > 1.0 && user_rating < 2.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_half);
+                star3.setImageResource(R.drawable.star_none);
+                star4.setImageResource(R.drawable.star_none);
+                star5.setImageResource(R.drawable.star_none);
+            } else if (user_rating == 1.0) {
+                star1.setImageResource(R.drawable.star_filled);
+                star2.setImageResource(R.drawable.star_none);
+                star3.setImageResource(R.drawable.star_none);
+                star4.setImageResource(R.drawable.star_none);
+                star5.setImageResource(R.drawable.star_none);
+            } else if (user_rating > 0 && user_rating < 1.0) {
+                star1.setImageResource(R.drawable.star_half);
+                star2.setImageResource(R.drawable.star_none);
+                star3.setImageResource(R.drawable.star_none);
+                star4.setImageResource(R.drawable.star_none);
+                star5.setImageResource(R.drawable.star_none);
+            } else {
+                star1.setImageResource(R.drawable.star_none);
+                star2.setImageResource(R.drawable.star_none);
+                star3.setImageResource(R.drawable.star_none);
+                star4.setImageResource(R.drawable.star_none);
+                star5.setImageResource(R.drawable.star_none);
+            }
+        }
+    }
+
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private ArrayList<User> mDataset;
 
-        public class ViewHolder extends RecyclerView.ViewHolder{
+        public MyAdapter(ArrayList<User> mDataset) {
+            this.mDataset = mDataset;
+        }
+
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.passenger_card, parent, false);
+            ViewHolder vh = new ViewHolder(v);
+            return vh;
+        }
+
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.passengerName.setText(mDataset.get(position).getUsername());
+            Picasso.get().load(mDataset.get(position).getAvatar()).into(holder.passengerPic);
+            showStarFromRating(mDataset.get(position).getRating(), holder.passengerStar1, holder.passengerStar2, holder.passengerStar3, holder.passengerStar4, holder.passengerStar5);
+        }
+
+        public int getItemCount() {
+            return mDataset.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
             public CircleImageView passengerPic;
             public TextView passengerName;
             public ImageView passengerStar1, passengerStar2, passengerStar3, passengerStar4, passengerStar5;
 
-            public ViewHolder(View v){
+            public ViewHolder(View v) {
                 super(v);
                 passengerName = v.findViewById(R.id.passenger_name);
                 passengerPic = v.findViewById(R.id.passenger_pic);
@@ -165,116 +262,6 @@ public class FragmentMember extends Fragment {
                 passengerStar3 = v.findViewById(R.id.star3_passenger);
                 passengerStar4 = v.findViewById(R.id.star4_passenger);
                 passengerStar5 = v.findViewById(R.id.star5_passenger);
-            }
-        }
-
-        public MyAdapter(ArrayList<User> mDataset){
-            this.mDataset = mDataset;
-        }
-
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.passenger_card, parent, false);
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
-
-        public void onBindViewHolder(ViewHolder holder, int position){
-            holder.passengerName.setText(mDataset.get(position).getUsername());
-            Picasso.get().load(mDataset.get(position).getAvatar()).into(holder.passengerPic);
-            showStarFromRating(mDataset.get(position).getRating(), holder.passengerStar1, holder.passengerStar2, holder.passengerStar3, holder.passengerStar4, holder.passengerStar5);
-        }
-
-        public int getItemCount(){
-            return mDataset.size();
-        }
-    }
-
-    public void showStarFromRating(String rating, ImageView star1, ImageView star2, ImageView star3, ImageView star4, ImageView star5){
-        if(rating.equals("")){       // user hasn't received any rating now
-            star1.setVisibility(View.INVISIBLE);
-            star2.setVisibility(View.INVISIBLE);
-            star3.setVisibility(View.INVISIBLE);
-            star4.setVisibility(View.INVISIBLE);
-            star5.setVisibility(View.INVISIBLE);
-        }
-        else{       // user has rating
-            double user_rating = Double.parseDouble(rating);
-            if(user_rating == 5.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_filled);
-                star3.setImageResource(R.drawable.star_filled);
-                star4.setImageResource(R.drawable.star_filled);
-                star5.setImageResource(R.drawable.star_filled);
-            }
-            else if(user_rating > 4.0 && user_rating < 5.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_filled);
-                star3.setImageResource(R.drawable.star_filled);
-                star4.setImageResource(R.drawable.star_filled);
-                star5.setImageResource(R.drawable.star_half);
-            }
-            else if(user_rating == 4.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_filled);
-                star3.setImageResource(R.drawable.star_filled);
-                star4.setImageResource(R.drawable.star_filled);
-                star5.setImageResource(R.drawable.star_none);
-            }
-            else if(user_rating > 3.0 && user_rating < 4.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_filled);
-                star3.setImageResource(R.drawable.star_filled);
-                star4.setImageResource(R.drawable.star_half);
-                star5.setImageResource(R.drawable.star_none);
-            }
-            else if(user_rating == 3.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_filled);
-                star3.setImageResource(R.drawable.star_filled);
-                star4.setImageResource(R.drawable.star_none);
-                star5.setImageResource(R.drawable.star_none);
-            }
-            else if(user_rating > 2.0 && user_rating < 3.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_filled);
-                star3.setImageResource(R.drawable.star_half);
-                star4.setImageResource(R.drawable.star_none);
-                star5.setImageResource(R.drawable.star_none);
-            }
-            else if(user_rating == 2.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_filled);
-                star3.setImageResource(R.drawable.star_none);
-                star4.setImageResource(R.drawable.star_none);
-                star5.setImageResource(R.drawable.star_none);
-            }
-            else if(user_rating > 1.0 && user_rating < 2.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_half);
-                star3.setImageResource(R.drawable.star_none);
-                star4.setImageResource(R.drawable.star_none);
-                star5.setImageResource(R.drawable.star_none);
-            }
-            else if(user_rating == 1.0){
-                star1.setImageResource(R.drawable.star_filled);
-                star2.setImageResource(R.drawable.star_none);
-                star3.setImageResource(R.drawable.star_none);
-                star4.setImageResource(R.drawable.star_none);
-                star5.setImageResource(R.drawable.star_none);
-            }
-            else if(user_rating > 0 && user_rating < 1.0){
-                star1.setImageResource(R.drawable.star_half);
-                star2.setImageResource(R.drawable.star_none);
-                star3.setImageResource(R.drawable.star_none);
-                star4.setImageResource(R.drawable.star_none);
-                star5.setImageResource(R.drawable.star_none);
-            }
-            else{
-                star1.setImageResource(R.drawable.star_none);
-                star2.setImageResource(R.drawable.star_none);
-                star3.setImageResource(R.drawable.star_none);
-                star4.setImageResource(R.drawable.star_none);
-                star5.setImageResource(R.drawable.star_none);
             }
         }
     }

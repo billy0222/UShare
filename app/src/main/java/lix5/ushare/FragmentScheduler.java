@@ -27,32 +27,32 @@ public class FragmentScheduler extends PreferenceFragmentCompat {
         secLoc = (Preference) findPreference("secLoc");
         secDes = (Preference) findPreference("secDes");
         retrace = (CheckBoxPreference) findPreference("retrace");
-        retrace.setOnPreferenceClickListener(v->{
-            if(retrace.isChecked()) {
+        retrace.setOnPreferenceClickListener(v -> {
+            if (retrace.isChecked()) {
                 secLoc.setEnabled(false);
                 secDes.setEnabled(false);
                 secLoc.setSummary(firstDes.getSummary());
                 secDes.setSummary(firstLoc.getSummary());
             }
-            if(!retrace.isChecked()){
+            if (!retrace.isChecked()) {
                 secLoc.setEnabled(true);
                 secDes.setEnabled(true);
             }
             return true;
         });
-        firstLoc.setOnPreferenceClickListener(v->{
+        firstLoc.setOnPreferenceClickListener(v -> {
             startActivityForResult(new Intent(getContext(), AutocompleteActivity.class), 0);
             return true;
         });
-        firstDes.setOnPreferenceClickListener(v->{
+        firstDes.setOnPreferenceClickListener(v -> {
             startActivityForResult(new Intent(getContext(), AutocompleteActivity.class), 1);
             return true;
         });
-        secLoc.setOnPreferenceClickListener(v->{
+        secLoc.setOnPreferenceClickListener(v -> {
             startActivityForResult(new Intent(getContext(), AutocompleteActivity.class), 2);
             return true;
         });
-        secDes.setOnPreferenceClickListener(v->{
+        secDes.setOnPreferenceClickListener(v -> {
             startActivityForResult(new Intent(getContext(), AutocompleteActivity.class), 3);
             return true;
         });

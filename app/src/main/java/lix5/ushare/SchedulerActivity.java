@@ -12,11 +12,17 @@ public class SchedulerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedular);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_schedule);
-        fab.setOnClickListener(v-> startActivity(new Intent(SchedulerActivity.this, AddScheduleActivity.class)));
-
-
+        fab.setOnClickListener(v -> startActivity(new Intent(SchedulerActivity.this, AddScheduleActivity.class)));
 
     }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
 }

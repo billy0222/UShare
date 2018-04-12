@@ -22,7 +22,6 @@ public class FragmentInfo extends Fragment {
     private TextView remark;
 
 
-
     public FragmentInfo() {
         // Required empty public constructor
     }
@@ -43,7 +42,7 @@ public class FragmentInfo extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Event event = (Event)getActivity().getIntent().getSerializableExtra("event");
+        Event event = (Event) getActivity().getIntent().getSerializableExtra("event");
         pickUp.setText(event.getPickUp());
         dropOff.setText(event.getDropOff());
         dateTime.setText(event.getDateTime());

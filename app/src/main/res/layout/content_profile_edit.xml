@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true">
+
         <TextView
             android:id="@+id/name"
             style="@style/sectionHeader"
@@ -31,7 +32,7 @@
             android:lines="1"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/bio"
@@ -54,12 +55,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:background="@android:color/transparent"
-            android:textColor="@android:color/black"
-            android:textColorHint="@android:color/darker_gray"
-            android:lines="1"
             android:gravity="top"
             android:hint="@string/tell_us_about_yourself"
-            android:maxLines="6" />
+            android:lines="1"
+            android:maxLines="6"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/darker_gray" />
 
         <TextView
             android:id="@+id/phone"
@@ -84,7 +85,7 @@
             android:lines="1"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/gender"
@@ -109,7 +110,7 @@
             android:lines="1"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/avatar"
@@ -124,183 +125,182 @@
 
         <ImageView
             android:id="@+id/uploaded_avatar_profileEdit"
-            android:src="@drawable/profile_icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_below="@id/avatar"
             android:layout_marginLeft="0dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginStart="0dp" />
+            android:layout_marginStart="0dp"
+            android:src="@drawable/profile_icon"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <Button
             android:id="@+id/btnUploadAvatar_profileEdit"
-            android:text="@string/choose_your_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/avatar"
             android:layout_centerHorizontal="true"
             android:onClick="chooseImage"
+            android:text="@string/choose_your_avatar"
             app:layout_constraintLeft_toLeftOf="parent" />
 
         <Button
             android:id="@+id/btnSubmit_profileEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:onClick="submit"
             android:text="@string/edit"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
             app:layout_constraintTop_toBottomOf="@id/gender" />
 
     </RelativeLayout>
 </ScrollView>
 
 
+    <!--
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="lix5.ushare.ProfileEditActivity"
+        tools:showIn="@layout/activity_profile_edit">
 
-<!--
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="lix5.ushare.ProfileEditActivity"
-    tools:showIn="@layout/activity_profile_edit">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:text="Name: "
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:text="Name: "
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/name_profileEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="30sp"
+            android:clickable="true"
+            android:text="[Name]"
+            app:layout_constraintLeft_toRightOf="@+id/name"
+            />
 
-    <EditText
-        android:id="@+id/name_profileEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="30sp"
-        android:clickable="true"
-        android:text="[Name]"
-        app:layout_constraintLeft_toRightOf="@+id/name"
-        />
+        <TextView
+            android:id="@+id/bio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:text="Bio: "
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name" />
 
-    <TextView
-        android:id="@+id/bio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:text="Bio: "
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/name" />
+        <EditText
+            android:id="@+id/bio_profileEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:clickable="true"
+            android:text="[Bio]"
+            app:layout_constraintLeft_toRightOf="@+id/bio"
+            app:layout_constraintTop_toBottomOf="@id/name_profileEdit" />
 
-    <EditText
-        android:id="@+id/bio_profileEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:clickable="true"
-        android:text="[Bio]"
-        app:layout_constraintLeft_toRightOf="@+id/bio"
-        app:layout_constraintTop_toBottomOf="@id/name_profileEdit" />
+        <TextView
+            android:id="@+id/phoneNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:text="Phone Number: "
+            android:textSize="30dp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bio" />
 
-    <TextView
-        android:id="@+id/phoneNum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:text="Phone Number: "
-        android:textSize="30dp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bio" />
+        <EditText
+            android:id="@+id/phoneNum_profileEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="[phone]"
+            app:layout_constraintLeft_toRightOf="@+id/phoneNum"
+            app:layout_constraintTop_toBottomOf="@id/bio_profileEdit" />
 
-    <EditText
-        android:id="@+id/phoneNum_profileEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:text="[phone]"
-        app:layout_constraintLeft_toRightOf="@+id/phoneNum"
-        app:layout_constraintTop_toBottomOf="@id/bio_profileEdit" />
+        <TextView
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="30dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:text="Gender: "
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phoneNum" />
 
-    <TextView
-        android:id="@+id/gender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textSize="30dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:text="Gender: "
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phoneNum" />
+        <EditText
+            android:id="@+id/gender_profileEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="[gender]"
+            app:layout_constraintLeft_toRightOf="@+id/gender"
+            app:layout_constraintTop_toBottomOf="@id/phoneNum_profileEdit" />
 
-    <EditText
-        android:id="@+id/gender_profileEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:text="[gender]"
-        app:layout_constraintLeft_toRightOf="@+id/gender"
-        app:layout_constraintTop_toBottomOf="@id/phoneNum_profileEdit" />
+        <TextView
+            android:id="@+id/avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="30dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:text="Avatar: "
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gender" />
 
-    <TextView
-        android:id="@+id/avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textSize="30dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:text="Avatar: "
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gender" />
+        <Button
+            android:id="@+id/btnUploadAvatar_profileEdit"
+            android:text="Choose your avatar"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="110dp"
+            android:onClick="chooseImage"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gender"/>
 
-    <Button
-        android:id="@+id/btnUploadAvatar_profileEdit"
-        android:text="Choose your avatar"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="110dp"
-        android:onClick="chooseImage"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gender"/>
+        <ImageView
+            android:id="@+id/uploaded_avatar_profileEdit"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="290dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gender" />
 
-    <ImageView
-        android:id="@+id/uploaded_avatar_profileEdit"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginLeft="290dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gender" />
+        <Button
+            android:id="@+id/btnSubmit_profileEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:layout_weight="1"
+            android:onClick="submit"
+            android:text="Submit"
+            app:layout_constraintTop_toBottomOf="@id/gender" />
 
-    <Button
-        android:id="@+id/btnSubmit_profileEdit"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:layout_weight="1"
-        android:onClick="submit"
-        android:text="Submit"
-        app:layout_constraintTop_toBottomOf="@id/gender" />
-
-</android.support.constraint.ConstraintLayout>
--->
+    </android.support.constraint.ConstraintLayout>
+    -->

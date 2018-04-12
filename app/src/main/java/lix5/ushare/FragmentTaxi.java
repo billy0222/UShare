@@ -3,9 +3,7 @@ package lix5.ushare;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,12 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceBufferResponse;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -89,10 +81,10 @@ public class FragmentTaxi extends Fragment {
                 String key = dataSnapshot.getKey();
                 Event tempEvent = dataSnapshot.getValue(Event.class);
                 int index = myDatasetID.indexOf(key);
-                if (index > -1){
+                if (index > -1) {
                     myDataset.set(index, tempEvent);
                     rv.getAdapter().notifyItemChanged(index);
-                }else{
+                } else {
                     Log.w(TAG, "onChildChanged:unknown_child:" + index);
                 }
             }
@@ -102,11 +94,11 @@ public class FragmentTaxi extends Fragment {
                 // event removed
                 String key = dataSnapshot.getKey();
                 int index = myDatasetID.indexOf(key);
-                if (index > -1){
+                if (index > -1) {
                     myDatasetID.remove(index);
                     myDataset.remove(index);
                     rv.getAdapter().notifyItemRemoved(index);
-                }else{
+                } else {
                     Log.w(TAG, "onChildRemoved:unknown_child:" + index);
                 }
             }
@@ -126,7 +118,7 @@ public class FragmentTaxi extends Fragment {
         return rv;
     }
 
-    public void filter(String pickUpID, String dropOffID, CharSequence time, double pickUpLat, double pickUpLng, double dropOffLat, double dropOffLng){
+    public void filter(String pickUpID, String dropOffID, CharSequence time, double pickUpLat, double pickUpLng, double dropOffLat, double dropOffLng) {
         ArrayList<Event> tempEventList = new ArrayList<>();
         tempEventList.addAll(myDataset);
         Iterator<Event> itr = tempEventList.iterator();
@@ -134,17 +126,17 @@ public class FragmentTaxi extends Fragment {
         Date searchDateTime30minutesBefore = null;
         Date searchDateTime30minutesAfter = null;
 
-        if(!pickUpID.equals("")){
+        if (!pickUpID.equals("")) {
             placeIDNearPickUp = new ArrayList<>();      //ArrayList for PlaceID near pick up location;
             findPickUpNear(pickUpLat, pickUpLng);
         }
 
-        if(!dropOffID.equals("")){
+        if (!dropOffID.equals("")) {
             placeIDNearDropOff = new ArrayList<>();       //ArrayList for PlaceID near drop off location
             findDropOffNear(dropOffLat, dropOffLng);
         }
 
-        if(!TextUtils.isEmpty(time)) {
+        if (!TextUtils.isEmpty(time)) {
             Date searchDateTime = null;
             try {
                 searchDateTime = formatter.parse(time.toString());
@@ -157,123 +149,159 @@ public class FragmentTaxi extends Fragment {
             searchDateTime30minutesAfter = new Date(searchDateTimeToCalender.getTimeInMillis() + (31 * 60000));    // 30mins after
         }
 
-        if(!pickUpID.equals("") && dropOffID.equals("") && TextUtils.isEmpty(time)){    // pickUp, "", ""
-            while(itr.hasNext()){
+        if (!pickUpID.equals("") && dropOffID.equals("") && TextUtils.isEmpty(time)) {    // pickUp, "", ""
+            while (itr.hasNext()) {
                 Event event = itr.next();
-                if(!(event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID()))){
+                if (!(event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID()))) {
                     itr.remove();
                 }
             }
-        }
-        else if(pickUpID.equals("") && !dropOffID.equals("") && TextUtils.isEmpty(time)){   // "", dropOff, ""
-            while(itr.hasNext()){
+        } else if (pickUpID.equals("") && !dropOffID.equals("") && TextUtils.isEmpty(time)) {   // "", dropOff, ""
+            while (itr.hasNext()) {
                 Event event = itr.next();
-                if(!(event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID()))){
+                if (!(event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID()))) {
                     itr.remove();
                 }
             }
-        }
-        else if(pickUpID.equals("") && dropOffID.equals("") && !TextUtils.isEmpty(time)){   // "", "", time
+        } else if (pickUpID.equals("") && dropOffID.equals("") && !TextUtils.isEmpty(time)) {   // "", "", time
             try {
-                while(itr.hasNext()){
+                while (itr.hasNext()) {
                     Event event = itr.next();
                     Date eventDateTime = formatter.parse(event.getDateTime());
-                    if(!(eventDateTime.after(searchDateTime30minutesBefore) && eventDateTime.before(searchDateTime30minutesAfter))){
+                    if (!(eventDateTime.after(searchDateTime30minutesBefore) && eventDateTime.before(searchDateTime30minutesAfter))) {
                         itr.remove();
                     }
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
-        else if(!pickUpID.equals("") && !dropOffID.equals("") && TextUtils.isEmpty(time)){  // pickUP, dropOff, ""
-            while(itr.hasNext()){
+        } else if (!pickUpID.equals("") && !dropOffID.equals("") && TextUtils.isEmpty(time)) {  // pickUP, dropOff, ""
+            while (itr.hasNext()) {
                 Event event = itr.next();
-                if(!((event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID()))
-                        && (event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID())))){
+                if (!((event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID()))
+                        && (event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID())))) {
                     itr.remove();
                 }
             }
-        }
-        else if(!pickUpID.equals("") && dropOffID.equals("") && !TextUtils.isEmpty(time)){  // pickUp, "", time
+        } else if (!pickUpID.equals("") && dropOffID.equals("") && !TextUtils.isEmpty(time)) {  // pickUp, "", time
             try {
-                while(itr.hasNext()){
+                while (itr.hasNext()) {
                     Event event = itr.next();
                     Date eventDateTime = formatter.parse(event.getDateTime());
-                    if(!(eventDateTime.after(searchDateTime30minutesBefore)
+                    if (!(eventDateTime.after(searchDateTime30minutesBefore)
                             && eventDateTime.before(searchDateTime30minutesAfter)
-                            && (event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID())))){
+                            && (event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID())))) {
                         itr.remove();
                     }
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
-        else if(pickUpID.equals("") && !dropOffID.equals("") && !TextUtils.isEmpty(time)){   // "", dropOff, time
+        } else if (pickUpID.equals("") && !dropOffID.equals("") && !TextUtils.isEmpty(time)) {   // "", dropOff, time
             try {
-                while(itr.hasNext()){
+                while (itr.hasNext()) {
                     Event event = itr.next();
                     Date eventDateTime = formatter.parse(event.getDateTime());
-                    if(!(eventDateTime.after(searchDateTime30minutesBefore)
+                    if (!(eventDateTime.after(searchDateTime30minutesBefore)
                             && eventDateTime.before(searchDateTime30minutesAfter)
-                            && (event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID())))){
+                            && (event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID())))) {
                         itr.remove();
                     }
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
-        else if(!pickUpID.equals("") && !dropOffID.equals("") && !TextUtils.isEmpty(time)){  //  pickUP, dropOff, time
+        } else if (!pickUpID.equals("") && !dropOffID.equals("") && !TextUtils.isEmpty(time)) {  //  pickUP, dropOff, time
             try {
-                while(itr.hasNext()){
+                while (itr.hasNext()) {
                     Event event = itr.next();
                     Date eventDateTime = formatter.parse(event.getDateTime());
-                    if(!(eventDateTime.after(searchDateTime30minutesBefore)
+                    if (!(eventDateTime.after(searchDateTime30minutesBefore)
                             && eventDateTime.before(searchDateTime30minutesAfter)
                             && (event.getDropOffID().equals(dropOffID) || placeIDNearDropOff.contains(event.getDropOffID()))
-                            && (event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID())))){
+                            && (event.getPickUpID().equals(pickUpID) || placeIDNearPickUp.contains(event.getPickUpID())))) {
                         itr.remove();
                     }
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
-        else if(pickUpID.equals("") && dropOffID.equals("") && TextUtils.isEmpty(time)){    // "", "", ""
+        } else if (pickUpID.equals("") && dropOffID.equals("") && TextUtils.isEmpty(time)) {    // "", "", ""
             tempEventList = myDataset;
         }
         rv.setAdapter(new rvAdapter(tempEventList));
         rv.getAdapter().notifyDataSetChanged();
     }
 
-    private void findPickUpNear(double lat, double lng){
+    private void findPickUpNear(double lat, double lng) {
         PlaceService service = new PlaceService("AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA");
         ArrayList<String> nearPlaceID = new ArrayList<>();
 
         @SuppressLint("RestrictedApi")
         List<Place> findPlaces = service.findPlaces(lat, lng);
-        for(int i = 0 ; i < findPlaces.size() ; i++){
+        for (int i = 0; i < findPlaces.size(); i++) {
             nearPlaceID.add(findPlaces.get(i).getId());
         }
         placeIDNearPickUp = nearPlaceID;
     }
 
-    private void findDropOffNear(double lat, double lng){
+    private void findDropOffNear(double lat, double lng) {
         PlaceService service = new PlaceService("AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA");
         ArrayList<String> nearPlaceID = new ArrayList<>();
 
         @SuppressLint("RestrictedApi")
         List<Place> findPlaces = service.findPlaces(lat, lng);
-        for(int i = 0 ; i < findPlaces.size() ; i++){
+        for (int i = 0; i < findPlaces.size(); i++) {
             nearPlaceID.add(findPlaces.get(i).getId());
         }
         placeIDNearDropOff = nearPlaceID;
     }
 
-    public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
+    public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder> {
         private ArrayList<Event> mData;
+
+        public rvAdapter(ArrayList<Event> data) {
+            mData = data;
+        }
+
+        @Override
+        public rvAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.taxi_item, parent, false);
+            ViewHolder vh = new ViewHolder(v);
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.hostText.setText(mData.get(position).getHostName());
+            holder.vacancyText.setText(mData.get(position).getNumOfSeat());
+            if (mData.get(position).getBoyOnly().equals("true") && mData.get(position).getGirlOnly().equals("false")) {
+                holder.gender.setImageResource(R.drawable.man);
+                holder.genderText.setText(R.string.menOnly);
+            } else if (mData.get(position).getGirlOnly().equals("true") && mData.get(position).getBoyOnly().equals("false")) {
+                holder.gender.setImageResource(R.drawable.woman);
+                holder.genderText.setText(R.string.womenOnly);
+            } else {
+                holder.gender.setVisibility(GONE);
+                holder.genderText.setVisibility(GONE);
+            }
+            holder.fromText.setText(mData.get(position).getPickUp());
+            holder.toText.setText(mData.get(position).getDropOff());
+            holder.dateTimeText.setText(mData.get(position).getDateTime());
+            holder.message.setText(mData.get(position).getMessage());
+            if (mData.get(position).getIsRequest().equals("true")) {
+                holder.isRequest.setImageResource(R.drawable.request);
+                holder.isRequest.setVisibility(View.VISIBLE);
+            } else {
+                holder.isRequest.setVisibility(GONE);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return mData.size();
+        }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView hostText;
@@ -305,51 +333,6 @@ public class FragmentTaxi extends Fragment {
                     startActivity(new Intent(getActivity(), EventActivity.class).putExtras(bundle));
                 });
             }
-        }
-
-        public rvAdapter(ArrayList<Event> data) {
-            mData = data;
-        }
-
-        @Override
-        public rvAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.taxi_item, parent, false);
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.hostText.setText(mData.get(position).getHostName());
-            holder.vacancyText.setText(mData.get(position).getNumOfSeat());
-            if(mData.get(position).getBoyOnly().equals("true") && mData.get(position).getGirlOnly().equals("false")){
-                holder.gender.setImageResource(R.drawable.man);
-                holder.genderText.setText(R.string.menOnly);
-            }
-            else if(mData.get(position).getGirlOnly().equals("true") && mData.get(position).getBoyOnly().equals("false")){
-                holder.gender.setImageResource(R.drawable.woman);
-                holder.genderText.setText(R.string.womenOnly);
-            }
-            else{
-                holder.gender.setVisibility(GONE);
-                holder.genderText.setVisibility(GONE);
-            }
-            holder.fromText.setText(mData.get(position).getPickUp());
-            holder.toText.setText(mData.get(position).getDropOff());
-            holder.dateTimeText.setText(mData.get(position).getDateTime());
-            holder.message.setText(mData.get(position).getMessage());
-            if(mData.get(position).getIsRequest().equals("true")){
-                holder.isRequest.setImageResource(R.drawable.request);
-                holder.isRequest.setVisibility(View.VISIBLE);
-            }else{
-                holder.isRequest.setVisibility(GONE);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mData.size();
         }
 
     }

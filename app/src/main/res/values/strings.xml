@@ -42,7 +42,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="passenger">Passenger</string>
-    <string name="vacancy">Vacancy:</string>
+    <string name="remain">Remain:</string>
     <string name="men_only">MEN ONLY</string>
     <string name="menOnly">MEN ONLY</string>
     <string name="womenOnly">WOMEN ONLY</string>

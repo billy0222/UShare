@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,26 +31,22 @@ import java.util.Map;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
+    private final int PICK_IMAGE_REQUEST = 71;
     private FirebaseAuth mAuth; //instance of FirebaseAuth
     private DatabaseReference mDatabase; //instance of Database
     private StorageReference mStorage;   //instance of Storage
-
     private TextView name, phone, gender;
     private EditText bio;
     private Button btnChoose, btnSubmit;
     private ImageView uploaded_avatar;
     private Uri filePath;
-    private final int PICK_IMAGE_REQUEST = 71;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.title_activity_profile_edit);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         name = findViewById(R.id.name_profileEdit);
         bio = findViewById(R.id.bio_profileEdit);
@@ -82,7 +77,13 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
     }
 
-    public void chooseImage(View view){
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    public void chooseImage(View view) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -92,23 +93,20 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
             filePath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 uploaded_avatar.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void submit(View view){
-        if(filePath != null) {          //Have Avatar uploaded
+    public void submit(View view) {
+        if (filePath != null) {          //Have Avatar uploaded
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Please wait...");
             progressDialog.show();
@@ -116,12 +114,12 @@ public class ProfileEditActivity extends AppCompatActivity {
             StorageReference ref = mStorage.child("images/" + mAuth.getUid());
             Task upload = ref.putFile(filePath)
                     .addOnSuccessListener(taskSnapshot -> {
-                        if(progressDialog.getOwnerActivity() != null && !progressDialog.getOwnerActivity().isFinishing())
+                        if (progressDialog.getOwnerActivity() != null && !progressDialog.getOwnerActivity().isFinishing())
                             progressDialog.dismiss();
                         Toast.makeText(ProfileEditActivity.this, "Your profile has edited", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
-                        if(progressDialog.getOwnerActivity() != null && !progressDialog.getOwnerActivity().isFinishing())
+                        if (progressDialog.getOwnerActivity() != null && !progressDialog.getOwnerActivity().isFinishing())
                             progressDialog.dismiss();
                         Toast.makeText(ProfileEditActivity.this, "Failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     })
@@ -130,30 +128,29 @@ public class ProfileEditActivity extends AppCompatActivity {
                                 .getTotalByteCount());
                         progressDialog.setMessage("Uploading avatar..." + (int) progress + "%");
                     });
-            while(!upload.isComplete()) {
+            while (!upload.isComplete()) {
             }
             ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                    mDatabase.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User temp = new User(name.getText().toString(), dataSnapshot.child("email").getValue(String.class),
-                                    dataSnapshot.child("password").getValue(String.class),
-                                    uri.toString(), gender.getText().toString(), bio.getText().toString(),
-                                    dataSnapshot.child("rating").getValue(String.class), phone.getText().toString());
-                            Map<String, Object> postValues = temp.toMapHaveAvatar();
-                            Map<String, Object> childUpdates = new HashMap<>();
-                            childUpdates.put(mAuth.getUid(), postValues);
-                            mDatabase.updateChildren(childUpdates);
-                        }
+                mDatabase.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User temp = new User(name.getText().toString(), dataSnapshot.child("email").getValue(String.class),
+                                dataSnapshot.child("password").getValue(String.class),
+                                uri.toString(), gender.getText().toString(), bio.getText().toString(),
+                                dataSnapshot.child("rating").getValue(String.class), phone.getText().toString());
+                        Map<String, Object> postValues = temp.toMapHaveAvatar();
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put(mAuth.getUid(), postValues);
+                        mDatabase.updateChildren(childUpdates);
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            // data fetch error
-                        }
-                    });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // data fetch error
+                    }
+                });
             });
-        }
-        else{       // No Avatar Uploaded
+        } else {       // No Avatar Uploaded
             mDatabase.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

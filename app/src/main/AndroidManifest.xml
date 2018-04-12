@@ -16,7 +16,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA" />
-
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="MainActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -31,7 +33,6 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -40,27 +41,25 @@
             android:label="Register" />
         <activity
             android:name=".ProfileActivity"
-            android:label="Profile"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="Profile" />
         <activity
             android:name=".ProfileEditActivity"
-            android:label="@string/title_activity_profile_edit"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_profile_edit" />
         <activity
             android:name=".EventActivity"
             android:label="@string/title_activity_event"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LiveView"
             android:label="Bus Station Live View" />
         <activity android:name=".AutocompleteActivity" />
         <activity android:name=".SchedulerActivity" />
-        <activity android:name=".AddScheduleActivity"/>
+        <activity android:name=".AddScheduleActivity" />
 
         <service
             android:name=".SchedulerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
     </application>
 
 </manifest>

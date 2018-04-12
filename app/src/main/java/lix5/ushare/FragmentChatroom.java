@@ -24,7 +24,8 @@ public class FragmentChatroom extends Fragment {
     private String event_key;
     private Event event;
 
-    public FragmentChatroom(){}
+    public FragmentChatroom() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,7 +37,7 @@ public class FragmentChatroom extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         //listOfMessages = view.findViewById(R.id.list_of_messages);
         event_key = getActivity().getIntent().getStringExtra("event_key");
-        event = (Event)getActivity().getIntent().getSerializableExtra("event");
+        event = (Event) getActivity().getIntent().getSerializableExtra("event");
 
         return view;
     }

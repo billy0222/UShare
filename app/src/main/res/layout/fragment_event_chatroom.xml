@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout
+<?xml version="1.0" encoding="utf-8"?><!--<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -40,21 +39,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-<!--    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp">
-    </ListView>-->
+    <!--    <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp">
+        </ListView>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_message_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".9"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
     <RelativeLayout
         android:id="@+id/form"
@@ -62,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/chatText"
