@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".9"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            android:windowSoftInputMode="adjustResize"/>
 
         <EditText
             android:id="@+id/chatText"

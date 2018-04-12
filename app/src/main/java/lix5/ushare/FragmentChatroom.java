@@ -55,6 +55,8 @@ public class FragmentChatroom extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(new FragmentChatroom.MyAdapter(myDataset));
 
+        mRecyclerView.addOnLayoutChangeListener((view12, i, i1, i2, i3, i4, i5, i6, i7) -> mRecyclerView.scrollToPosition(myDataset.size() - 1));
+
         buttonSend.setOnClickListener(view1 -> {
             @SuppressLint("RestrictedApi")
             ChatMessage chatMessage = new ChatMessage(chatText.getText().toString(), mAuth.getUid());
@@ -90,6 +92,11 @@ public class FragmentChatroom extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        mRecyclerView.scrollToPosition(myDataset.size() - 1);
     }
 
     public class MyAdapter extends RecyclerView.Adapter<FragmentChatroom.MyAdapter.ViewHolder>{
