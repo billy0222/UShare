@@ -25,7 +25,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,18 +46,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
+    static final int PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    static final int DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
+    String date_time = "";
+    int mYear, mMonth, mDay, mHour, mMinute;
     private FirebaseAuth mAuth; //instance of FirebaseAuth
     private DatabaseReference mDatabase; //instance of Database
     private Geocoder geocoder;
@@ -68,12 +70,8 @@ public class MainActivity extends AppCompatActivity
     private ViewPager vp_pages;
     private ViewPagerAdapter adapter;
     private TextView searchPickup, searchDropoff, searchTime;
-    static final int PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    static final int DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
     private String TAG = "Search Autocomplete";
-    private ImageView up_down_arrow;
-    String date_time = "";
-    int mYear, mMonth, mDay, mHour, mMinute;
+    private ImageView up_down_arrow, uIcon;
     private TextView uName, uEmail;
     private ImageView search_pick_up_cancel, search_drop_off_cancel, search_time_cancel;
     private String pickUpID = "", dropOffID = "";
@@ -99,13 +97,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         View HeaderView = navigationView.getHeaderView(0);      //initialize name, email in navigation bar
+        uIcon = HeaderView.findViewById(R.id.uicon);
         uName = HeaderView.findViewById(R.id.uname);
         uEmail = HeaderView.findViewById(R.id.uemail);
         mDatabase.child("users/").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    uName.setText(dataSnapshot.child("username").getValue(String.class));   //set the name
-                    uEmail.setText(dataSnapshot.child("email").getValue(String.class));    //set the email
+                uName.setText(dataSnapshot.child("username").getValue(String.class));   //set the name
+                uEmail.setText(dataSnapshot.child("email").getValue(String.class));    //set the email
+                Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(uIcon);
             }
 
             @Override
@@ -115,12 +115,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.sendMessage);
-        fab.setOnClickListener(v->{
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, CreateActivity.class);
-                startActivity(intent);
-                finish();
-            });
+        fab.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CreateActivity.class)));
 
         setupSearchBar();
 
@@ -132,7 +127,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         // FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -146,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dpd = new DatePickerDialog(this, (DatePickerDialog.OnDateSetListener) (DatePicker view, int year, int monthOfYear, int dayOfMonth) -> {
-            Date date = new Date(year-1900, monthOfYear, dayOfMonth);
+            Date date = new Date(year - 1900, monthOfYear, dayOfMonth);
             timePicker(date);
         }, mYear, mMonth, mDay);
         dpd.getDatePicker().setMinDate(c.getTimeInMillis());
@@ -170,10 +165,10 @@ public class MainActivity extends AppCompatActivity
             mMinute = minute;
             date.setHours(hourOfDay);
             date.setMinutes(minute);
-            if(date.before(c.getTime()))
+            if (date.before(c.getTime()))
                 new AlertDialog.Builder(MainActivity.this).setMessage("The pick up time can only be future.").setPositiveButton("OK", (dialog, which) -> datePicker()).show();
             else
-                date_time = (date.getYear()+1900 == c.get(Calendar.YEAR) ? new SimpleDateFormat("EE, dd MMMM, HH:mm").format(date) : new SimpleDateFormat("EE, dd MMMM yyyy, HH:mm").format(date));
+                date_time = (date.getYear() + 1900 == c.get(Calendar.YEAR) ? new SimpleDateFormat("EE, dd MMMM, HH:mm").format(date) : new SimpleDateFormat("EE, dd MMMM yyyy, HH:mm").format(date));
             searchTime.setText(date_time);
 
         }, mHour, mMinute, true);
@@ -235,16 +230,16 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(adapter);
     }
 
-    private void setupTabIcons(){
+    private void setupTabIcons() {
 
         TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabOne.setText(getResources().getText(R.string.taxi));
-        tabOne.setCompoundDrawablesWithIntrinsicBounds( R.drawable.taxi_sign_icon, 0, 0, 0);
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(R.drawable.taxi_sign_icon, 0, 0, 0);
         tbl_pages.getTabAt(0).setCustomView(tabOne);
 
         TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabTwo.setText(getResources().getText(R.string.private_car));
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_directions_car_black_48dp, 0, 0, 0);
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_directions_car_black_48dp, 0, 0, 0);
         tbl_pages.getTabAt(1).setCustomView(tabTwo);
     }
 
@@ -252,17 +247,17 @@ public class MainActivity extends AppCompatActivity
         // Setup autocomplete
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry("HK").build();
         searchPickup = (TextView) findViewById(R.id.search_pick_up);
-        searchPickup.setOnClickListener(v->{
+        searchPickup.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AutocompleteActivity.class);
             startActivityForResult(intent, PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
         searchDropoff = (TextView) findViewById(R.id.search_drop_off);
-        searchDropoff.setOnClickListener(v->{
+        searchDropoff.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AutocompleteActivity.class);
             startActivityForResult(intent, DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
         up_down_arrow = (ImageView) findViewById(R.id.up_down_arrow);
-        up_down_arrow.setOnClickListener(v->{
+        up_down_arrow.setOnClickListener(v -> {
             String temp = pickUpID;
             pickUpID = dropOffID;
             dropOffID = temp;
@@ -271,7 +266,7 @@ public class MainActivity extends AppCompatActivity
             searchDropoff.setText(dummy);
         });
         searchTime = (TextView) findViewById(R.id.search_time);
-        searchTime.setOnClickListener(v-> datePicker());
+        searchTime.setOnClickListener(v -> datePicker());
 
         //set up cancel icon
         search_pick_up_cancel = findViewById(R.id.search_pick_up_cancel);
@@ -286,7 +281,7 @@ public class MainActivity extends AppCompatActivity
                                 R.drawable.current_location);
                         Drawable cancel = MainActivity.this.getResources().getDrawable(R.drawable.cross);
                         img.setBounds(0, 0, img.getIntrinsicWidth() * searchPickup.getMeasuredHeight() / img.getIntrinsicHeight(), searchPickup.getMeasuredHeight());
-                        searchPickup.setCompoundDrawables(img, null, null,null);
+                        searchPickup.setCompoundDrawables(img, null, null, null);
                         searchPickup.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 });
@@ -339,8 +334,8 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void afterTextChanged(Editable editable) {
-                FragmentCar car = (FragmentCar)adapter.getItem(1);
-                FragmentTaxi taxi = (FragmentTaxi)adapter.getItem(0);
+                FragmentCar car = (FragmentCar) adapter.getItem(1);
+                FragmentTaxi taxi = (FragmentTaxi) adapter.getItem(0);
                 car.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
                 taxi.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
             }
@@ -359,8 +354,8 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void afterTextChanged(Editable editable) {
-                FragmentCar car = (FragmentCar)adapter.getItem(1);
-                FragmentTaxi taxi = (FragmentTaxi)adapter.getItem(0);
+                FragmentCar car = (FragmentCar) adapter.getItem(1);
+                FragmentTaxi taxi = (FragmentTaxi) adapter.getItem(0);
                 car.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
                 taxi.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
             }
@@ -379,13 +374,14 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void afterTextChanged(Editable editable) {
-                FragmentCar car = (FragmentCar)adapter.getItem(1);
-                FragmentTaxi taxi = (FragmentTaxi)adapter.getItem(0);
+                FragmentCar car = (FragmentCar) adapter.getItem(1);
+                FragmentTaxi taxi = (FragmentTaxi) adapter.getItem(0);
                 car.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
                 taxi.filter(pickUpID, dropOffID, searchTime.getText(), pickUpLat, pickUpLng, dropOffLat, dropOffLng);
             }
         });
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -400,9 +396,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        for(int i = 0; i < menu.size(); i++){
+        for (int i = 0; i < menu.size(); i++) {
             Drawable drawable = menu.getItem(i).getIcon();
-            if(drawable != null) {
+            if (drawable != null) {
                 drawable.mutate();
                 drawable.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
             }
@@ -417,11 +413,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_event){
+        if (id == R.id.action_event) {
             startActivity(new Intent(MainActivity.this, EventActivity.class));
             return true;
         }
@@ -433,22 +425,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view taxi_item clicks here.
-        int id = item.getItemId();
+        switch (item.getItemId()){
+            case R.id.nav_profile:
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                break;
+            case R.id.nav_follow:
 
-        if (id == R.id.nav_profile) {
-            // Handle the profile action
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-//            item.setChecked(false);
-        } else if (id == R.id.nav_follow) {
+                break;
+            case R.id.liveView:
+                startActivity(new Intent(MainActivity.this, LiveView.class));
+                break;
+            case R.id.nav_scheduler:
+                startActivity(new Intent(MainActivity.this, SchedulerActivity.class));
+                break;
+            case R.id.nav_trip:
 
-        } else if (id == R.id.liveView) {
-            startActivity(new Intent(MainActivity.this, LiveView.class));
-        } else if (id == R.id.nav_scheduler) {
-
-        } else if (id == R.id.nav_trip) {
-
-        } else if (id == R.id.nav_logout) {
-            logout();
+                break;
+            case R.id.nav_logout:
+                logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

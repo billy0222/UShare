@@ -1,0 +1,31 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Advanced">
+
+        <Preference
+            android:key="firstLoc"
+            android:summary=""
+            android:title="First starting location" />
+
+        <Preference
+            android:key="firstDes"
+            android:summary=""
+            android:title="First destination" />
+
+        <Preference
+            android:key="secLoc"
+            android:summary=""
+            android:title="Second starting location" />
+
+        <Preference
+            android:key="secDes"
+            android:summary=""
+            android:title="Second destination" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="retrace"
+            android:summary="Use reversed location for second schedule"
+            android:title="Retrace" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

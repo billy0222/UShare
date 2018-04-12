@@ -17,10 +17,11 @@ public class User {
     public String rating;
     public String phoneNum;
 
-    public User(){
+    public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
-    public User(String username, String email, String password){        // Constructor for creating user
+
+    public User(String username, String email, String password) {        // Constructor for creating user
         this.username = username;
         this.email = email;
         this.password = password;
@@ -30,7 +31,8 @@ public class User {
         this.rating = "";
         this.phoneNum = "";
     }
-    public User(String username, String email, String password, String avatar, String sex, String bio, String rating, String phoneNum){      //Constructor for editing profile
+
+    public User(String username, String email, String password, String avatar, String sex, String bio, String rating, String phoneNum) {      //Constructor for editing profile
         this.username = username;
         this.email = email;
         this.password = password;
@@ -73,7 +75,7 @@ public class User {
         return username;
     }
 
-    public Map<String, Object> toMapHaveAvatar(){
+    public Map<String, Object> toMapHaveAvatar() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("username", username);
         result.put("email", email);

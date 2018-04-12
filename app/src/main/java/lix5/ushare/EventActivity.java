@@ -58,7 +58,7 @@ public class EventActivity extends AppCompatActivity {
         setupViewPager(mViewPager);
         tabLayout = (TabLayout) findViewById(R.id.eventTabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-        for(int i =0; i < iconID.length;i++){
+        for (int i = 0; i < iconID.length; i++) {
             tabLayout.getTabAt(i).setIcon(iconID[i]);
         }
 
@@ -73,9 +73,9 @@ public class EventActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_event, menu);
-        for(int i = 0; i < menu.size(); i++){
+        for (int i = 0; i < menu.size(); i++) {
             Drawable drawable = menu.getItem(i).getIcon();
-            if(drawable != null) {
+            if (drawable != null) {
                 drawable.mutate();
                 drawable.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
             }
@@ -92,43 +92,42 @@ public class EventActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.exit_event) {
-            Event event = (Event)getIntent().getSerializableExtra("event");
-            String event_key = (String)getIntent().getStringExtra("event_key");
-            if(event.getHostID().equals(mAuth.getUid())){       // You are the host and you want to disband the event
+            Event event = (Event) getIntent().getSerializableExtra("event");
+            String event_key = (String) getIntent().getStringExtra("event_key");
+            if (event.getHostID().equals(mAuth.getUid())) {       // You are the host and you want to disband the event
                 new AlertDialog.Builder(EventActivity.this)
                         .setMessage("Are you sure you want to disband this sharing event?")
                         .setPositiveButton("YES", (dialog, which) -> disbandEvent(event_key))
-                        .setNegativeButton("NO", (dialog, which) ->{})
+                        .setNegativeButton("NO", (dialog, which) -> {
+                        })
                         .show();
-            }
-            else if(event.getPassengers().contains(mAuth.getUid())){        // You are the passenger and you want to quit the event
+            } else if (event.getPassengers().contains(mAuth.getUid())) {        // You are the passenger and you want to quit the event
                 new AlertDialog.Builder(EventActivity.this)
                         .setMessage("Are you sure you want to quit this sharing event?")
                         .setPositiveButton("YES", (dialog, which) -> quitEvent(event, event_key))
-                        .setNegativeButton("NO", (dialog, which) ->{})
+                        .setNegativeButton("NO", (dialog, which) -> {
+                        })
                         .show();
-            }
-            else{       // You are not the host or the passenger
+            } else {       // You are not the host or the passenger
                 new AlertDialog.Builder(EventActivity.this).setMessage("You are not the host or the passenger!").show();
             }
             return true;
-        }else if(id == R.id.share){
+        } else if (id == R.id.share) {
             //TODO share event
             return true;
-        }else if(id == R.id.join_event){
-            Event event = (Event)getIntent().getSerializableExtra("event");
-            String event_key = (String)getIntent().getStringExtra("event_key");
-            if(event.getHostID().equals(mAuth.getUid())){        // You are the host! Why do you have to join the event again?
+        } else if (id == R.id.join_event) {
+            Event event = (Event) getIntent().getSerializableExtra("event");
+            String event_key = (String) getIntent().getStringExtra("event_key");
+            if (event.getHostID().equals(mAuth.getUid())) {        // You are the host! Why do you have to join the event again?
                 new AlertDialog.Builder(EventActivity.this).setMessage("You are the host!").show();
-            }
-            else {
+            } else {
                 mDatabase.child("events").child(event_key).child("passengers").orderByValue().equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {      // have already joined the event
                             new AlertDialog.Builder(EventActivity.this).setMessage("You have already joined this event!").show();
                         } else {       // have not joined the event yet
-                            if(Integer.parseInt(event.getNumOfSeat()) > 0) {        // have vacancy
+                            if (Integer.parseInt(event.getNumOfSeat()) > 0) {        // have vacancy
                                 event.getPassengers().add(mAuth.getUid());
                                 int remaining_seat = Integer.parseInt(event.getNumOfSeat()) - 1;
                                 event.setNumOfSeat(String.valueOf(remaining_seat));
@@ -137,8 +136,7 @@ public class EventActivity extends AppCompatActivity {
                                 childUpdates.put(event_key, postValues);
                                 mDatabase.child("events").updateChildren(childUpdates);
                                 new AlertDialog.Builder(EventActivity.this).setMessage("Join event success").show();
-                            }
-                            else{
+                            } else {
                                 new AlertDialog.Builder(EventActivity.this).setMessage("Sorry, the event is currently full!").show();
                             }
                         }
@@ -151,20 +149,20 @@ public class EventActivity extends AppCompatActivity {
                 });
             }
             return true;
-        }else if(id == android.R.id.home){
+        } else if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void disbandEvent(String event_key){
+    private void disbandEvent(String event_key) {
         mDatabase.child("events/").child(event_key).removeValue();
         Toast.makeText(getApplicationContext(), "Your event has been disbanded", Toast.LENGTH_SHORT).show();
         finish();
     }
 
-    private void quitEvent(Event event, String event_key){
+    private void quitEvent(Event event, String event_key) {
         event.getPassengers().remove(mAuth.getUid());
         int remaining_seat = Integer.parseInt(event.getNumOfSeat()) + 1;
         event.setNumOfSeat(String.valueOf(remaining_seat));
@@ -173,6 +171,14 @@ public class EventActivity extends AppCompatActivity {
         childUpdates.put(event_key, postValues);
         mDatabase.child("events").updateChildren(childUpdates);
         new AlertDialog.Builder(EventActivity.this).setMessage("You have quited the event").show();
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter.addFrag(new FragmentInfo());
+        mSectionsPagerAdapter.addFrag(new FragmentMember());
+        mSectionsPagerAdapter.addFrag(new FragmentChatroom());
+        viewPager.setAdapter(mSectionsPagerAdapter);
     }
 
     public static class PlaceholderFragment extends Fragment {
@@ -205,16 +211,6 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
-
-    private void setupViewPager(ViewPager viewPager) {
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mSectionsPagerAdapter.addFrag(new FragmentInfo());
-        mSectionsPagerAdapter.addFrag(new FragmentMember());
-        mSectionsPagerAdapter.addFrag(new FragmentChatroom());
-        viewPager.setAdapter(mSectionsPagerAdapter);
-    }
-
-
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         //private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -237,7 +233,6 @@ public class EventActivity extends AppCompatActivity {
             mFragmentList.add(fragment);
         }
     }
-
 
 
 }

@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private AppCompatButton b1;
-    private EditText ed1,ed2;
+    private EditText ed1, ed2;
     private TextView b2;
     private SharedPreferences mPrefs;
 
@@ -26,21 +26,21 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPrefs = getSharedPreferences("login", MODE_PRIVATE);
-        if (mPrefs.getBoolean("is_logged_in",false)) {
+        if (mPrefs.getBoolean("is_logged_in", false)) {
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
         }
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
-        ed1 = (EditText)findViewById(R.id.email);
-        ed2 = (EditText)findViewById(R.id.password);
+        ed1 = (EditText) findViewById(R.id.email);
+        ed2 = (EditText) findViewById(R.id.password);
 
         b1 = (AppCompatButton) findViewById(R.id.button);
-        b2 = (TextView)findViewById(R.id.button2);
+        b2 = (TextView) findViewById(R.id.button2);
 
         b1.setOnClickListener((v) -> {  //login
-            if (loginCheck(ed1.getText().toString(), ed2.getText().toString())){
+            if (loginCheck(ed1.getText().toString(), ed2.getText().toString())) {
                 signIn(ed1.getText().toString(), ed2.getText().toString());
             }
         });
@@ -52,29 +52,28 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
     }
 
-    private void signIn(String email, String password){
+    private void signIn(String email, String password) {
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getInstance().getCurrentUser();
-                        if(user.isEmailVerified()){
+                        if (user.isEmailVerified()) {
                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
                             mPrefs = getSharedPreferences("login", MODE_PRIVATE);
                             SharedPreferences.Editor editor = mPrefs.edit();
 //                            editor.putString("userID", user.getUid());
-                            editor.putBoolean("is_logged_in",true);
+                            editor.putBoolean("is_logged_in", true);
                             editor.apply();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Email is not verified, please check your email",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Email is not verified, please check your email", Toast.LENGTH_SHORT).show();
                             mAuth.signOut();
                             finish();
                             Intent intent = getIntent();
@@ -88,10 +87,10 @@ public class LoginActivity extends AppCompatActivity {
         // [END sign_in_with_email]
     }
 
-    private boolean loginCheck(String email_, String pw_){
+    private boolean loginCheck(String email_, String pw_) {
         boolean haveError = false;
 
-        if (TextUtils.isEmpty(email_)){
+        if (TextUtils.isEmpty(email_)) {
             ed1.setError("Please enter your email");
             ed1.requestFocus();
             haveError = true;

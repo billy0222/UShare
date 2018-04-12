@@ -6,19 +6,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/profile"
             android:title="Profile" />
         <item
             android:id="@+id/nav_follow"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Follower" />
+            android:icon="@drawable/following"
+            android:title="Following" />
         <item
             android:id="@+id/liveView"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/liveview"
             android:title="Live View of Bus Stations" />
         <item
             android:id="@+id/nav_scheduler"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/schedule"
             android:title="Scheduler System" />
     </group>
 
@@ -26,12 +26,12 @@
         <menu>
             <item
                 android:id="@+id/nav_trip"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Your trip" />
+                android:icon="@drawable/history"
+                android:title="My trip" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Logout" />
+                android:icon="@drawable/logout"
+                android:title="Sign out" />
         </menu>
     </item>
 
