@@ -53,14 +53,14 @@
             android:name=".LiveView"
             android:label="Bus Station Live View" />
         <activity android:name=".AutocompleteActivity" />
-<<<<<<< HEAD
+
         <activity
             android:name=".RateUserActivity"
             android:label="@string/title_activity_rate_user" />
         <activity
             android:name=".RatingActivity"
             android:label="RatingActivity" />
-=======
+
         <activity android:name=".SchedulerActivity" />
         <activity android:name=".AddScheduleActivity" />
 
@@ -68,7 +68,6 @@
             android:name=".SchedulerService"
             android:enabled="true"
             android:exported="true" />
->>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
     </application>
 
 </manifest>

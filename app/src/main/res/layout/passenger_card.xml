@@ -43,11 +43,8 @@
             android:layout_below="@id/host"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-<<<<<<< HEAD
-=======
             android:layout_marginTop="25dp"
             android:layout_toRightOf="@id/passenger_pic"
->>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
             android:gravity="end"
             android:orientation="horizontal">
 

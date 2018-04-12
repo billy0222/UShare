@@ -36,25 +36,14 @@ public class FragmentMember extends Fragment {
     private DatabaseReference mDatabase; //instance of Database
 
     private CircleImageView hostPic;
-<<<<<<< HEAD
     private TextView hostName, hostPlate, rate_me_host;
-    private ImageView star1,star2,star3,star4,star5;
-    private LinearLayout host_star;
-=======
-    private TextView hostName;
-    private TextView hostPlate;
     private ImageView star1, star2, star3, star4, star5;
->>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
+    private LinearLayout host_star;
+
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<User> myDataset;
     private ArrayList<String> myDatasetID;
-<<<<<<< HEAD
     private ArrayList<String> passengerID;
-    
-=======
->>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
 
 
     public FragmentMember() {
@@ -80,12 +69,10 @@ public class FragmentMember extends Fragment {
         myDataset = new ArrayList<>();
         myDatasetID = new ArrayList<>();
         passengerID = new ArrayList<>();
-        mRecyclerView = view.findViewById(R.id.recyclerView_passenger);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MyAdapter(myDataset);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView = view.findViewById(R.id.recyclerView_passenger);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(new MyAdapter(myDataset));
 
         String event_key = getActivity().getIntent().getStringExtra("event_key");
         mDatabase.child("events/").child(event_key).child("passengers").addChildEventListener(new ChildEventListener() {        // Passengers details
@@ -148,13 +135,10 @@ public class FragmentMember extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-<<<<<<< HEAD
-        Event event = (Event)getActivity().getIntent().getSerializableExtra("event");
-        mDatabase.child("users").child(event.getHostID()).addListenerForSingleValueEvent(new ValueEventListener() {    //Host details
-=======
+
         Event event = (Event) getActivity().getIntent().getSerializableExtra("event");
         mDatabase.child("users/").child(event.getHostID()).addListenerForSingleValueEvent(new ValueEventListener() {    //Host details
->>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(hostPic);
@@ -187,11 +171,10 @@ public class FragmentMember extends Fragment {
         });
     }
 
-<<<<<<< HEAD
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private ArrayList<User> mDataset;
 
-        public class ViewHolder extends RecyclerView.ViewHolder{
+        public class ViewHolder extends RecyclerView.ViewHolder {
             public CircleImageView passengerPic;
             public TextView passengerName;
             public ImageView passengerStar1, passengerStar2, passengerStar3, passengerStar4, passengerStar5;
@@ -199,7 +182,7 @@ public class FragmentMember extends Fragment {
             public TextView passenger_rate_me;
             public LinearLayout passenger_star;
 
-            public ViewHolder(View v){
+            public ViewHolder(View v) {
                 super(v);
                 passengerName = v.findViewById(R.id.passenger_name);
                 passengerPic = v.findViewById(R.id.passenger_pic);
@@ -219,17 +202,17 @@ public class FragmentMember extends Fragment {
             }
         }
 
-        public MyAdapter(ArrayList<User> mDataset){
+        public MyAdapter(ArrayList<User> mDataset) {
             this.mDataset = mDataset;
         }
 
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.passenger_card, parent, false);
             ViewHolder vh = new ViewHolder(v);
             return vh;
         }
 
-        public void onBindViewHolder(ViewHolder holder, int position){
+        public void onBindViewHolder(ViewHolder holder, int position) {
             holder.passengerName.setText(mDataset.get(position).getUsername());
             Picasso.get().load(mDataset.get(position).getAvatar()).into(holder.passengerPic);
             mDatabase.child("users").child(passengerID.get(position)).child("rating").addValueEventListener(new ValueEventListener() {
@@ -245,31 +228,20 @@ public class FragmentMember extends Fragment {
             });
         }
 
-        public int getItemCount(){
+        public int getItemCount() {
             return mDataset.size();
         }
     }
 
-    public void showStarFromRating(String rating, TextView words, ImageView star1, ImageView star2, ImageView star3, ImageView star4, ImageView star5){
-        if(rating.equals("")){       // user hasn't received any rating now
+    public void showStarFromRating(String rating, TextView words, ImageView star1, ImageView star2, ImageView star3, ImageView star4, ImageView star5) {
+        if (rating.equals("")) {       // user hasn't received any rating now
             star1.setImageResource(R.drawable.star_none);
             star2.setImageResource(R.drawable.star_none);
             star3.setImageResource(R.drawable.star_none);
             star4.setImageResource(R.drawable.star_none);
             star5.setImageResource(R.drawable.star_none);
             words.setText("Be the first to give rating!");
-        }
-        else{       // user has rating
-=======
-    public void showStarFromRating(String rating, ImageView star1, ImageView star2, ImageView star3, ImageView star4, ImageView star5) {
-        if (rating.equals("")) {       // user hasn't received any rating now
-            star1.setVisibility(View.INVISIBLE);
-            star2.setVisibility(View.INVISIBLE);
-            star3.setVisibility(View.INVISIBLE);
-            star4.setVisibility(View.INVISIBLE);
-            star5.setVisibility(View.INVISIBLE);
         } else {       // user has rating
->>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
             double user_rating = Double.parseDouble(rating);
             if (user_rating == 5.0) {
                 star1.setImageResource(R.drawable.star_filled);
@@ -337,47 +309,6 @@ public class FragmentMember extends Fragment {
                 star3.setImageResource(R.drawable.star_none);
                 star4.setImageResource(R.drawable.star_none);
                 star5.setImageResource(R.drawable.star_none);
-            }
-        }
-    }
-
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        private ArrayList<User> mDataset;
-
-        public MyAdapter(ArrayList<User> mDataset) {
-            this.mDataset = mDataset;
-        }
-
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.passenger_card, parent, false);
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
-
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.passengerName.setText(mDataset.get(position).getUsername());
-            Picasso.get().load(mDataset.get(position).getAvatar()).into(holder.passengerPic);
-            showStarFromRating(mDataset.get(position).getRating(), holder.passengerStar1, holder.passengerStar2, holder.passengerStar3, holder.passengerStar4, holder.passengerStar5);
-        }
-
-        public int getItemCount() {
-            return mDataset.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public CircleImageView passengerPic;
-            public TextView passengerName;
-            public ImageView passengerStar1, passengerStar2, passengerStar3, passengerStar4, passengerStar5;
-
-            public ViewHolder(View v) {
-                super(v);
-                passengerName = v.findViewById(R.id.passenger_name);
-                passengerPic = v.findViewById(R.id.passenger_pic);
-                passengerStar1 = v.findViewById(R.id.star1_passenger);
-                passengerStar2 = v.findViewById(R.id.star2_passenger);
-                passengerStar3 = v.findViewById(R.id.star3_passenger);
-                passengerStar4 = v.findViewById(R.id.star4_passenger);
-                passengerStar5 = v.findViewById(R.id.star5_passenger);
             }
         }
     }
