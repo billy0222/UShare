@@ -48,4 +48,5 @@
     <string name="men_only">MEN ONLY</string>
     <string name="menOnly">MEN ONLY</string>
     <string name="womenOnly">WOMEN ONLY</string>
+    <string name="title_activity_rate_user">RateUserActivity</string>
 </resources>

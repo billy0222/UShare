@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="lix5.ushare.RateUserActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/star1_rate_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_none" />
+            <ImageView
+                android:id="@+id/star2_rate_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_none" />
+            <ImageView
+                android:id="@+id/star3_rate_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_none" />
+            <ImageView
+                android:id="@+id/star4_rate_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_none" />
+            <ImageView
+                android:id="@+id/star5_rate_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_none" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comment"
+            android:textSize="20dp"
+            android:layout_weight="1"
+            android:layout_marginTop="40dp"/>
+        <EditText
+            android:id="@+id/comment_rate_user"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:hint="What do you want to say about him/her?" />
+        <Button
+            android:id="@+id/submit_rate_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="lix5.ushare.RatingActivity">
+    <item
+        android:id="@+id/rate"
+        android:icon="@drawable/rate_user"
+        android:orderInCategory="1"
+        android:title="Rate"
+        app:showAsAction="always" />
+</menu>

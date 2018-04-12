@@ -24,8 +24,6 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView edit;
     private de.hdodenhof.circleimageview.CircleImageView avatar;
 
-    private Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
         gender = findViewById(R.id.gender_profile);
         rating = findViewById(R.id.rating_profile);
         avatar = findViewById(R.id.avatar_profile);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         edit = findViewById(R.id.edit_profile);
 
         edit.setOnClickListener(view -> {
@@ -49,7 +47,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         mDatabase.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
