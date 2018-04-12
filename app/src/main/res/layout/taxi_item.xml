@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="4dp"
-    android:layout_margin="5dp">
+    android:layout_gravity="center"
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,14 +21,14 @@
             android:layout_marginRight="45dp"
             android:layout_marginStart="45dp"
             android:layout_marginTop="25dp"
-            android:src="@drawable/taxi_sign_icon" />
+            android:src="@drawable/taxi_item" />
 
         <ImageView
             android:id="@+id/passenger_taxiItem"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="25dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
             android:src="@drawable/passenger" />
 
         <ImageView
@@ -67,9 +66,9 @@
             android:id="@+id/vacancy_taxiItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="155dp"
             android:layout_below="@id/passenger_taxiItem"
-            android:text="@string/vacancy"
+            android:layout_marginLeft="155dp"
+            android:text="@string/remain"
             android:textStyle="bold" />
 
         <TextView
@@ -87,8 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/gender_taxiItem"
-            android:gravity="center"
             android:layout_marginLeft="290dp"
+            android:gravity="center"
             android:text="@string/men_only"
             android:textStyle="bold" />
 
@@ -126,8 +125,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/fromText_taxiItem"
             android:layout_alignStart="@+id/fromText_taxiItem"
-            android:lines="2"
             android:layout_below="@+id/fromText_taxiItem"
+            android:lines="2"
             android:text="[To..............................] " />
 
         <TextView
@@ -154,10 +153,10 @@
             android:id="@+id/remark_taxiItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remark:"
-            android:textStyle="bold"
             android:layout_below="@id/dateTime_taxiItem"
-            android:layout_marginTop="9dp"/>
+            android:layout_marginTop="9dp"
+            android:text="Remark:"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/message_taxiItem"

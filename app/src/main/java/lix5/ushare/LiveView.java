@@ -8,23 +8,24 @@ import android.webkit.WebViewClient;
 public class LiveView extends AppCompatActivity {
     private WebView webView;
 
-    public LiveView(){}
+    public LiveView() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
 
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
-            public void onPageFinished(WebView view, String url)
-            {
+            public void onPageFinished(WebView view, String url) {
                 webView.loadUrl("javascript:(function() { " +
-                        "jwplayer().setFullscreen(true);"+
-                        "jwplayer().setControls(false);"+
+                        "jwplayer().setFullscreen(true);" +
+                        "jwplayer().setControls(false);" +
                         "})()");
             }
         });
@@ -33,6 +34,10 @@ public class LiveView extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
 
 }

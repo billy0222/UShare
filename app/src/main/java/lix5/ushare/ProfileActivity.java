@@ -3,7 +3,6 @@ package lix5.ushare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference("users/");
@@ -38,16 +38,22 @@ public class ProfileActivity extends AppCompatActivity {
         gender = findViewById(R.id.gender_profile);
         rating = findViewById(R.id.rating_profile);
         avatar = findViewById(R.id.avatar_profile);
+<<<<<<< HEAD
         Toolbar toolbar = findViewById(R.id.toolbar);
+=======
+>>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
         edit = findViewById(R.id.edit_profile);
 
         edit.setOnClickListener(view -> {
             startActivity(new Intent(ProfileActivity.this, ProfileEditActivity.class));
         });
 
+<<<<<<< HEAD
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+=======
+>>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
 
         mDatabase.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -68,13 +74,15 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+
+
     protected void onStart() {
         super.onStart();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        finish();
         return true;
     }
 }

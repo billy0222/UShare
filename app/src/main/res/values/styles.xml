@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -27,5 +28,10 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="SwitchTheme" parent="Theme.AppCompat.Light">
+        <item name="android:colorControlActivated">#148E13</item>
+    </style>
+
+    <style name="nightTheme" parent="@android:style/Theme.DeviceDefault.Dialog.Alert"></style>
 
 </resources>

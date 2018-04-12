@@ -6,5 +6,5 @@
         android:id="@+id/action_event"
         android:icon="@drawable/car_sharing"
         android:title="@string/sharing_event"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 </menu>

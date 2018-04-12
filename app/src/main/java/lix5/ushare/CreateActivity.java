@@ -12,7 +12,6 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -44,6 +43,9 @@ import static lix5.ushare.MainActivity.DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE;
 import static lix5.ushare.MainActivity.PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE;
 
 public class CreateActivity extends AppCompatActivity {
+    String date_time = "";
+    int mYear, mMonth, mDay, mHour, mMinute;
+    Boolean typeIsCar, typeIsTaxi, boysOnly = false, girlsOnly = false, eventIsRequest = false;
     private FirebaseAuth mAuth; //instance of FirebaseAuth
     private DatabaseReference mDatabase; //instance of Database
     private EditText seats, remarks_input;
@@ -53,9 +55,6 @@ public class CreateActivity extends AppCompatActivity {
     private TextView createPickup, createDropoff, createTime, errorMessage;
     private String TAG = "Create Autocomplete";
     private Button create;
-    String date_time = "";
-    int mYear, mMonth, mDay, mHour, mMinute;
-    Boolean typeIsCar, typeIsTaxi, boysOnly = false , girlsOnly = false, eventIsRequest = false;
     private String pickUpID, dropOffID;
 
 
@@ -78,11 +77,11 @@ public class CreateActivity extends AppCompatActivity {
         isRequest = (CheckBox) findViewById(R.id.isRequest);
         create = findViewById(R.id.create);
         errorMessage = findViewById(R.id.errorMessage_createEvent);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupRouteInputBar();
 
         seats.setFilters(new InputFilter[]{new InputFilterMinMax("1", "10")});
-        add.setOnClickListener(v->{
+        add.setOnClickListener(v -> {
             if (!String.valueOf(seats.getText()).equals("10")) {
                 seats.setText(String.valueOf(Integer.parseInt(seats.getText().toString()) + 1));
                 remove.setImageDrawable(getResources().getDrawable(R.drawable.ic_remove_circle_outline_black_18dp));
@@ -90,17 +89,17 @@ public class CreateActivity extends AppCompatActivity {
                     add.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_circle_outline_gray_18dp));
             }
         });
-        remove.setOnClickListener(v->{
-            if (!String.valueOf(seats.getText()).equals("1")){
-                seats.setText(String.valueOf(Integer.parseInt(seats.getText().toString())-1));
+        remove.setOnClickListener(v -> {
+            if (!String.valueOf(seats.getText()).equals("1")) {
+                seats.setText(String.valueOf(Integer.parseInt(seats.getText().toString()) - 1));
                 add.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_circle_outline_black_18dp));
                 if (String.valueOf(seats.getText()).equals("1"))
-                 remove.setImageDrawable(getResources().getDrawable(R.drawable.ic_remove_circle_outline_gray_18dp));
+                    remove.setImageDrawable(getResources().getDrawable(R.drawable.ic_remove_circle_outline_gray_18dp));
             }
         });
 
-        create.setOnClickListener(v->{
-            if(!validEventCheck()) {
+        create.setOnClickListener(v -> {
+            if (!validEventCheck()) {
                 mDatabase.child("users/").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -122,21 +121,27 @@ public class CreateActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
     private void setupRouteInputBar() {
         // Setup autocomplete
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry("HK").build();
         createPickup = (TextView) findViewById(R.id.create_pick_up);
-        createPickup.setOnClickListener(v->{
+        createPickup.setOnClickListener(v -> {
             Intent intent = new Intent(CreateActivity.this, AutocompleteActivity.class);
             startActivityForResult(intent, PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
         createDropoff = (TextView) findViewById(R.id.create_drop_off);
-        createDropoff.setOnClickListener(v->{
+        createDropoff.setOnClickListener(v -> {
             Intent intent = new Intent(CreateActivity.this, AutocompleteActivity.class);
             startActivityForResult(intent, DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
         createTime = (TextView) findViewById(R.id.create_time);
-        createTime.setOnClickListener(v-> datePicker());
+        createTime.setOnClickListener(v -> datePicker());
 
         // Set icons
         createPickup.getViewTreeObserver()
@@ -174,8 +179,8 @@ public class CreateActivity extends AppCompatActivity {
                 });
     }
 
-    public void onTypeSelected(View view){
-        if(view.getId()==R.id.taxi_button){
+    public void onTypeSelected(View view) {
+        if (view.getId() == R.id.taxi_button) {
             taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_icon));
             carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_gray_48dp));
             taxiButton.setSelected(true);
@@ -184,12 +189,12 @@ public class CreateActivity extends AppCompatActivity {
             typeIsTaxi = true;
             typeIsCar = false;
         }
-        if(view.getId()==R.id.car_button){
+        if (view.getId() == R.id.car_button) {
             carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_black_48dp));
             taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_gray));
             carButton.setSelected(true);
             //TODO if no car plate -> isRequest.setChecked(true);
-            if(!isRequest.isClickable()){
+            if (!isRequest.isClickable()) {
                 isRequest.setClickable(true);
             }
             typeIsTaxi = false;
@@ -204,7 +209,7 @@ public class CreateActivity extends AppCompatActivity {
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dpd = new DatePickerDialog(this, (DatePickerDialog.OnDateSetListener) (DatePicker view, int year, int monthOfYear, int dayOfMonth) -> {
-            Date date = new Date(year-1900, monthOfYear, dayOfMonth);
+            Date date = new Date(year - 1900, monthOfYear, dayOfMonth);
             timePicker(date);
         }, mYear, mMonth, mDay);
         dpd.getDatePicker().setMinDate(c.getTimeInMillis());
@@ -228,10 +233,10 @@ public class CreateActivity extends AppCompatActivity {
             mMinute = minute;
             date.setHours(hourOfDay);
             date.setMinutes(minute);
-            if(date.before(c.getTime()))
+            if (date.before(c.getTime()))
                 new AlertDialog.Builder(CreateActivity.this).setMessage("The pick up time can only be future.").setPositiveButton("OK", (dialog, which) -> datePicker()).show();
             else
-                date_time = (date.getYear()+1900 == c.get(Calendar.YEAR) ? new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US).format(date) : new SimpleDateFormat("EE, dd MMMM yyyy, HH:mm", Locale.US).format(date));
+                date_time = (date.getYear() + 1900 == c.get(Calendar.YEAR) ? new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US).format(date) : new SimpleDateFormat("EE, dd MMMM yyyy, HH:mm", Locale.US).format(date));
             createTime.setText(date_time);
 
         }, mHour, mMinute, true);
@@ -281,33 +286,57 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void onCheckboxClicked(View view) {
-        if(view.getId()==R.id.boys) {
+        if (view.getId() == R.id.boys) {
             girls.setChecked(false);
             boysOnly = true;
             girlsOnly = false;
         }
-        if(view.getId()==R.id.girls) {
+        if (view.getId() == R.id.girls) {
             boys.setChecked(false);
             boysOnly = false;
             girlsOnly = true;
         }
     }
 
-    public void onCheckboxClickedRequest(View view){
-        if(view.getId() == R.id.isRequest){
+    public void onCheckboxClickedRequest(View view) {
+        if (view.getId() == R.id.isRequest) {
             eventIsRequest = isRequest.isChecked();
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            Intent intent = new Intent();
-            intent = new Intent(CreateActivity.this, MainActivity.class);
-            startActivity(intent);
-            this.finish();
+    public String typeToString(Boolean taxi, Boolean car) {
+        if (taxi && !car) {
+            return "Taxi";
+        } else if (car && !taxi) {
+            return "Car";
         }
-        return super.onKeyDown(keyCode, event);
+        return "No such type";
+    }
+
+    public boolean validEventCheck() {
+        Boolean haveError = false;
+        if (TextUtils.isEmpty(createPickup.getText().toString())) {
+            createPickup.setError("Please enter pick up station");
+            createPickup.requestFocus();
+            haveError = true;
+        }
+        if (TextUtils.isEmpty(createDropoff.getText().toString())) {
+            createDropoff.setError("Please enter drop off station");
+            createDropoff.requestFocus();
+            haveError = true;
+        }
+        if (TextUtils.isEmpty(createTime.getText().toString())) {
+            createTime.setError("Please enter depart time");
+            createTime.requestFocus();
+            haveError = true;
+        }
+        if (!taxiButton.isSelected() && !carButton.isSelected()) {
+            errorMessage.setVisibility(View.VISIBLE);
+            haveError = true;
+        } else {
+            errorMessage.setVisibility(View.GONE);
+        }
+        return haveError;
     }
 
     public class InputFilterMinMax implements InputFilter {
@@ -322,54 +351,20 @@ public class CreateActivity extends AppCompatActivity {
             this.min = Integer.parseInt(min);
             this.max = Integer.parseInt(max);
         }
+
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             try {
                 int input = Integer.parseInt(dest.toString() + source.toString());
                 if (isInRange(min, max, input))
                     return null;
-            } catch (NumberFormatException nfe) { }
+            } catch (NumberFormatException nfe) {
+            }
             return "";
         }
 
         private boolean isInRange(int a, int b, int c) {
             return b > a ? c >= a && c <= b : c >= b && c <= a;
         }
-    }
-
-    public String typeToString(Boolean taxi, Boolean car){
-        if(taxi && !car) {
-            return "Taxi";
-        }
-        else if(car && !taxi) {
-            return "Car";
-        }
-        return "No such type";
-    }
-
-    public boolean validEventCheck(){
-        Boolean haveError = false;
-        if(TextUtils.isEmpty(createPickup.getText().toString())){
-            createPickup.setError("Please enter pick up station");
-            createPickup.requestFocus();
-            haveError = true;
-        }
-        if(TextUtils.isEmpty(createDropoff.getText().toString())){
-            createDropoff.setError("Please enter drop off station");
-            createDropoff.requestFocus();
-            haveError = true;
-        }
-        if(TextUtils.isEmpty(createTime.getText().toString())){
-            createTime.setError("Please enter depart time");
-            createTime.requestFocus();
-            haveError = true;
-        }
-        if(!taxiButton.isSelected() && !carButton.isSelected()){
-            errorMessage.setVisibility(View.VISIBLE);
-            haveError = true;
-        }else{
-            errorMessage.setVisibility(View.GONE);
-        }
-        return haveError;
     }
 }

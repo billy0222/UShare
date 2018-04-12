@@ -18,33 +18,33 @@ import java.util.List;
 public class PlaceService {
     private String API_KEY;
 
-    public PlaceService(String apikey){
+    public PlaceService(String apikey) {
         this.API_KEY = apikey;
     }
 
-    public List<Place> findPlaces(double latitude, double longitude){
+    public List<Place> findPlaces(double latitude, double longitude) {
         String urlString = makeUrl(latitude, longitude);
         ArrayList<Place> arrayList = new ArrayList<>();
-        try{
+        try {
             String json = getJSON(urlString);
             JSONObject object = new JSONObject(json);
             JSONArray array = object.getJSONArray("results");
-            for(int i = 0 ; i < array.length() ; i++){
-                try{
+            for (int i = 0; i < array.length(); i++) {
+                try {
                     Place place = Place.getNearPlaceJsonToPlace((JSONObject) array.get(i));
                     arrayList.add(place);
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }
             return arrayList;
-        }catch (JSONException ex){
+        } catch (JSONException ex) {
 
         }
         return arrayList;
     }
 
-    public String makeUrl(double latitude, double longitude){
+    public String makeUrl(double latitude, double longitude) {
         StringBuilder urlString = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
 
         urlString.append("&location=");
@@ -57,23 +57,23 @@ public class PlaceService {
         return urlString.toString();
     }
 
-    protected String getJSON(String url){
+    protected String getJSON(String url) {
         return getUrlContents(url);
     }
 
-    private String getUrlContents(String theUrl){
+    private String getUrlContents(String theUrl) {
         StringBuilder content = new StringBuilder();
         Thread a = new Thread((Runnable) () -> {
-            try{
+            try {
                 URL url = new URL(theUrl);
                 URLConnection urlConnection = url.openConnection();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()), 8);
                 String line;
-                while ((line = bufferedReader.readLine()) != null){
+                while ((line = bufferedReader.readLine()) != null) {
                     content.append(line + "\n");
                 }
                 bufferedReader.close();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });

@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -54,7 +53,7 @@
             android:layout_marginTop="16dp"
             android:layout_toRightOf="@id/host_pic"
             android:text="Plate"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/host_rating_star"
@@ -63,8 +62,12 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/host"
             android:layout_centerVertical="true"
-            android:layout_marginTop="25dp"
             android:layout_marginRight="16dp"
+<<<<<<< HEAD
+=======
+            android:layout_marginTop="25dp"
+            android:layout_toRightOf="@id/host_pic"
+>>>>>>> becffca4bccfafcaac0a978e389310d928d6add7
             android:gravity="end"
             android:orientation="horizontal">
 
@@ -74,24 +77,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-20dp"
                 android:src="@drawable/star_filled" />
+
             <ImageView
                 android:id="@+id/star2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-20dp"
                 android:src="@drawable/star_filled" />
+
             <ImageView
                 android:id="@+id/star3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-20dp"
                 android:src="@drawable/star_filled" />
+
             <ImageView
                 android:id="@+id/star4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-20dp"
                 android:src="@drawable/star_filled" />
+
             <ImageView
                 android:id="@+id/star5"
                 android:layout_width="wrap_content"
@@ -125,10 +132,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/passenger"
+            android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             android:scrollbars="vertical" />
     </RelativeLayout>
 </ScrollView>

@@ -31,7 +31,7 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AutocompleteActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class AutocompleteActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final int PERMISSION_REQUEST_CODE = 100;
     private static final int PLACE_PICKER_REQUEST = 3;
     private GoogleApiClient mGoogleApiClient;
@@ -49,14 +49,15 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_autocomplete);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         readData();
         current = (TextView) findViewById(R.id.current);
         placePicker = (Button) findViewById(R.id.placePicker);
-        recentTextView[0] =(TextView) findViewById(R.id.recent1);
-        recentTextView[1] =(TextView) findViewById(R.id.recent2);
-        recentTextView[2] =(TextView) findViewById(R.id.recent3);
-        recentTextView[3] =(TextView) findViewById(R.id.recent4);
-        recentTextView[4] =(TextView) findViewById(R.id.recent5);
+        recentTextView[0] = (TextView) findViewById(R.id.recent1);
+        recentTextView[1] = (TextView) findViewById(R.id.recent2);
+        recentTextView[2] = (TextView) findViewById(R.id.recent3);
+        recentTextView[3] = (TextView) findViewById(R.id.recent4);
+        recentTextView[4] = (TextView) findViewById(R.id.recent5);
         recommend[0] = (TextView) findViewById(R.id.ch);
         recommend[1] = (TextView) findViewById(R.id.hh);
         recommend[2] = (TextView) findViewById(R.id.north);
@@ -69,7 +70,7 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
                 .Builder(this)
                 .addApi(Places.PLACE_DETECTION_API)
                 .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(this,0, this)
+                .enableAutoManage(this, 0, this)
                 .build();
         mGoogleApiClient.connect();
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry("HK").build();
@@ -88,7 +89,7 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
-        current.setOnClickListener(v->{
+        current.setOnClickListener(v -> {
             if (mGoogleApiClient.isConnected()) {
                 if (ContextCompat.checkSelfPermission(AutocompleteActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -100,8 +101,8 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
-        placePicker.setOnClickListener(v->{
-                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+        placePicker.setOnClickListener(v -> {
+            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
             try {
                 startActivityForResult(intentBuilder.build(AutocompleteActivity.this), PLACE_PICKER_REQUEST);
             } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
@@ -115,14 +116,14 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, array);
             placeResult.setResultCallback((PlaceBuffer places) -> {
                 if (places.getStatus().isSuccess() && places.getCount() > 0) {
-                    for(int i=0; i< places.getCount(); i++){
-                        recentPlaceName[i] = places.get(i).getAddress().toString()+ " " + places.get(i).getName();
+                    for (int i = 0; i < places.getCount(); i++) {
+                        recentPlaceName[i] = places.get(i).getAddress().toString() + " " + places.get(i).getName();
                         Log.i(TAG, "Recent  Place found: " + places.get(i).getName());
                     }
                     int k = 0;
-                    for(int i = recentPlaceID.size()-1; i>=0;i--){
+                    for (int i = recentPlaceID.size() - 1; i >= 0; i--) {
                         int j = i;
-                        recentTextView[k].setOnClickListener(v->{
+                        recentTextView[k].setOnClickListener(v -> {
                             returnResult(places.get(j));
                             places.release();
                         });
@@ -139,13 +140,13 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
         PendingResult<PlaceBuffer> recentResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, recommendID);
         recentResult.setResultCallback(places -> {
             if (places.getStatus().isSuccess() && places.getCount() > 0) {
-                for(int i=0; i<places.getCount() ; i++){
+                for (int i = 0; i < places.getCount(); i++) {
                     int j = i;
-                    recommend[i].setOnClickListener(v->{
+                    recommend[i].setOnClickListener(v -> {
                         returnResult(places.get(j));
                         places.release();
                     });
-                    recommendName[i] = places.get(i).getAddress().toString()+ " " + places.get(i).getName();
+                    recommendName[i] = places.get(i).getAddress().toString() + " " + places.get(i).getName();
                     recommend[i].setText(recommendName[i]);
                     //Log.i(TAG, "Place found: " + places.get(i).getName());
                 }
@@ -156,14 +157,20 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
     }
 
     @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this, data);
-                returnResult(place);
+            Place place = PlacePicker.getPlace(this, data);
+            returnResult(place);
         }
     }
 
-    public void returnResult(Place place){
+    public void returnResult(Place place) {
         Intent intent = new Intent();
         CharSequence result = place.getAddress().toString() + " " + place.getName();
         intent.putExtra("result", result);
@@ -173,13 +180,13 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
         setResult(RESULT_OK, intent);
         Log.i(TAG, "Place: " + place.getName());
 
-        if(!Arrays.asList(recommendID).contains(place.getId())){
+        if (!Arrays.asList(recommendID).contains(place.getId())) {
             if (recentPlaceID != null) {
-                for(int i = recentPlaceID.size()-1; i>=0;i--){
-                    if(recentPlaceID.get(i).equals(place.getId()))
+                for (int i = recentPlaceID.size() - 1; i >= 0; i--) {
+                    if (recentPlaceID.get(i).equals(place.getId()))
                         recentPlaceID.remove(i);
                 }
-                if (recentPlaceID.size()==5) {
+                if (recentPlaceID.size() == 5) {
                     recentPlaceID.remove(0);
                 }
             }
@@ -208,10 +215,10 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
 
         StringBuilder sb = new StringBuilder();
         String delim = "";
-        for (String s : list)
-        {
+        for (String s : list) {
             sb.append(delim);
-            sb.append(s);;
+            sb.append(s);
+            ;
             delim = ",";
         }
         return sb.toString();
@@ -223,13 +230,14 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
         return list;
     }
 
-    public void saveData(){
+    public void saveData() {
         SharedPreferences recent = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = recent.edit();
         String s = convertToString(recentPlaceID);
-        editor.putString("recentPlace",s).apply();
+        editor.putString("recentPlace", s).apply();
     }
-    public void readData(){
+
+    public void readData() {
         SharedPreferences recent = PreferenceManager.getDefaultSharedPreferences(this);
         String data = recent.getString("recentPlace", null);
         if (data != null) {

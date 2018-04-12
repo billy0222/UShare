@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by Kevin on 1/4/2018.
  */
 
-public class Event implements Serializable{
+public class Event implements Serializable {
     private String hostID;
     private String hostName;
     private List<String> passengers = new ArrayList<>();
@@ -27,11 +27,11 @@ public class Event implements Serializable{
     private String pickUpID;
     private String dropOffID;
 
-    public Event(){
+    public Event() {
 
     }
 
-    public Event(String hostID, String hostName, String pickUP, String dropOff, String dateTime, String numOfSeat, String type, String boyOnly, String girlOnly, String message, String isRequest, String pickUpID, String dropOffID){
+    public Event(String hostID, String hostName, String pickUP, String dropOff, String dateTime, String numOfSeat, String type, String boyOnly, String girlOnly, String message, String isRequest, String pickUpID, String dropOffID) {
         this.hostID = hostID;
         this.hostName = hostName;
         this.passengers = new ArrayList<>();
@@ -52,11 +52,15 @@ public class Event implements Serializable{
     public List<ChatMessage> getChatMessages() {
         return chatMessages;
     }
-    public String getHostID(){ return hostID;
+
+    public String getHostID() {
+        return hostID;
     }
+
     public String getDateTime() {
         return dateTime;
     }
+
     public String getBoyOnly() {
         return boyOnly;
     }
@@ -85,7 +89,7 @@ public class Event implements Serializable{
         return numOfSeat;
     }
 
-    public void setNumOfSeat(String numOfSeat){
+    public void setNumOfSeat(String numOfSeat) {
         this.numOfSeat = numOfSeat;
     }
 
@@ -109,7 +113,7 @@ public class Event implements Serializable{
         return dropOffID;
     }
 
-    public Map<String, Object> toMapEvent(){
+    public Map<String, Object> toMapEvent() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("hostID", hostID);
         result.put("hostName", hostName);

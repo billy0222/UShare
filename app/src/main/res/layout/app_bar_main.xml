@@ -47,6 +47,7 @@
                     android:textColor="@android:color/black"
                     android:textColorHint="@android:color/darker_gray"
                     android:textSize="20sp" />
+
                 <ImageView
                     android:id="@+id/search_pick_up_cancel"
                     android:layout_width="25dp"
@@ -54,8 +55,9 @@
                     android:layout_alignParentTop="true"
                     android:layout_toLeftOf="@+id/up_down_arrow"
                     android:layout_toStartOf="@+id/up_down_arrow"
-                    android:src="@drawable/cross"
-                    android:elevation="5dp"/>
+                    android:elevation="5dp"
+                    android:src="@drawable/cross" />
+
                 <TextView
                     android:id="@+id/search_drop_off"
                     android:layout_width="match_parent"
@@ -70,6 +72,7 @@
                     android:textColor="@android:color/black"
                     android:textColorHint="@android:color/darker_gray"
                     android:textSize="20sp" />
+
                 <ImageView
                     android:id="@+id/search_drop_off_cancel"
                     android:layout_width="25dp"
@@ -77,8 +80,9 @@
                     android:layout_above="@+id/search_time"
                     android:layout_alignLeft="@+id/search_pick_up_cancel"
                     android:layout_alignStart="@+id/search_pick_up_cancel"
-                    android:src="@drawable/cross"
-                    android:elevation="5dp"/>
+                    android:elevation="5dp"
+                    android:src="@drawable/cross" />
+
                 <TextView
                     android:id="@+id/search_time"
                     android:layout_width="match_parent"
@@ -100,8 +104,8 @@
                     android:layout_alignLeft="@+id/search_drop_off_cancel"
                     android:layout_alignStart="@+id/search_drop_off_cancel"
                     android:layout_alignTop="@+id/search_time"
-                    android:src="@drawable/cross"
-                    android:elevation="5dp"/>
+                    android:elevation="5dp"
+                    android:src="@drawable/cross" />
 
                 <ImageView
                     android:id="@+id/up_down_arrow"
@@ -134,7 +138,7 @@
                 android:background="@color/colorPrimary"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/colorAccent"
-                app:tabTextColor="#FFFFFF"/>
+                app:tabTextColor="#FFFFFF" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -145,7 +149,7 @@
         android:id="@+id/vp_pages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/sendMessage"
