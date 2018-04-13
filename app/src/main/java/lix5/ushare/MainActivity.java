@@ -412,10 +412,8 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        if (id == R.id.action_event) {
-            startActivity(new Intent(MainActivity.this, EventActivity.class));
-            return true;
+        if (id == R.id.action_event){
+            startActivity(new Intent(MainActivity.this, MyEventActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -430,7 +428,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
             case R.id.nav_follow:
-
                 break;
             case R.id.liveView:
                 startActivity(new Intent(MainActivity.this, LiveView.class));
@@ -439,7 +436,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, SchedulerActivity.class));
                 break;
             case R.id.nav_trip:
-
+                startActivity(new Intent(MainActivity.this, MyEventActivity.class));
                 break;
             case R.id.nav_logout:
                 logout();

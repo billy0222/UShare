@@ -64,8 +64,6 @@ public class EventActivity extends AppCompatActivity {
 
         RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_passenger);
         //TODO adapter
-
-
     }
 
 

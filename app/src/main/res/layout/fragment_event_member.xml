@@ -56,6 +56,7 @@
             android:visibility="visible" />
 
         <LinearLayout
+            android:id="@+id/host_rating_star"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
@@ -103,6 +104,14 @@
                 android:src="@drawable/star_filled" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/host_rate_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/host_rating_star"
+            android:layout_alignEnd="@+id/host_rating_star"
+            android:layout_alignRight="@+id/host_rating_star"
+            android:text="Rate me!" />
 
         <TextView
             android:id="@+id/passenger"
