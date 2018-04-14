@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +36,6 @@ import static android.content.ContentValues.TAG;
 import static android.view.View.GONE;
 
 public class FragmentTaxi extends Fragment {
-    private FirebaseAuth mAuth; //instance of FirebaseAuth
     private DatabaseReference mDatabase; //instance of Database
     private ArrayList<Event> myDataset;
     private ArrayList<String> myDatasetID;
@@ -52,7 +50,6 @@ public class FragmentTaxi extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         myDataset = new ArrayList<>();
         myDatasetID = new ArrayList<>();
@@ -70,9 +67,12 @@ public class FragmentTaxi extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Event tempEvent = dataSnapshot.getValue(Event.class);
-                myDataset.add(tempEvent);
-                myDatasetID.add(dataSnapshot.getKey());
-                rv.getAdapter().notifyItemInserted(myDataset.size() - 1);
+                if(isAfterToday(tempEvent)) {
+                    int positionToInsert = sorting(tempEvent);
+                    myDataset.add(positionToInsert, tempEvent);
+                    myDatasetID.add(positionToInsert, dataSnapshot.getKey());
+                    rv.getAdapter().notifyItemInserted(positionToInsert);
+                }
             }
 
             @Override
@@ -113,9 +113,53 @@ public class FragmentTaxi extends Fragment {
 
             }
         });
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_car, container, false);
         return rv;
+    }
+
+    public boolean isAfterToday(Event event){
+        Date eventDateTime = null;
+        DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
+        try {
+            eventDateTime= formatter.parse(event.getDateTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar eventDateTimeToCalendar = Calendar.getInstance();
+        eventDateTimeToCalendar.setTime(eventDateTime);
+        eventDateTimeToCalendar.set(Calendar.YEAR, 2018);
+        Calendar currentTimeToCalendar = Calendar.getInstance();
+        currentTimeToCalendar.setTime(new Date());
+
+        return eventDateTimeToCalendar.after(currentTimeToCalendar);
+    }
+
+    public int sorting(Event event){
+        int locationToInsert = 0;
+        Date event1DateTime = null;
+        Date event2DateTime = null;
+        DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
+
+        if(myDataset.isEmpty()){      // no element
+            return 0;
+        }
+        else{
+            for(int i = 0 ; i < myDataset.size() ; i++){
+                try {
+                    event1DateTime = formatter.parse(event.getDateTime());
+                    event2DateTime = formatter.parse(myDataset.get(i).getDateTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if(event2DateTime.compareTo(event1DateTime) == 0 || event2DateTime.compareTo(event1DateTime) == 1) {
+                    locationToInsert = i;
+                    break;
+                }
+                if(i == myDataset.size() - 1){      // add at the last position
+                    locationToInsert = myDataset.size();
+                }
+            }
+            return locationToInsert;
+        }
     }
 
     public void filter(String pickUpID, String dropOffID, CharSequence time, double pickUpLat, double pickUpLng, double dropOffLat, double dropOffLng) {
@@ -334,7 +378,5 @@ public class FragmentTaxi extends Fragment {
                 });
             }
         }
-
     }
-
 }

@@ -1,5 +1,6 @@
 package lix5.ushare;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class EventActivity extends AppCompatActivity {
 
@@ -61,11 +63,21 @@ public class EventActivity extends AppCompatActivity {
         for (int i = 0; i < iconID.length; i++) {
             tabLayout.getTabAt(i).setIcon(iconID[i]);
         }
-
-        RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_passenger);
+        if(getIntent().getBooleanExtra("event_is_history", false)){
+            invalidateOptionsMenu();
+        }
         //TODO adapter
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        if(getIntent().getBooleanExtra("event_is_history", false)) {
+            for (int i = 0; i < menu.size(); i++) {
+                menu.getItem(i).setVisible(false);
+            }
+        }
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,6 +93,7 @@ public class EventActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -160,6 +173,7 @@ public class EventActivity extends AppCompatActivity {
         finish();
     }
 
+    @SuppressLint("RestrictedApi")
     private void quitEvent(Event event, String event_key) {
         event.getPassengers().remove(mAuth.getUid());
         int remaining_seat = Integer.parseInt(event.getNumOfSeat()) + 1;
