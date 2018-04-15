@@ -77,5 +77,92 @@
             android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
             android:hint="@string/remarks" />
+
+        <TextView
+            android:id="@+id/placeInfo"
+            style="@style/sectionHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/remarks_input"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/place_information" />
+
+        <TextView
+            android:id="@+id/placeInfo_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeInfo"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:text="distance: " />
+
+        <TextView
+            android:id="@+id/placeInfo_distance_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeInfo"
+            android:layout_toEndOf="@id/placeInfo_distance"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/distance" />
+
+        <TextView
+            android:id="@+id/placeInfo_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeInfo_distance"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:text="Duration: " />
+
+        <TextView
+            android:id="@+id/placeInfo_duration_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeInfo_distance"
+            android:layout_toEndOf="@id/placeInfo_duration"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/duration" />
+
+        <TextView
+            android:id="@+id/placeInfo_taxiFare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeInfo_duration"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:text="Estimated taxi fare: " />
+
+        <TextView
+            android:id="@+id/placeInfo_taxiFare_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeInfo_duration"
+            android:layout_toEndOf="@id/placeInfo_taxiFare"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/taxi_fare" />
+
     </RelativeLayout>
 </ScrollView>
