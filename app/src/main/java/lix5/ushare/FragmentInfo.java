@@ -49,6 +49,7 @@ public class FragmentInfo extends Fragment {
         distance = view.findViewById(R.id.placeInfo_distance_input);
         duration = view.findViewById(R.id.placeInfo_duration_input);
         taxiFare = view.findViewById(R.id.placeInfo_taxiFare_input);
+        taxiFare_text = view.findViewById(R.id.placeInfo_taxiFare);
         return view;
     }
 

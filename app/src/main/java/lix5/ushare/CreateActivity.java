@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -98,7 +99,7 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-        create.setOnClickListener(v -> {
+        create.setOnClickListener(v -> {        // sync with database
             if (!validEventCheck()) {
                 mDatabase.child("users/").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -106,7 +107,10 @@ public class CreateActivity extends AppCompatActivity {
                         Event event = new Event(mAuth.getUid(), dataSnapshot.child("username").getValue().toString(), createPickup.getText().toString(), createDropoff.getText().toString(), createTime.getText().toString(),
                                 seats.getText().toString(), typeToString(typeIsTaxi, typeIsCar), boysOnly.toString(), girlsOnly.toString(),
                                 remarks_input.getText().toString(), eventIsRequest.toString(), pickUpID, dropOffID);
-                        mDatabase.child("events").push().setValue(event);
+                        mDatabase.child("events").push().setValue(event, (databaseError, databaseReference) -> {
+                            String key = databaseReference.getKey();
+                            FirebaseMessaging.getInstance().subscribeToTopic(key);      // subscribed to event
+                        });
                         Toast.makeText(getApplicationContext(), "Your event has been created", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(CreateActivity.this, MainActivity.class));
                         finish();

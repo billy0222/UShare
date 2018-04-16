@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,6 +147,7 @@ public class EventActivity extends AppCompatActivity {
                                 Map<String, Object> childUpdates = new HashMap<>();
                                 childUpdates.put(event_key, postValues);
                                 mDatabase.child("events").updateChildren(childUpdates);
+                                FirebaseMessaging.getInstance().subscribeToTopic(event_key);        // subscribed to event
                                 new AlertDialog.Builder(EventActivity.this).setMessage("Join event success").show();
                             } else {
                                 new AlertDialog.Builder(EventActivity.this).setMessage("Sorry, the event is currently full!").show();
@@ -169,6 +171,7 @@ public class EventActivity extends AppCompatActivity {
 
     private void disbandEvent(String event_key) {
         mDatabase.child("events/").child(event_key).removeValue();
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(event_key);      // unsubscribed from event
         Toast.makeText(getApplicationContext(), "Your event has been disbanded", Toast.LENGTH_SHORT).show();
         finish();
     }
@@ -182,6 +185,7 @@ public class EventActivity extends AppCompatActivity {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(event_key, postValues);
         mDatabase.child("events").updateChildren(childUpdates);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(event_key);        // unsubscribed from event
         new AlertDialog.Builder(EventActivity.this).setMessage("You have quited the event").show();
     }
 
