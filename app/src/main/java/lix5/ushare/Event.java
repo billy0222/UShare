@@ -1,20 +1,12 @@
 package lix5.ushare;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-/**
- * Created by Kevin on 1/4/2018.
- */
+
 
 public class Event implements Serializable{
     private String hostID;

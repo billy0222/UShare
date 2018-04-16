@@ -157,7 +157,7 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
     }
 
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
@@ -218,7 +218,6 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
         for (String s : list) {
             sb.append(delim);
             sb.append(s);
-            ;
             delim = ",";
         }
         return sb.toString();

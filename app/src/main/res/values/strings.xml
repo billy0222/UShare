@@ -49,8 +49,24 @@
     <string name="title_activity_rate_user">RateUserActivity</string>
     <string name="myEventTitle">My Sharing</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="entries_type_preference">
+        <item>Taxi</item>
+        <item>Private car</item>
+    </string-array>
+    <string-array name="entryvalues_type_preference">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="entries_preference">
+        <item>None</item>
+        <item>Men only</item>
+        <item>Women only</item>
+    </string-array>
+    <string-array name="entryvalues_preference">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
     <string name="place_information">Place Information</string>
     <string name="distance">Distance:</string>
     <string name="duration">Duration</string>
