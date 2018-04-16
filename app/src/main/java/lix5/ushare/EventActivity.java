@@ -1,5 +1,6 @@
 package lix5.ushare;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -25,11 +26,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class EventActivity extends AppCompatActivity {
 
@@ -61,11 +64,21 @@ public class EventActivity extends AppCompatActivity {
         for (int i = 0; i < iconID.length; i++) {
             tabLayout.getTabAt(i).setIcon(iconID[i]);
         }
-
-        RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_passenger);
+        if(getIntent().getBooleanExtra("event_is_history", false)){
+            invalidateOptionsMenu();
+        }
         //TODO adapter
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        if(getIntent().getBooleanExtra("event_is_history", false)) {
+            for (int i = 0; i < menu.size(); i++) {
+                menu.getItem(i).setVisible(false);
+            }
+        }
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,6 +94,7 @@ public class EventActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -133,6 +147,7 @@ public class EventActivity extends AppCompatActivity {
                                 Map<String, Object> childUpdates = new HashMap<>();
                                 childUpdates.put(event_key, postValues);
                                 mDatabase.child("events").updateChildren(childUpdates);
+                                FirebaseMessaging.getInstance().subscribeToTopic(event_key);        // subscribed to event
                                 new AlertDialog.Builder(EventActivity.this).setMessage("Join event success").show();
                             } else {
                                 new AlertDialog.Builder(EventActivity.this).setMessage("Sorry, the event is currently full!").show();
@@ -156,10 +171,12 @@ public class EventActivity extends AppCompatActivity {
 
     private void disbandEvent(String event_key) {
         mDatabase.child("events/").child(event_key).removeValue();
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(event_key);      // unsubscribed from event
         Toast.makeText(getApplicationContext(), "Your event has been disbanded", Toast.LENGTH_SHORT).show();
         finish();
     }
 
+    @SuppressLint("RestrictedApi")
     private void quitEvent(Event event, String event_key) {
         event.getPassengers().remove(mAuth.getUid());
         int remaining_seat = Integer.parseInt(event.getNumOfSeat()) + 1;
@@ -168,6 +185,7 @@ public class EventActivity extends AppCompatActivity {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(event_key, postValues);
         mDatabase.child("events").updateChildren(childUpdates);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(event_key);        // unsubscribed from event
         new AlertDialog.Builder(EventActivity.this).setMessage("You have quited the event").show();
     }
 

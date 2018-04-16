@@ -55,6 +55,10 @@ public class FragmentPresentEvent extends Fragment{
         myDataset = new ArrayList<>();
         myDatasetID = new ArrayList<>();
 
+        mRecyclerView = view.findViewById(R.id.recyclerView_myEvent_presentEvent);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(new MyAdapter(myDataset));
+
         mDatabase.child("events").orderByChild("hostID").equalTo(mAuth.getUid()).addChildEventListener(new ChildEventListener() {   // User as host
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -74,9 +78,10 @@ public class FragmentPresentEvent extends Fragment{
                     currentTimeToCalendar.setTime(new Date());
 
                     if (eventDateTimeToCalendar.after(currentTimeToCalendar) || eventDateTimeToCalendar.equals(currentTimeToCalendar)){
-                        myDataset.add(tempEvent);
-                        myDatasetID.add(dataSnapshot.getKey());
-                        mRecyclerView.getAdapter().notifyItemInserted(myDataset.size() - 1);
+                        int positionToInsert = sorting(tempEvent);
+                        myDataset.add(positionToInsert, tempEvent);
+                        myDatasetID.add(positionToInsert, dataSnapshot.getKey());
+                        mRecyclerView.getAdapter().notifyItemInserted(positionToInsert);
                     }
                 }
             }
@@ -140,9 +145,10 @@ public class FragmentPresentEvent extends Fragment{
 
                     if((eventDateTimeToCalendar.after(currentTimeToCalendar) || eventDateTimeToCalendar.equals(currentTimeToCalendar))
                             && tempEvent.getPassengers().contains(mAuth.getUid())){
-                        myDataset.add(tempEvent);
-                        myDatasetID.add(dataSnapshot.getKey());
-                        mRecyclerView.getAdapter().notifyItemInserted(myDataset.size() - 1);
+                        int positionToInsert = sorting(tempEvent);
+                        myDataset.add(positionToInsert, tempEvent);
+                        myDatasetID.add(positionToInsert, dataSnapshot.getKey());
+                        mRecyclerView.getAdapter().notifyItemInserted(positionToInsert);
                     }
                 }
             }
@@ -185,13 +191,36 @@ public class FragmentPresentEvent extends Fragment{
 
             }
         });
-        Collections.sort(myDataset);
-        Collections.sort(myDatasetID);
-
-        mRecyclerView = view.findViewById(R.id.recyclerView_myEvent_presentEvent);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(new MyAdapter(myDataset));
         return view;
+    }
+
+    public int sorting(Event event){
+        int locationToInsert = 0;
+        Date event1DateTime = null;
+        Date event2DateTime = null;
+        DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
+
+        if(myDataset.isEmpty()){      // no element
+            return 0;
+        }
+        else{
+            for(int i = 0 ; i < myDataset.size() ; i++){
+                try {
+                    event1DateTime = formatter.parse(event.getDateTime());
+                    event2DateTime = formatter.parse(myDataset.get(i).getDateTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if(event2DateTime.compareTo(event1DateTime) == 0 || event2DateTime.compareTo(event1DateTime) == 1) {
+                    locationToInsert = i;
+                    break;
+                }
+                if(i == myDataset.size() - 1){      // add at the last position
+                    locationToInsert = myDataset.size();
+                }
+            }
+            return locationToInsert;
+        }
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
@@ -269,9 +298,6 @@ public class FragmentPresentEvent extends Fragment{
                 holder.request.setVisibility(View.VISIBLE);
             }else{
                 holder.request.setVisibility(View.INVISIBLE);
-            }
-            if(mDataset.get(position).getHostID().equals(mAuth.getUid())){
-                holder.cardView.setBackgroundResource(R.drawable.card_edge);
             }
         }
 

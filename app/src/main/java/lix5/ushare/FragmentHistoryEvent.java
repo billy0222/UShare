@@ -77,9 +77,10 @@ public class FragmentHistoryEvent extends Fragment{
                     currentTimeToCalendar.setTime(new Date());
 
                     if (eventDateTimeToCalendar.before(currentTimeToCalendar)){
-                        myDataset.add(tempEvent);
-                        myDatasetID.add(dataSnapshot.getKey());
-                        mRecyclerView.getAdapter().notifyItemInserted(myDataset.size() - 1);
+                        int positionToInsert = sorting(tempEvent);
+                        myDataset.add(positionToInsert, tempEvent);
+                        myDatasetID.add(positionToInsert, dataSnapshot.getKey());
+                        mRecyclerView.getAdapter().notifyItemInserted(positionToInsert);
                     }
                 }
             }
@@ -142,9 +143,10 @@ public class FragmentHistoryEvent extends Fragment{
                     currentTimeToCalendar.setTime(new Date());
 
                     if(eventDateTimeToCalendar.before(currentTimeToCalendar) && tempEvent.getPassengers().contains(mAuth.getUid())){
-                        myDataset.add(tempEvent);
-                        myDatasetID.add(dataSnapshot.getKey());
-                        mRecyclerView.getAdapter().notifyItemInserted(myDataset.size() - 1);
+                        int positionToInsert = sorting(tempEvent);
+                        myDataset.add(positionToInsert, tempEvent);
+                        myDatasetID.add(positionToInsert, dataSnapshot.getKey());
+                        mRecyclerView.getAdapter().notifyItemInserted(positionToInsert);
                     }
                 }
             }
@@ -190,6 +192,35 @@ public class FragmentHistoryEvent extends Fragment{
         return view;
     }
 
+    public int sorting(Event event){
+        int locationToInsert = 0;
+        Date event1DateTime = null;
+        Date event2DateTime = null;
+        DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
+
+        if(myDataset.isEmpty()){      // no element
+            return 0;
+        }
+        else{
+            for(int i = 0 ; i < myDataset.size() ; i++){
+                try {
+                    event1DateTime = formatter.parse(event.getDateTime());
+                    event2DateTime = formatter.parse(myDataset.get(i).getDateTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if(event2DateTime.compareTo(event1DateTime) == 0 || event2DateTime.compareTo(event1DateTime) == 1) {
+                    locationToInsert = i;
+                    break;
+                }
+                if(i == myDataset.size() - 1){      // add at the last position
+                    locationToInsert = myDataset.size();
+                }
+            }
+            return locationToInsert;
+        }
+    }
+
     public class MyAdapter extends RecyclerView.Adapter<FragmentHistoryEvent.MyAdapter.ViewHolder>{
         private ArrayList<Event> mDataset;
 
@@ -224,6 +255,7 @@ public class FragmentHistoryEvent extends Fragment{
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("event", mDataset.get(getAdapterPosition()));
                     bundle.putString("event_key", myDatasetID.get(getAdapterPosition()));
+                    bundle.putBoolean("event_is_history", true);
                     startActivity(new Intent(getActivity(), EventActivity.class).putExtras(bundle));
                 });
             }
@@ -266,9 +298,9 @@ public class FragmentHistoryEvent extends Fragment{
             }else{
                 holder.request.setVisibility(View.INVISIBLE);
             }
-            if(mDataset.get(position).getHostID().equals(mAuth.getUid())){
+            /*if(mDataset.get(position).getHostID().equals(mAuth.getUid())){
                 holder.cardView.setBackgroundResource(R.drawable.card_edge);
-            }
+            }*/
         }
 
         @Override

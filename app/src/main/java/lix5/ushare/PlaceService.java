@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Kevin on 9/4/2018.
@@ -44,6 +46,25 @@ public class PlaceService {
         return arrayList;
     }
 
+    public PlaceDistance findPlacesInfo(String start_placeID, String end_placeID){
+        String urlString = makeUrlDistanceService(start_placeID, end_placeID);
+        PlaceDistance placeInfo = new PlaceDistance();
+        try{
+            String json = getJSON(urlString);
+            JSONObject object = new JSONObject(json);
+            JSONArray array = object.getJSONArray("rows");
+            try{
+                placeInfo = PlaceDistance.getDistanceJsonToPlace((JSONObject)array.get(0));
+            } catch (Exception e) {
+
+            }
+            return placeInfo;
+        }catch (JSONException ex){
+
+        }
+        return placeInfo;
+    }
+
     public String makeUrl(double latitude, double longitude) {
         StringBuilder urlString = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
 
@@ -52,6 +73,18 @@ public class PlaceService {
         urlString.append(",");
         urlString.append(Double.toString(longitude));
         urlString.append("&radius=500");
+        urlString.append("&key=" + API_KEY);
+
+        return urlString.toString();
+    }
+
+    public String makeUrlDistanceService(String start_placeId, String end_placeID){
+        StringBuilder urlString = new StringBuilder("https://maps.googleapis.com/maps/api/distancematrix/json?units=metric");
+
+        urlString.append("&origins=");
+        urlString.append("place_id:").append(start_placeId);
+        urlString.append("&destinations=");
+        urlString.append("place_id:").append(end_placeID);
         urlString.append("&key=" + API_KEY);
 
         return urlString.toString();

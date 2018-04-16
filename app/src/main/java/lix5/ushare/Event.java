@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Kevin on 1/4/2018.
  */
 
-public class Event implements Serializable, Comparable<Event>{
+public class Event implements Serializable{
     private String hostID;
     private String hostName;
     private List<String> passengers = new ArrayList<>();
@@ -137,19 +137,5 @@ public class Event implements Serializable, Comparable<Event>{
         result.put("pickUpID", pickUpID);
         result.put("dropOffID", dropOffID);
         return result;
-    }
-
-    @Override
-    public int compareTo(Event event){
-        Date event1DateTime = null;
-        Date event2DateTime = null;
-        DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
-        try {
-            event1DateTime = formatter.parse(this.getDateTime());
-            event2DateTime = formatter.parse(event.getDateTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return event1DateTime.compareTo(event2DateTime);
     }
 }
