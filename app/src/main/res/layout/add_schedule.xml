@@ -77,88 +77,12 @@
                 android:layout_below="@id/rl"
                 android:layout_margin="10dp" />
 
-            <fragment
+            <FrameLayout
                 android:id="@+id/advanced"
                 android:name="lix5.ushare.FragmentScheduler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/weekdays_buttons" />
-
-
-            <!--<TextView
-                android:id="@+id/advance"
-                style="@style/sectionHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/weekdays_stub"
-                android:layout_margin="10dp"
-                android:text="Advanced"/>
-
-            <ListView
-                android:id="@+id/fp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/advance">
-
-                <TextView
-                    android:id="@+id/f1"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/advance"
-                    android:layout_margin="8dp"
-                    android:text="First starting location"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/fPickup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/f1" />
-            </ListView>
-
-
-            <TextView
-                android:id="@+id/f2"
-                style="@style/TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/fp"
-                android:layout_margin="8dp"
-                android:text="First destination"
-                android:textColor="#000000"/>
-
-
-
-            <TextView
-                android:id="@+id/s1"
-                style="@style/TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/f2"
-                android:layout_margin="8dp"
-                android:text="Second starting location"
-                android:textColor="#000000"/>
-
-
-            <TextView
-                android:id="@+id/s2"
-                style="@style/TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/s1"
-                android:layout_margin="8dp"
-                android:text="Second destination"
-                android:textColor="#000000"/>
-
-            <CheckBox
-                android:id="@+id/re"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/s2"
-                android:layout_margin="8dp"
-                android:text="Use reversed location for second schedule"/>-->
-
         </RelativeLayout>
     </ScrollView>
 

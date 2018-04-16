@@ -22,10 +22,31 @@
             android:title="Second destination" />
 
         <CheckBoxPreference
-            android:defaultValue="true"
             android:key="retrace"
+            android:defaultValue="false"
             android:summary="Use reversed location for second schedule"
             android:title="Retrace" />
+
+        <ListPreference
+            android:entries="@array/entries_type_preference"
+            android:entryValues="@array/entryvalues_type_preference"
+            android:key="type"
+            android:summary=""
+            android:title="Type" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="seats"
+            android:summary=""
+            android:title="@string/available_seats" />
+
+        <ListPreference
+            android:entries="@array/entries_preference"
+            android:entryValues="@array/entryvalues_preference"
+            android:key="preference"
+            android:summary=""
+            android:title="Preference" />
+
 
     </PreferenceCategory>
 </PreferenceScreen>

@@ -8,4 +8,6 @@
     <color name="emphasis">#31B6E7</color>
     <color name="toolbarText">#ffffff</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#DDDDDD</color>
 </resources>

@@ -11,18 +11,33 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/schedule_time"
+            android:id="@+id/schedule_daytime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:drawableLeft="@drawable/sun"
             android:text="00:00"
+            android:textColor="#000"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/schedule_nighttime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/schedule_daytime"
+            android:drawableLeft="@drawable/moon"
+            android:text="00:00"
+            android:textColor="#000"
             android:textSize="40sp" />
 
         <TextView
             android:id="@+id/schedule_weekday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/schedule_time"
-            android:text="Mon, Tue, Wed, Thu, Fri &amp; Sat"
+            android:layout_below="@id/schedule_daytime"
+            android:layout_marginLeft="8dp"
+            android:text=""
             android:textSize="12sp" />
 
         <Switch
