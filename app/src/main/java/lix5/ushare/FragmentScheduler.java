@@ -129,7 +129,15 @@ public class FragmentScheduler extends PreferenceFragmentCompat {
         type.setValue(loadSchedulePreferences.getString("type",""));
         seats.setSummary(loadSchedulePreferences.getString("seats",""));
         preference.setSummary(loadSchedulePreferences.getString("pref",""));
-//        ((AddScheduleActivity) getActivity()).restartFragment();
+        if(!loadSchedulePreferences.getBoolean("isTwice", false)){
+            secLoc.setEnabled(false);
+            secDes.setEnabled(false);
+            retrace.setEnabled(false);
+        }else {
+            secLoc.setEnabled(true);
+            secDes.setEnabled(true);
+            retrace.setEnabled(true);
+        }
     }
 
     public boolean isNumeric(String str) {

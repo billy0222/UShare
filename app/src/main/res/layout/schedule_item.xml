@@ -10,23 +10,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/sun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/schedule_switch"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/sun" />
+
         <TextView
             android:id="@+id/schedule_daytime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:drawableLeft="@drawable/sun"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/sun"
             android:text="00:00"
             android:textColor="#000"
             android:textSize="40sp" />
+
+        <ImageView
+            android:id="@+id/moon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/schedule_switch"
+            android:layout_marginLeft="8dp"
+            android:layout_toEndOf="@id/schedule_daytime"
+            android:src="@drawable/moon" />
 
         <TextView
             android:id="@+id/schedule_nighttime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/schedule_daytime"
-            android:drawableLeft="@drawable/moon"
+            android:layout_toRightOf="@id/moon"
             android:text="00:00"
             android:textColor="#000"
             android:textSize="40sp" />
@@ -48,7 +64,6 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_margin="16dp"
-            android:checked="true"
             android:gravity="end" />
 
 
