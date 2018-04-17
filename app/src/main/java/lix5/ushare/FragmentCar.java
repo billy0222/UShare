@@ -180,7 +180,7 @@ public class FragmentCar extends Fragment {
             placeIDNearDropOff = new ArrayList<>();       //ArrayList for PlaceID near drop off location
             findDropOffNear(dropOffLat, dropOffLng);
         }
-
+        
         if (!TextUtils.isEmpty(time)) {
             Date searchDateTime = null;
             try {

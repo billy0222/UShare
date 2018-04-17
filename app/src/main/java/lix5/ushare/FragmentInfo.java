@@ -27,7 +27,7 @@ public class FragmentInfo extends Fragment {
     private TextView pickUp;
     private TextView dropOff;
     private TextView dateTime;
-    private TextView remark;
+    private TextView remark, remarkTitle;
     private TextView distance, duration, taxiFare, taxiFare_text;
     private int numberOfPeopleInEvent = 1;
 
@@ -46,6 +46,7 @@ public class FragmentInfo extends Fragment {
         dropOff = view.findViewById(R.id.info_drop_off);
         dateTime = view.findViewById(R.id.info_time);
         remark = view.findViewById(R.id.remarks_input);
+        remarkTitle = view.findViewById(R.id.remark);
         distance = view.findViewById(R.id.placeInfo_distance_input);
         duration = view.findViewById(R.id.placeInfo_duration_input);
         taxiFare = view.findViewById(R.id.placeInfo_taxiFare_input);
@@ -61,7 +62,10 @@ public class FragmentInfo extends Fragment {
         pickUp.setText(event.getPickUp());
         dropOff.setText(event.getDropOff());
         dateTime.setText(event.getDateTime());
-        remark.setText(event.getMessage());
+        if(event.getMessage().equals(""))
+            remarkTitle.setVisibility(View.GONE);
+        else
+            remark.setText(event.getMessage());
 
         PlaceDistance result = findPlaceInfo(event.getPickUpID(), event.getDropOffID());
         distance.setText(String.valueOf(result.getDistance()) + " meters");

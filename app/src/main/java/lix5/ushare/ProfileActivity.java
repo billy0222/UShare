@@ -1,5 +1,6 @@
 package lix5.ushare;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView edit;
     private de.hdodenhof.circleimageview.CircleImageView avatar;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,6 @@ public class ProfileActivity extends AppCompatActivity {
         gender = findViewById(R.id.gender_profile);
         rating = findViewById(R.id.rating_profile);
         avatar = findViewById(R.id.avatar_profile);
-        Toolbar toolbar = findViewById(R.id.toolbar);
 
         edit = findViewById(R.id.edit_profile);
 
@@ -56,7 +57,8 @@ public class ProfileActivity extends AppCompatActivity {
                 mobile.setText(dataSnapshot.child("phoneNum").getValue(String.class));  //set the mobile
                 gender.setText(dataSnapshot.child("sex").getValue(String.class));   //set the gender
                 rating.setText(dataSnapshot.child("rating").getValue(String.class));    //set the rating
-                Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(avatar);  //set the avatar
+                if(!dataSnapshot.child("avatar").getValue(String.class).equals(""))
+                    Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(avatar);  //set the avatar
             }
 
             @Override
