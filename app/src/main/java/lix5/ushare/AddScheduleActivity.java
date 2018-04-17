@@ -38,9 +38,9 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
     private int selected = 0;
     private Button cancel, save;
     private List<Schedule> schedules;
-    private String firstTime, secTime, selectedDays, firstLoc, firstDes, secLoc, secDes, firstLocID, firstDesID, secLocID, secDesID, type, seats, preference;
+    private String firstTime, secTime, selectedDays = "", firstLoc, firstDes, secLoc, secDes, firstLocID, firstDesID, secLocID, secDesID, type, seats, preference;
     private Schedule loadedSchedule;
-//    private Fragment fs;
+    private boolean isTwice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +97,11 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
             }
         });
         twice.setOnClickListener(v -> {
-            if (!twice.isChecked()) {
+            if (!twice.isChecked())
                 dayNightSwitch.setIsNight(false, true);
-                //TODO disable sec, retrace
-            }
+            isTwice = twice.isChecked();
+            getSharedPreferences("loadSchedule", MODE_PRIVATE).edit().putBoolean("isTwice",isTwice).apply();
+            getSupportFragmentManager().beginTransaction().replace(R.id.advanced, new FragmentScheduler()).commit();
         });
         cancel.setOnClickListener(v -> {
             startActivity(new Intent(AddScheduleActivity.this, SchedulerActivity.class));
@@ -111,7 +112,7 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
         firstTime = new SimpleDateFormat("HH:mm").format(daytime);
         secTime = new SimpleDateFormat("HH:mm").format(nighttime);
         save.setOnClickListener(v -> {
-            if (selectedDays.equals("No days selected")) {
+            if (selectedDays.equals("No days selected") || selectedDays.equals("")) {
                 Toast.makeText(this, "Please select the repeat day", Toast.LENGTH_SHORT).show();
             } else {
                 if (loadedSchedule != null) {
@@ -183,12 +184,8 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
                 .putString("type", type)
                 .putString("seats", seats)
                 .putString("pref", preference)
+                .putBoolean("isTwice", twice.isChecked())
                 .apply();
-    }
-
-    public void restartFragment() {
-        FragmentScheduler fragment = new FragmentScheduler();
-        getSupportFragmentManager().beginTransaction().replace(R.id.advanced, fragment).commit();
     }
 
     @Override
@@ -228,7 +225,6 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
                 preference = data;
                 break;
         }
-
     }
 
     @Override
@@ -289,8 +285,6 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
         SharedPreferences.Editor editor = schedulePreferences.edit();
         Gson gson = new Gson();
         String jsonSchedules = gson.toJson(schedules);
-
-        Log.i("SAVE", jsonSchedules);
         editor.putString("Schedules", jsonSchedules).apply();
     }
 
@@ -298,7 +292,6 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
         SharedPreferences scheduledPreferences = getSharedPreferences("schedulers", MODE_PRIVATE);
         Gson gson = new Gson();
         String jsonSchedules = scheduledPreferences.getString("Schedules", "");
-        Log.i("LOAD", jsonSchedules);
         Type type = new TypeToken<ArrayList<Schedule>>() {
         }.getType();
         if (!jsonSchedules.isEmpty())

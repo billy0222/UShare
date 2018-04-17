@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -57,6 +58,14 @@ public class SchedulerActivity extends AppCompatActivity {
         return true;
     }
 
+    public void saveData(List<Schedule> schedules) {
+        SharedPreferences schedulePreferences = getSharedPreferences("schedulers", MODE_PRIVATE);
+        SharedPreferences.Editor editor = schedulePreferences.edit();
+        Gson gson = new Gson();
+        String jsonSchedules = gson.toJson(schedules);
+        editor.putString("Schedules", jsonSchedules).apply();
+    }
+
     public List<Schedule> readData() {
         List<Schedule> schedules = new ArrayList<Schedule>();
         SharedPreferences scheduledPreferences = getSharedPreferences("schedulers", MODE_PRIVATE);
@@ -73,11 +82,21 @@ public class SchedulerActivity extends AppCompatActivity {
         return schedules;
     }
 
-    private void setTextViewDrawableColor(TextView textView, int color) {
-        for (Drawable drawable: textView.getCompoundDrawables()) {
-            if(drawable != null)
-                drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        }
+//    private void setTextViewDrawableColor(TextView textView, int color) {
+//        for (Drawable drawable : textView.getCompoundDrawables()) {
+//            if (drawable != null)
+//                drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+//        }
+//    }
+
+    private void setupByState(MyAdapter.ViewHolder holder, String color) {
+        holder.daytime.setTextColor(Color.parseColor(color));
+        holder.nighttime.setTextColor(Color.parseColor(color));
+//        setTextViewDrawableColor(holder.daytime, Color.parseColor(color));
+//        setTextViewDrawableColor(holder.nighttime, Color.parseColor(color));
+        holder.sun.setColorFilter(Color.parseColor(color), PorterDuff.Mode.SRC_IN);
+        holder.moon.setColorFilter(Color.parseColor(color), PorterDuff.Mode.SRC_IN);
+        holder.weekday.setTextColor(Color.parseColor(color));
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
@@ -98,32 +117,31 @@ public class SchedulerActivity extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.daytime.setText(mData.get(position).getDaytime());
             holder.nighttime.setText(mData.get(position).getNighttime());
-            if(mData.get(position).getNighttime().equals(""))
+            if (mData.get(position).getNighttime().equals("")) {
                 holder.nighttime.setVisibility(View.GONE);
+                holder.moon.setVisibility(View.GONE);
+            }
             String repeatday;
-            if(new ArrayList<String>(Arrays.asList(mData.get(position).getWeekday().split(", "))).size()==7)
+            if (new ArrayList<String>(Arrays.asList(mData.get(position).getWeekday().split(", "))).size() == 7)
                 repeatday = "Every day";
             else
                 repeatday = "Every " + mData.get(position).getWeekday();
             holder.weekday.setText(repeatday);
             holder.state.setChecked(mData.get(position).getOn());
-            holder.state.setOnClickListener(v->{//TODO NOT WORKING WELL
-                if(!holder.state.isChecked()){
-                    schedules.get(position).setOn(false);
-                    holder.daytime.setTextColor(Color.parseColor("#DDDDDD"));
-                    holder.nighttime.setTextColor(Color.parseColor("#DDDDDD"));
-                    setTextViewDrawableColor(holder.daytime, Color.parseColor("#DDDDDD"));
-                    setTextViewDrawableColor(holder.nighttime, Color.parseColor("#DDDDDD"));
-                    holder.weekday.setTextColor(Color.parseColor("#DDDDDD"));
-                }else{
+            holder.state.setOnClickListener(v -> {
+                if (holder.state.isChecked()) {
                     schedules.get(position).setOn(true);
-                    holder.daytime.setTextColor(Color.parseColor("#000000"));
-                    holder.nighttime.setTextColor(Color.parseColor("#000000"));
-                    setTextViewDrawableColor(holder.daytime, Color.parseColor("#000000"));
-                    setTextViewDrawableColor(holder.nighttime, Color.parseColor("#000000"));
-                    holder.weekday.setTextColor(Color.parseColor("#000000"));
+                    setupByState(holder, "#000000");
+                } else {
+                    schedules.get(position).setOn(false);
+                    setupByState(holder, "#DDDDDD");
                 }
+                saveData(schedules);
             });
+            if (mData.get(position).getOn())
+                setupByState(holder, "#000000");
+            else
+                setupByState(holder, "#DDDDDD");
         }
 
         @Override
@@ -133,6 +151,7 @@ public class SchedulerActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView daytime, nighttime, weekday;
+            ImageView sun, moon;
             Switch state;
 
             public ViewHolder(View v) {
@@ -141,6 +160,8 @@ public class SchedulerActivity extends AppCompatActivity {
                 nighttime = v.findViewById(R.id.schedule_nighttime);
                 weekday = v.findViewById(R.id.schedule_weekday);
                 state = v.findViewById(R.id.schedule_switch);
+                sun = v.findViewById(R.id.sun);
+                moon = v.findViewById(R.id.moon);
 
                 v.setOnClickListener(view -> {
                     Bundle bundle = new Bundle();
@@ -148,6 +169,25 @@ public class SchedulerActivity extends AppCompatActivity {
                     bundle.putInt("scheduleID", getAdapterPosition());
                     startActivity(new Intent(SchedulerActivity.this, AddScheduleActivity.class).putExtras(bundle));
                     finish();
+                });
+
+                v.setOnLongClickListener(view -> {
+                    int position = getAdapterPosition();
+                    PopupMenu popup = new PopupMenu(SchedulerActivity.this, view);
+                    popup.setOnMenuItemClickListener(menuItem -> {
+                        switch (menuItem.getItemId()) {
+                            case R.id.delete:
+                                mData.remove(position);
+                                saveData(schedules);
+                                notifyItemRemoved(position);
+                                return true;
+                            default:
+                                return false;
+                        }
+                    });
+                    popup.inflate(R.menu.delete_schedule_menu);
+                    popup.show();
+                    return true;
                 });
             }
         }

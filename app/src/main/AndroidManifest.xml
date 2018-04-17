@@ -65,7 +65,9 @@
         <activity
             android:name=".RatingActivity"
             android:label="RatingActivity" />
-        <activity android:name=".SchedulerActivity" />
+        <activity
+            android:name=".SchedulerActivity"
+            android:label="My Scheduler"/>
         <activity android:name=".AddScheduleActivity" />
 
         <service
