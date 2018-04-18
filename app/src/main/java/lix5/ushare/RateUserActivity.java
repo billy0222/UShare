@@ -105,9 +105,7 @@ public class RateUserActivity extends AppCompatActivity {
             }
             else{
                 Rating newRating = new Rating(String.valueOf(rating), comment.getText().toString());
-                Map<String, Rating> ratingMap = new HashMap<>();
-                ratingMap.put(mAuth.getUid(), newRating);
-                mDatabase.child("rating").child(rating_user_id).setValue(ratingMap);
+                mDatabase.child("rating").child(rating_user_id).child(mAuth.getUid()).setValue(newRating);
                 mDatabase.child("rating").child(rating_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -120,7 +118,7 @@ public class RateUserActivity extends AppCompatActivity {
                                     ratingAfter = (0.0 + rating);
                                 }
                                 else {
-                                    ratingAfter = ((dataSnapshot2.getValue(Double.class) + rating) / numOfRating);
+                                    ratingAfter = ((Double.valueOf(dataSnapshot2.getValue(String.class)) * (numOfRating - 1) + rating) / numOfRating);
                                 }
                                 mDatabase.child("users").child(rating_user_id).child("rating").setValue(String.valueOf(ratingAfter));
                             }

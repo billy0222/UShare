@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,8 @@ public class FragmentInfo extends Fragment {
     private TextView pickUp;
     private TextView dropOff;
     private TextView dateTime;
-    private TextView remark;
+    private TextView remark, remarkTitle;
     private TextView distance, duration, taxiFare, taxiFare_text;
-    private int numberOfPeopleInEvent = 1;
 
 
     public FragmentInfo() {
@@ -46,6 +46,7 @@ public class FragmentInfo extends Fragment {
         dropOff = view.findViewById(R.id.info_drop_off);
         dateTime = view.findViewById(R.id.info_time);
         remark = view.findViewById(R.id.remarks_input);
+        remarkTitle = view.findViewById(R.id.remark);
         distance = view.findViewById(R.id.placeInfo_distance_input);
         duration = view.findViewById(R.id.placeInfo_duration_input);
         taxiFare = view.findViewById(R.id.placeInfo_taxiFare_input);
@@ -61,7 +62,10 @@ public class FragmentInfo extends Fragment {
         pickUp.setText(event.getPickUp());
         dropOff.setText(event.getDropOff());
         dateTime.setText(event.getDateTime());
-        remark.setText(event.getMessage());
+        if(event.getMessage().equals(""))
+            remarkTitle.setVisibility(View.GONE);
+        else
+            remark.setText(event.getMessage());
 
         PlaceDistance result = findPlaceInfo(event.getPickUpID(), event.getDropOffID());
         distance.setText(String.valueOf(result.getDistance()) + " meters");
@@ -69,29 +73,13 @@ public class FragmentInfo extends Fragment {
 
         if(event.getType().equals("Taxi")) {
             double fare = taxiFareCalculation(result.getDistance());
-            taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / numberOfPeopleInEvent) + " per person");
+            taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare) + " per person");
 
-            mDatabase.child("events").child(eventKey).child("passengers").addChildEventListener(new ChildEventListener() {
+            mDatabase.child("events").child(eventKey).child("passengers").addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    numberOfPeopleInEvent += 1;
-                    taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / numberOfPeopleInEvent) + " per person");
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    numberOfPeopleInEvent -= 1;
-                    taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / numberOfPeopleInEvent) + " per person");
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int size = (int)dataSnapshot.getChildrenCount() + 1;
+                    taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / size) + " per person");
                 }
 
                 @Override

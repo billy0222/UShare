@@ -25,7 +25,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.avatar = "";
+        this.avatar = "https://firebasestorage.googleapis.com/v0/b/ridesharing-46453.appspot.com/o/images%2Fprofile_icon.jpg?alt=media&token=f8c6fa2a-9ce7-4557-85e8-b6b57cd09863";
         this.sex = "";
         this.bio = "";
         this.rating = "";

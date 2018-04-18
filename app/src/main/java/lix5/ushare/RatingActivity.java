@@ -317,36 +317,36 @@ public class RatingActivity extends AppCompatActivity {
     }
 
     public void showStarFromRater(String rating, ImageView star1, ImageView star2, ImageView star3, ImageView star4, ImageView star5){
-        int user_rating = Integer.parseInt(rating);
-        if(user_rating == 5){
+        double user_rating = Double.parseDouble(rating);
+        if(user_rating == 5.0){
             star1.setImageResource(R.drawable.star_filled);
             star2.setImageResource(R.drawable.star_filled);
             star3.setImageResource(R.drawable.star_filled);
             star4.setImageResource(R.drawable.star_filled);
             star5.setImageResource(R.drawable.star_filled);
         }
-        else if(user_rating == 4){
+        else if(user_rating == 4.0){
             star1.setImageResource(R.drawable.star_filled);
             star2.setImageResource(R.drawable.star_filled);
             star3.setImageResource(R.drawable.star_filled);
             star4.setImageResource(R.drawable.star_filled);
             star5.setImageResource(R.drawable.star_none);
         }
-        else if(user_rating == 3){
+        else if(user_rating == 3.0){
             star1.setImageResource(R.drawable.star_filled);
             star2.setImageResource(R.drawable.star_filled);
             star3.setImageResource(R.drawable.star_filled);
             star4.setImageResource(R.drawable.star_none);
             star5.setImageResource(R.drawable.star_none);
         }
-        else if(user_rating == 2){
+        else if(user_rating == 2.0){
             star1.setImageResource(R.drawable.star_filled);
             star2.setImageResource(R.drawable.star_filled);
             star3.setImageResource(R.drawable.star_none);
             star4.setImageResource(R.drawable.star_none);
             star5.setImageResource(R.drawable.star_none);
         }
-        else if(user_rating == 1){
+        else if(user_rating == 1.0){
             star1.setImageResource(R.drawable.star_filled);
             star2.setImageResource(R.drawable.star_none);
             star3.setImageResource(R.drawable.star_none);

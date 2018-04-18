@@ -190,6 +190,7 @@ public class CreateActivity extends AppCompatActivity {
             taxiButton.setSelected(true);
             isRequest.setChecked(true);
             isRequest.setClickable(false);
+            eventIsRequest = true;
             typeIsTaxi = true;
             typeIsCar = false;
         }
@@ -221,7 +222,6 @@ public class CreateActivity extends AppCompatActivity {
         long afterOneYearInMillis = c.getTimeInMillis();
         dpd.getDatePicker().setMaxDate(afterOneYearInMillis);
         dpd.show();
-
     }
 
     private void timePicker(Date date) {

@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -110,7 +111,8 @@ public class MainActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 uName.setText(dataSnapshot.child("username").getValue(String.class));   //set the name
                 uEmail.setText(dataSnapshot.child("email").getValue(String.class));    //set the email
-                Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(uIcon);
+                    if(!dataSnapshot.child("avatar").getValue(String.class).equals(""))
+                    Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(uIcon);
             }
 
             @Override
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity
             if (date.before(c.getTime()))
                 new AlertDialog.Builder(MainActivity.this).setMessage("The pick up time can only be future.").setPositiveButton("OK", (dialog, which) -> datePicker()).show();
             else
-                date_time = (date.getYear() + 1900 == c.get(Calendar.YEAR) ? new SimpleDateFormat("EE, dd MMMM, HH:mm").format(date) : new SimpleDateFormat("EE, dd MMMM yyyy, HH:mm").format(date));
+                date_time = (date.getYear() + 1900 == c.get(Calendar.YEAR) ? new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US).format(date) : new SimpleDateFormat("EE, dd MMMM yyyy, HH:mm", Locale.US).format(date));
             searchTime.setText(date_time);
 
         }, mHour, mMinute, true);
