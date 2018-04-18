@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,6 @@ public class FragmentInfo extends Fragment {
     private TextView dateTime;
     private TextView remark, remarkTitle;
     private TextView distance, duration, taxiFare, taxiFare_text;
-    private int numberOfPeopleInEvent = 1;
 
 
     public FragmentInfo() {
@@ -73,29 +73,13 @@ public class FragmentInfo extends Fragment {
 
         if(event.getType().equals("Taxi")) {
             double fare = taxiFareCalculation(result.getDistance());
-            taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / numberOfPeopleInEvent) + " per person");
+            taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare) + " per person");
 
-            mDatabase.child("events").child(eventKey).child("passengers").addChildEventListener(new ChildEventListener() {
+            mDatabase.child("events").child(eventKey).child("passengers").addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    numberOfPeopleInEvent += 1;
-                    taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / numberOfPeopleInEvent) + " per person");
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    numberOfPeopleInEvent -= 1;
-                    taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / numberOfPeopleInEvent) + " per person");
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int size = (int)dataSnapshot.getChildrenCount() + 1;
+                    taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / size) + " per person");
                 }
 
                 @Override
