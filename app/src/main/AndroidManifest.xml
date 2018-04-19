@@ -70,10 +70,7 @@
             android:label="My Scheduler"/>
         <activity android:name=".AddScheduleActivity" />
 
-        <service
-            android:name=".SchedulerService"
-            android:enabled="true"
-            android:exported="true" />
+        <receiver android:name=".AlarmReceiver" />
 
         <activity
             android:name=".MyEventActivity"

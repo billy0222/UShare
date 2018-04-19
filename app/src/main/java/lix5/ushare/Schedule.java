@@ -1,6 +1,7 @@
 package lix5.ushare;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Schedule implements Serializable {
     private String daytime, nighttime, weekday, firstLoc, firstDes, secLoc, secDes, firstLocID, firstDesID, secLocID, secDesID, type, seats, preference;
@@ -94,5 +95,24 @@ public class Schedule implements Serializable {
 
     public String getPreference() {
         return preference;
+    }
+
+    public ArrayList<Integer> getWeekdaysArray() {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        if (weekday.contains("Sunday"))
+            result.add(1);
+        if (weekday.contains("Monday"))
+            result.add(2);
+        if (weekday.contains("Tuesday"))
+            result.add(3);
+        if (weekday.contains("Wednesday"))
+            result.add(4);
+        if (weekday.contains("Thursday"))
+            result.add(5);
+        if (weekday.contains("Friday"))
+            result.add(6);
+        if (weekday.contains("Saturday"))
+            result.add(7);
+        return result;
     }
 }

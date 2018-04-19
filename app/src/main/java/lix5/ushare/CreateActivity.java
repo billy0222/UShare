@@ -81,6 +81,51 @@ public class CreateActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupRouteInputBar();
 
+        Schedule loadedSchedule = (Schedule) getIntent().getSerializableExtra("schedule");
+        boolean isDay = getIntent().getBooleanExtra("isDaytime", false);
+        if (loadedSchedule != null) {
+            if (isDay) {
+                createPickup.setText(loadedSchedule.getFirstLoc());
+                createDropoff.setText(loadedSchedule.getFirstDes());
+                pickUpID = loadedSchedule.getFirstLocID();
+                dropOffID = loadedSchedule.getFirstDesID();
+                //            createTime.setText();
+            } else {
+                createPickup.setText(loadedSchedule.getSecLoc());
+                createDropoff.setText(loadedSchedule.getSecDes());
+                pickUpID = loadedSchedule.getSecLocID();
+                dropOffID = loadedSchedule.getSecDesID();
+            }
+            if (loadedSchedule.getType().equals("Taxi")) {
+                taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_icon));
+                carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_gray_48dp));
+                taxiButton.setSelected(true);
+                isRequest.setChecked(true);
+                isRequest.setClickable(false);
+                eventIsRequest = true;
+                typeIsTaxi = true;
+                typeIsCar = false;
+            }
+            if (loadedSchedule.getType().equals("Private car")) {
+                carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_black_48dp));
+                taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_gray));
+                carButton.setSelected(true);
+                typeIsTaxi = false;
+                typeIsCar = true;
+            }
+            if (loadedSchedule.getPreference().equals("Men only")) {
+                boys.setChecked(true);
+                boysOnly = true;
+            }
+            if (loadedSchedule.getPreference().equals("Women only")) {
+                girls.setChecked(true);
+                girlsOnly = true;
+            }
+            if (!loadedSchedule.getSeats().equals(""))
+                seats.setText(loadedSchedule.getSeats());
+
+        }
+
         seats.setFilters(new InputFilter[]{new InputFilterMinMax("1", "10")});
         add.setOnClickListener(v -> {
             if (!String.valueOf(seats.getText()).equals("10")) {
@@ -126,7 +171,7 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
