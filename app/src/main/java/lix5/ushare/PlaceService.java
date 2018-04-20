@@ -9,13 +9,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-/**
- * Created by Kevin on 9/4/2018.
- */
 
 public class PlaceService {
     private String API_KEY;
@@ -36,31 +30,31 @@ public class PlaceService {
                     Place place = Place.getNearPlaceJsonToPlace((JSONObject) array.get(i));
                     arrayList.add(place);
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
             return arrayList;
         } catch (JSONException ex) {
-
+            ex.printStackTrace();
         }
         return arrayList;
     }
 
-    public PlaceDistance findPlacesInfo(String start_placeID, String end_placeID){
+    public PlaceDistance findPlacesInfo(String start_placeID, String end_placeID) {
         String urlString = makeUrlDistanceService(start_placeID, end_placeID);
         PlaceDistance placeInfo = new PlaceDistance();
-        try{
+        try {
             String json = getJSON(urlString);
             JSONObject object = new JSONObject(json);
             JSONArray array = object.getJSONArray("rows");
-            try{
-                placeInfo = PlaceDistance.getDistanceJsonToPlace((JSONObject)array.get(0));
+            try {
+                placeInfo = PlaceDistance.getDistanceJsonToPlace((JSONObject) array.get(0));
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
             return placeInfo;
-        }catch (JSONException ex){
-
+        } catch (JSONException ex) {
+            ex.printStackTrace();
         }
         return placeInfo;
     }
@@ -74,11 +68,10 @@ public class PlaceService {
         urlString.append(Double.toString(longitude));
         urlString.append("&radius=1500");
         urlString.append("&key=" + API_KEY);
-
         return urlString.toString();
     }
 
-    public String makeUrlDistanceService(String start_placeId, String end_placeID){
+    public String makeUrlDistanceService(String start_placeId, String end_placeID) {
         StringBuilder urlString = new StringBuilder("https://maps.googleapis.com/maps/api/distancematrix/json?units=metric");
 
         urlString.append("&origins=");
@@ -86,7 +79,6 @@ public class PlaceService {
         urlString.append("&destinations=");
         urlString.append("place_id:").append(end_placeID);
         urlString.append("&key=" + API_KEY);
-
         return urlString.toString();
     }
 

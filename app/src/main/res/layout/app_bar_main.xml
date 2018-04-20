@@ -2,7 +2,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
@@ -11,14 +10,11 @@
 
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="240dp"
         android:theme="@style/AppTheme.AppBarOverlay">
-        <!--app:expanded="false">-->
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
@@ -31,7 +27,7 @@
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="70dp"
                 android:orientation="vertical">
 
@@ -40,7 +36,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="50dp"
-                    android:layout_marginRight="75dp"
                     android:background="@android:color/white"
                     android:hint="@string/pick_up"
                     android:lines="1"
@@ -53,7 +48,6 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentTop="true"
-                    android:layout_toLeftOf="@+id/up_down_arrow"
                     android:layout_toStartOf="@+id/up_down_arrow"
                     android:elevation="5dp"
                     android:src="@drawable/cross" />
@@ -64,7 +58,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/search_pick_up"
                     android:layout_marginEnd="50dp"
-                    android:layout_marginRight="75dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/white"
                     android:hint="@string/drop_off"
@@ -78,7 +71,6 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_above="@+id/search_time"
-                    android:layout_alignLeft="@+id/search_pick_up_cancel"
                     android:layout_alignStart="@+id/search_pick_up_cancel"
                     android:elevation="5dp"
                     android:src="@drawable/cross" />
@@ -89,7 +81,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/search_drop_off"
                     android:layout_marginEnd="50dp"
-                    android:layout_marginRight="75dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/white"
                     android:hint="@string/pick_up_time"
@@ -101,7 +92,6 @@
                     android:id="@+id/search_time_cancel"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_alignLeft="@+id/search_drop_off_cancel"
                     android:layout_alignStart="@+id/search_drop_off_cancel"
                     android:layout_alignTop="@+id/search_time"
                     android:elevation="5dp"
@@ -112,7 +102,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="8dp"
                     app:srcCompat="@drawable/icons8_up_down_arrow_50" />
@@ -129,7 +118,6 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
@@ -141,8 +129,6 @@
                 app:tabTextColor="#FFFFFF" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
-
-
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager

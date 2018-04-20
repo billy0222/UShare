@@ -6,10 +6,6 @@ import org.json.JSONObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by Kevin on 9/4/2018.
- */
-
 public class Place {
     private String id;
     private String name;

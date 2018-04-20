@@ -2,14 +2,9 @@ package lix5.ushare;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,10 +16,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RateUserActivity extends AppCompatActivity {
 
@@ -100,24 +91,23 @@ public class RateUserActivity extends AppCompatActivity {
         });
 
         submit.setOnClickListener(view -> {
-            if(rating == 0){
+            if (rating == 0) {
                 new AlertDialog.Builder(RateUserActivity.this).setMessage("Please rate the user! [1 star - 5 stars]").show();
-            }
-            else{
+            } else {
                 Rating newRating = new Rating(String.valueOf(rating), comment.getText().toString());
                 mDatabase.child("rating").child(rating_user_id).child(mAuth.getUid()).setValue(newRating);
                 mDatabase.child("rating").child(rating_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        int numOfRating = (int)dataSnapshot.getChildrenCount();
+                        int numOfRating = (int) dataSnapshot.getChildrenCount();
                         mDatabase.child("users").child(rating_user_id).child("rating").addListenerForSingleValueEvent(new ValueEventListener() {
                             double ratingAfter = 0;
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot2) {
-                                if(dataSnapshot2.getValue(String.class).equals("")){
+                                if (dataSnapshot2.getValue(String.class).equals("")) {
                                     ratingAfter = (0.0 + rating);
-                                }
-                                else {
+                                } else {
                                     ratingAfter = ((Double.valueOf(dataSnapshot2.getValue(String.class)) * (numOfRating - 1) + rating) / numOfRating);
                                 }
                                 mDatabase.child("users").child(rating_user_id).child("rating").setValue(String.valueOf(ratingAfter));
@@ -142,10 +132,10 @@ public class RateUserActivity extends AppCompatActivity {
         });
     }
 
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }

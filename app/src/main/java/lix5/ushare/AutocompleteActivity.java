@@ -148,7 +148,6 @@ public class AutocompleteActivity extends AppCompatActivity implements GoogleApi
                     });
                     recommendName[i] = places.get(i).getAddress().toString() + " " + places.get(i).getName();
                     recommend[i].setText(recommendName[i]);
-                    //Log.i(TAG, "Place found: " + places.get(i).getName());
                 }
             } else {
                 Log.e(TAG, "Place not found");

@@ -12,12 +12,15 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.tuyenmonkey.AutoFillEditText;
 
+import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
-    private AppCompatButton b1;
-    private EditText ed1, ed2;
-    private TextView b2;
+    private AppCompatButton login;
+    private AutoFillEditText email;
+    private EditText pw;
+    private TextView register;
     private SharedPreferences mPrefs;
 
     private FirebaseAuth mAuth; //instance of FirebaseAuth
@@ -32,20 +35,19 @@ public class LoginActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
+        email = (AutoFillEditText) findViewById(R.id.email);
+        pw = (EditText) findViewById(R.id.password);
+        login = (AppCompatButton) findViewById(R.id.login);
+        register = (TextView) findViewById(R.id.register);
+        email.addSuggestions(Arrays.asList("connect.ust.hk", "ust.hk"));
 
-        ed1 = (EditText) findViewById(R.id.email);
-        ed2 = (EditText) findViewById(R.id.password);
-
-        b1 = (AppCompatButton) findViewById(R.id.button);
-        b2 = (TextView) findViewById(R.id.button2);
-
-        b1.setOnClickListener((v) -> {  //login
-            if (loginCheck(ed1.getText().toString(), ed2.getText().toString())) {
-                signIn(ed1.getText().toString(), ed2.getText().toString());
+        login.setOnClickListener((v) -> {  //login
+            if (loginCheck(email.getText().toString(), pw.getText().toString())) {
+                signIn(email.getText().toString(), pw.getText().toString());
             }
         });
 
-        b2.setOnClickListener((v) -> {  //register
+        register.setOnClickListener((v) -> {  //register
             startActivity(new Intent(LoginActivity.this, RegActivity.class));
             finish();
         });
@@ -65,11 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                         FirebaseUser user = mAuth.getInstance().getCurrentUser();
                         if (user.isEmailVerified()) {
                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
-                            mPrefs = getSharedPreferences("login", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = mPrefs.edit();
-//                            editor.putString("userID", user.getUid());
-                            editor.putBoolean("is_logged_in", true);
-                            editor.apply();
+                            getSharedPreferences("login", MODE_PRIVATE).edit().putBoolean("is_logged_in", true).apply();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
@@ -91,14 +89,14 @@ public class LoginActivity extends AppCompatActivity {
         boolean haveError = false;
 
         if (TextUtils.isEmpty(email_)) {
-            ed1.setError("Please enter your email");
-            ed1.requestFocus();
+            email.setError("Please enter your email");
+            email.requestFocus();
             haveError = true;
         }
 
         if (TextUtils.isEmpty(pw_)) {
-            ed2.setError("Please enter your password");
-            ed2.requestFocus();
+            pw.setError("Please enter your password");
+            pw.requestFocus();
             haveError = true;
         }
         return !haveError;

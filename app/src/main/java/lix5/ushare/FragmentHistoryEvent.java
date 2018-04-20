@@ -298,9 +298,6 @@ public class FragmentHistoryEvent extends Fragment{
             }else{
                 holder.request.setVisibility(View.INVISIBLE);
             }
-            /*if(mDataset.get(position).getHostID().equals(mAuth.getUid())){
-                holder.cardView.setBackgroundResource(R.drawable.card_edge);
-            }*/
         }
 
         @Override

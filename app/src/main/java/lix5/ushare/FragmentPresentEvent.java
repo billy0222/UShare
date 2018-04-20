@@ -27,13 +27,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 
-public class FragmentPresentEvent extends Fragment{
+public class FragmentPresentEvent extends Fragment {
     private FirebaseAuth mAuth; //instance of FirebaseAuth
     private DatabaseReference mDatabase; //instance of Database
 
@@ -41,13 +40,13 @@ public class FragmentPresentEvent extends Fragment{
     private ArrayList<Event> myDataset;
     private ArrayList<String> myDatasetID;
 
-    public FragmentPresentEvent(){
+    public FragmentPresentEvent() {
 
     }
 
     @SuppressLint("RestrictedApi")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_myevent_present_event, container, false);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -62,12 +61,12 @@ public class FragmentPresentEvent extends Fragment{
         mDatabase.child("events").orderByChild("hostID").equalTo(mAuth.getUid()).addChildEventListener(new ChildEventListener() {   // User as host
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     Event tempEvent = dataSnapshot.getValue(Event.class);
                     Date eventDateTime = null;
                     DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
                     try {
-                        eventDateTime= formatter.parse(tempEvent.getDateTime());
+                        eventDateTime = formatter.parse(tempEvent.getDateTime());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -77,7 +76,7 @@ public class FragmentPresentEvent extends Fragment{
                     Calendar currentTimeToCalendar = Calendar.getInstance();
                     currentTimeToCalendar.setTime(new Date());
 
-                    if (eventDateTimeToCalendar.after(currentTimeToCalendar) || eventDateTimeToCalendar.equals(currentTimeToCalendar)){
+                    if (eventDateTimeToCalendar.after(currentTimeToCalendar) || eventDateTimeToCalendar.equals(currentTimeToCalendar)) {
                         int positionToInsert = sorting(tempEvent);
                         myDataset.add(positionToInsert, tempEvent);
                         myDatasetID.add(positionToInsert, dataSnapshot.getKey());
@@ -128,12 +127,12 @@ public class FragmentPresentEvent extends Fragment{
         mDatabase.child("events").orderByChild("passengers").addChildEventListener(new ChildEventListener() {   // User as passenger
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     Event tempEvent = dataSnapshot.getValue(Event.class);
                     Date eventDateTime = null;
                     DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
                     try {
-                        eventDateTime= formatter.parse(tempEvent.getDateTime());
+                        eventDateTime = formatter.parse(tempEvent.getDateTime());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -143,8 +142,8 @@ public class FragmentPresentEvent extends Fragment{
                     Calendar currentTimeToCalendar = Calendar.getInstance();
                     currentTimeToCalendar.setTime(new Date());
 
-                    if((eventDateTimeToCalendar.after(currentTimeToCalendar) || eventDateTimeToCalendar.equals(currentTimeToCalendar))
-                            && tempEvent.getPassengers().contains(mAuth.getUid())){
+                    if ((eventDateTimeToCalendar.after(currentTimeToCalendar) || eventDateTimeToCalendar.equals(currentTimeToCalendar))
+                            && tempEvent.getPassengers().contains(mAuth.getUid())) {
                         int positionToInsert = sorting(tempEvent);
                         myDataset.add(positionToInsert, tempEvent);
                         myDatasetID.add(positionToInsert, dataSnapshot.getKey());
@@ -194,28 +193,27 @@ public class FragmentPresentEvent extends Fragment{
         return view;
     }
 
-    public int sorting(Event event){
+    public int sorting(Event event) {
         int locationToInsert = 0;
         Date event1DateTime = null;
         Date event2DateTime = null;
         DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
 
-        if(myDataset.isEmpty()){      // no element
+        if (myDataset.isEmpty()) {      // no element
             return 0;
-        }
-        else{
-            for(int i = 0 ; i < myDataset.size() ; i++){
+        } else {
+            for (int i = 0; i < myDataset.size(); i++) {
                 try {
                     event1DateTime = formatter.parse(event.getDateTime());
                     event2DateTime = formatter.parse(myDataset.get(i).getDateTime());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if(event2DateTime.compareTo(event1DateTime) == 0 || event2DateTime.compareTo(event1DateTime) == 1) {
+                if (event2DateTime.compareTo(event1DateTime) == 0 || event2DateTime.compareTo(event1DateTime) == 1) {
                     locationToInsert = i;
                     break;
                 }
-                if(i == myDataset.size() - 1){      // add at the last position
+                if (i == myDataset.size() - 1) {      // add at the last position
                     locationToInsert = myDataset.size();
                 }
             }
@@ -223,10 +221,56 @@ public class FragmentPresentEvent extends Fragment{
         }
     }
 
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private ArrayList<Event> mDataset;
 
-        public class ViewHolder extends RecyclerView.ViewHolder{
+        public MyAdapter(ArrayList<Event> mDataset) {
+            this.mDataset = mDataset;
+        }
+
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.taxi_item, parent, false);
+            ViewHolder vh = new ViewHolder(v);
+            return vh;
+        }
+
+        @SuppressLint("RestrictedApi")
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            if (mDataset.get(position).getType().equals("Taxi")) {
+                Picasso.get().load(R.drawable.taxi_item).into(holder.taxiCar_img);
+            } else if (mDataset.get(position).getType().equals("Car")) {
+                Picasso.get().load(R.drawable.car_item).into(holder.taxiCar_img);
+            }
+            holder.hostName.setText(mDataset.get(position).getHostName());
+            holder.vacancy.setText(mDataset.get(position).getNumOfSeat());
+            if (mDataset.get(position).getBoyOnly().equals("true") && mDataset.get(position).getGirlOnly().equals("false")) {
+                holder.gender.setImageResource(R.drawable.man);
+                holder.gender_text.setText(R.string.men_only);
+            } else if (mDataset.get(position).getGirlOnly().equals("true") && mDataset.get(position).getBoyOnly().equals("false")) {
+                holder.gender.setImageResource(R.drawable.woman);
+                holder.gender_text.setText(R.string.womenOnly);
+            } else {
+                holder.gender.setVisibility(View.INVISIBLE);
+                holder.gender_text.setVisibility(View.INVISIBLE);
+            }
+            holder.from_text.setText(mDataset.get(position).getPickUp());
+            holder.to_text.setText(mDataset.get(position).getDropOff());
+            holder.dateTime_text.setText(mDataset.get(position).getDateTime());
+            holder.message.setText(mDataset.get(position).getMessage());
+            if (mDataset.get(position).getIsRequest().equals("true")) {
+                holder.request.setImageResource(R.drawable.request);
+                holder.request.setVisibility(View.VISIBLE);
+            } else {
+                holder.request.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDataset.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
             public CardView cardView;
             public ImageView taxiCar_img;
             public TextView hostName;
@@ -239,7 +283,7 @@ public class FragmentPresentEvent extends Fragment{
             public TextView message;
             public ImageView request;
 
-            public ViewHolder(View v){
+            public ViewHolder(View v) {
                 super(v);
                 taxiCar_img = v.findViewById(R.id.img_taxiItem);
                 hostName = v.findViewById(R.id.hostText_taxiItem);
@@ -261,47 +305,5 @@ public class FragmentPresentEvent extends Fragment{
                 });
             }
         }
-
-        public MyAdapter(ArrayList<Event> mDataset) { this.mDataset = mDataset;}
-
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.taxi_item, parent, false);
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
-
-        @SuppressLint("RestrictedApi")
-        public void onBindViewHolder(ViewHolder holder, int position){
-            if(mDataset.get(position).getType().equals("Taxi")){
-                Picasso.get().load(R.drawable.taxi_item).into(holder.taxiCar_img);
-            } else if(mDataset.get(position).getType().equals("Car")){
-                Picasso.get().load(R.drawable.car_item).into(holder.taxiCar_img);
-            }
-            holder.hostName.setText(mDataset.get(position).getHostName());
-            holder.vacancy.setText(mDataset.get(position).getNumOfSeat());
-            if(mDataset.get(position).getBoyOnly().equals("true") && mDataset.get(position).getGirlOnly().equals("false")){
-                holder.gender.setImageResource(R.drawable.man);
-                holder.gender_text.setText(R.string.men_only);
-            }else if(mDataset.get(position).getGirlOnly().equals("true") && mDataset.get(position).getBoyOnly().equals("false")){
-                holder.gender.setImageResource(R.drawable.woman);
-                holder.gender_text.setText(R.string.womenOnly);
-            }else{
-                holder.gender.setVisibility(View.INVISIBLE);
-                holder.gender_text.setVisibility(View.INVISIBLE);
-            }
-            holder.from_text.setText(mDataset.get(position).getPickUp());
-            holder.to_text.setText(mDataset.get(position).getDropOff());
-            holder.dateTime_text.setText(mDataset.get(position).getDateTime());
-            holder.message.setText(mDataset.get(position).getMessage());
-            if(mDataset.get(position).getIsRequest().equals("true")){
-                holder.request.setImageResource(R.drawable.request);
-                holder.request.setVisibility(View.VISIBLE);
-            }else{
-                holder.request.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        @Override
-        public int getItemCount() {return  mDataset.size();}
     }
 }

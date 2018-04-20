@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,9 +36,9 @@ public class ProfileEditActivity extends AppCompatActivity {
     private FirebaseAuth mAuth; //instance of FirebaseAuth
     private DatabaseReference mDatabase; //instance of Database
     private StorageReference mStorage;   //instance of Storage
-    private TextView name, phone, gender;
+    private TextView name, phone;
+    private Spinner gender;
     private EditText bio;
-    private Button btnChoose, btnSubmit;
     private ImageView uploaded_avatar;
     private Uri filePath;
 
@@ -45,16 +46,18 @@ public class ProfileEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
-        getSupportActionBar().setTitle(R.string.title_activity_profile_edit);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         name = findViewById(R.id.name_profileEdit);
         bio = findViewById(R.id.bio_profileEdit);
         phone = findViewById(R.id.phone_profileEdit);
         gender = findViewById(R.id.gender_profileEdit);
-        btnChoose = findViewById(R.id.btnUploadAvatar_profileEdit);
-        btnSubmit = findViewById(R.id.btnSubmit_profileEdit);
         uploaded_avatar = findViewById(R.id.uploaded_avatar_profileEdit);
+        findViewById(R.id.btnCancel).setOnClickListener(v -> finish());
+
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(ProfileEditActivity.this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.genders));
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gender.setAdapter(genderAdapter);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference("users/");
@@ -66,19 +69,24 @@ public class ProfileEditActivity extends AppCompatActivity {
                 name.setText(dataSnapshot.child("username").getValue(String.class));
                 bio.setText(dataSnapshot.child("bio").getValue(String.class));
                 phone.setText(dataSnapshot.child("phoneNum").getValue(String.class));
-                gender.setText(dataSnapshot.child("sex").getValue(String.class));
+                String gen = dataSnapshot.child("sex").getValue(String.class);
+                if (gen == null)
+                    gender.setSelection(0);
+                else if (gen.equals("Male"))
+                    gender.setSelection(1);
+                else if (gen.equals("Female"))
+                    gender.setSelection(2);
                 Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(uploaded_avatar);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //data fetch error
             }
         });
     }
 
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
@@ -136,7 +144,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User temp = new User(name.getText().toString(), dataSnapshot.child("email").getValue(String.class),
                                 dataSnapshot.child("password").getValue(String.class),
-                                uri.toString(), gender.getText().toString(), bio.getText().toString(),
+                                uri.toString(), gender.getSelectedItem().toString(), bio.getText().toString(),
                                 dataSnapshot.child("rating").getValue(String.class), phone.getText().toString());
                         Map<String, Object> postValues = temp.toMapHaveAvatar();
                         Map<String, Object> childUpdates = new HashMap<>();
@@ -156,7 +164,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User temp = new User(name.getText().toString(), dataSnapshot.child("email").getValue(String.class),
                             dataSnapshot.child("password").getValue(String.class), dataSnapshot.child("avatar").getValue(String.class),
-                            gender.getText().toString(), bio.getText().toString(),
+                            gender.getSelectedItem().toString(), bio.getText().toString(),
                             dataSnapshot.child("rating").getValue(String.class), phone.getText().toString());
                     Map<String, Object> postValues = temp.toMapHaveAvatar();
                     Map<String, Object> childUpdates = new HashMap<>();

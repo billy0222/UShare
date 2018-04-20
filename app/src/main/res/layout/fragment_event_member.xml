@@ -108,9 +108,9 @@
             android:id="@+id/host_rate_me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/host_rating_star"
             android:layout_alignEnd="@+id/host_rating_star"
             android:layout_alignRight="@+id/host_rating_star"
+            android:layout_below="@id/host_rating_star"
             android:text="Rate me!" />
 
         <TextView

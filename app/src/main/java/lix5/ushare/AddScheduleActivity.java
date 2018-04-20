@@ -55,7 +55,6 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
         save = (Button) findViewById(R.id.save);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("New schedule");
         readData();
         loadedSchedule = (Schedule) getIntent().getSerializableExtra("schedule");
         if (loadedSchedule != null)
@@ -89,8 +88,11 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
         dayNightSwitch.setListener(isNight -> {
             if (isNight) {
                 twice.setChecked(true);
+                isTwice = true;
                 daytimePicker.setVisibility(View.INVISIBLE);
                 nighttimePicker.setVisibility(View.VISIBLE);
+                getSharedPreferences("loadSchedule", MODE_PRIVATE).edit().putBoolean("isTwice", isTwice).apply();
+                getSupportFragmentManager().beginTransaction().replace(R.id.advanced, new FragmentScheduler()).commit();
             } else {
                 daytimePicker.setVisibility(View.VISIBLE);
                 nighttimePicker.setVisibility(View.INVISIBLE);
@@ -242,12 +244,6 @@ public class AddScheduleActivity extends AppCompatActivity implements WeekdaysDa
 
     @Override
     public void onWeekdaysItemClicked(int attachID, WeekdaysDataItem item) {
-        // Do something if today is selected?
-//        Calendar calendar = Calendar.getInstance();
-//        int today = calendar.get(Calendar.DAY_OF_WEEK);
-//        if (item.getCalendarDayId() == today && item.isSelected()) {
-//            // today isSelected
-//        }
     }
 
     @Override

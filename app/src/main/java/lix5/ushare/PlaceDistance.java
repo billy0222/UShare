@@ -7,10 +7,6 @@ import org.json.JSONObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by Kevin on 15/4/2018.
- */
-
 public class PlaceDistance {
     private int distance;
     private int duration;
@@ -35,12 +31,12 @@ public class PlaceDistance {
         return distance;
     }
 
-    public int getDuration() {
-        return duration;
-    }
-
     public void setDistance(int distance) {
         this.distance = distance;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public void setDuration(int duration) {

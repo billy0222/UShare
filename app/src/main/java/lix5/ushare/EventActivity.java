@@ -62,15 +62,14 @@ public class EventActivity extends AppCompatActivity {
         for (int i = 0; i < iconID.length; i++) {
             tabLayout.getTabAt(i).setIcon(iconID[i]);
         }
-        if(getIntent().getBooleanExtra("event_is_history", false)){
+        if (getIntent().getBooleanExtra("event_is_history", false)) {
             invalidateOptionsMenu();
         }
-        //TODO adapter
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
-        if(getIntent().getBooleanExtra("event_is_history", false)) {
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (getIntent().getBooleanExtra("event_is_history", false)) {
             for (int i = 0; i < menu.size(); i++) {
                 menu.getItem(i).setVisible(false);
             }

@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
 public class Event implements Serializable{
     private String hostID;
     private String hostName;

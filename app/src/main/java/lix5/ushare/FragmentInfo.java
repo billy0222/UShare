@@ -1,6 +1,5 @@
 package lix5.ushare;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,16 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class FragmentInfo extends Fragment {
     private FirebaseAuth mAuth; //instance of FirebaseAuth
@@ -62,7 +56,7 @@ public class FragmentInfo extends Fragment {
         pickUp.setText(event.getPickUp());
         dropOff.setText(event.getDropOff());
         dateTime.setText(event.getDateTime());
-        if(event.getMessage().equals(""))
+        if (event.getMessage().equals(""))
             remarkTitle.setVisibility(View.GONE);
         else
             remark.setText(event.getMessage());
@@ -71,14 +65,14 @@ public class FragmentInfo extends Fragment {
         distance.setText(String.valueOf(result.getDistance()) + " meters");
         duration.setText(String.valueOf(Math.round(result.getDuration() / 60)) + " minutes");
 
-        if(event.getType().equals("Taxi")) {
+        if (event.getType().equals("Taxi")) {
             double fare = taxiFareCalculation(result.getDistance());
             taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare) + " per person");
 
             mDatabase.child("events").child(eventKey).child("passengers").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    int size = (int)dataSnapshot.getChildrenCount() + 1;
+                    int size = (int) dataSnapshot.getChildrenCount() + 1;
                     taxiFare.setText("$" + fare + ", " + "$" + Math.round(fare / size) + " per person");
                 }
 
@@ -87,26 +81,24 @@ public class FragmentInfo extends Fragment {
 
                 }
             });
-        } else{
+        } else {
             taxiFare_text.setVisibility(View.INVISIBLE);
             taxiFare.setVisibility(View.INVISIBLE);
         }
     }
 
-    public PlaceDistance findPlaceInfo(String pickUpPlaceID, String dropOffPlaceID){
+    public PlaceDistance findPlaceInfo(String pickUpPlaceID, String dropOffPlaceID) {
         PlaceService service = new PlaceService("AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA");
         return service.findPlacesInfo(pickUpPlaceID, dropOffPlaceID);
     }
 
-    public double taxiFareCalculation(int distance){
+    public double taxiFareCalculation(int distance) {
         double totalFare;
-        if(distance <= 2000){       // First 2 kilometers or any part thereof => $24
+        if (distance <= 2000) {       // First 2 kilometers or any part thereof => $24
             totalFare = 24;
-        }
-        else if(distance <= 8882){      // $1.7 for every subsequent 200 meters or part thereof before $83.5
+        } else if (distance <= 8882) {      // $1.7 for every subsequent 200 meters or part thereof before $83.5
             totalFare = 24 + (distance - 2000) / 200 * 1.7;
-        }
-        else{       // $1.2 for for every subsequent 200 meters or part thereof after $83.5
+        } else {       // $1.2 for for every subsequent 200 meters or part thereof after $83.5
             totalFare = 83.5 + (distance - 8882) / 200 * 1.2;
         }
         return totalFare;

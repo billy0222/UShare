@@ -2,8 +2,8 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_selected="true" android:drawable="@drawable/history_black"/>
+    <item android:drawable="@drawable/history_black" android:state_selected="true" />
 
-    <item android:state_selected="false" android:drawable="@drawable/history_grey"/>
+    <item android:drawable="@drawable/history_grey" android:state_selected="false" />
 
 </selector>

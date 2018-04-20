@@ -5,13 +5,13 @@
     <item
         android:id="@+id/join_event"
         android:icon="@drawable/join_event"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:title="Join"
         app:showAsAction="always" />
     <item
         android:id="@+id/exit_event"
         android:icon="@drawable/exit"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:title="Exit"
         app:showAsAction="always" />
 </menu>

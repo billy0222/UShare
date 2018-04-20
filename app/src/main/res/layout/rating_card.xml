@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="4dp"
-    android:layout_margin="5dp">
+    android:layout_gravity="center"
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="4dp">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -30,30 +29,29 @@
             android:id="@+id/rater_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/rater_pic"
             android:layout_alignParentTop="true"
             android:layout_marginTop="16dp"
-            android:text="Name"
-            android:layout_toEndOf="@id/rater_pic" />
+            android:layout_toEndOf="@id/rater_pic"
+            android:layout_toRightOf="@id/rater_pic"
+            android:text="Name" />
 
         <TextView
             android:id="@+id/rater_message"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/rater_pic"
             android:layout_below="@id/rater_name"
             android:layout_toEndOf="@id/rater_pic"
-            android:text="[Message]"
-            android:maxLines="3"/>
+            android:layout_toRightOf="@id/rater_pic"
+            android:maxLines="3"
+            android:text="[Message]" />
 
         <LinearLayout
-            android:id="@+id/rater_rating_star"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginTop="25dp"
             android:layout_marginRight="16dp"
+            android:layout_marginTop="25dp"
             android:gravity="end"
             android:orientation="horizontal">
 
@@ -63,24 +61,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-20dp"
                 android:src="@drawable/star_filled" />
+
             <ImageView
                 android:id="@+id/star2_rater"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-20dp"
                 android:src="@drawable/star_filled" />
+
             <ImageView
                 android:id="@+id/star3_rater"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-20dp"
                 android:src="@drawable/star_filled" />
+
             <ImageView
                 android:id="@+id/star4_rater"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="-20dp"
                 android:src="@drawable/star_filled" />
+
             <ImageView
                 android:id="@+id/star5_rater"
                 android:layout_width="wrap_content"

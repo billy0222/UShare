@@ -16,15 +16,15 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.tuyenmonkey.AutoFillEditText;
 
-/**
- * Created by Kevin on 31/1/2018.
- */
+import java.util.Arrays;
 
 public class RegActivity extends AppCompatActivity {
 
-    private EditText name, email, pw, pwCheck;
-    private AppCompatButton btn;
+    private EditText name, pw, pwCheck;
+    private AutoFillEditText email;
+    private AppCompatButton register;
     private TextView backToLogin;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -41,14 +41,15 @@ public class RegActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        name = findViewById(R.id.input_name);
-        email = findViewById(R.id.input_email);
-        pw = findViewById(R.id.input_password);
-        pwCheck = findViewById(R.id.input_password_check);
-        btn = findViewById(R.id.btn_signup);
-        backToLogin = findViewById(R.id.link_login);
+        name = (EditText) findViewById(R.id.input_name);
+        email = (AutoFillEditText) findViewById(R.id.input_email);
+        pw = (EditText) findViewById(R.id.input_password);
+        pwCheck = (EditText) findViewById(R.id.input_password_check);
+        register = (AppCompatButton) findViewById(R.id.btn_signup);
+        backToLogin = (TextView) findViewById(R.id.link_login);
+        email.addSuggestions(Arrays.asList("connect.ust.hk", "ust.hk"));
 
-        btn.setOnClickListener((v) -> {     //register
+        register.setOnClickListener((v) -> {     //register
             if (regFormCheck(name.getText().toString(), email.getText().toString(), pw.getText().toString(), pwCheck.getText().toString())) {
                 createAccount(name.getText().toString(), email.getText().toString(), pw.getText().toString());
             } else {

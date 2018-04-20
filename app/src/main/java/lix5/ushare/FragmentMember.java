@@ -101,7 +101,6 @@ public class FragmentMember extends Fragment {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String key = dataSnapshot.getKey();
-                System.out.println(key);
                 int index = myDatasetID.indexOf(key);
                 if (index > -1) {
                     myDatasetID.remove(index);
@@ -167,68 +166,6 @@ public class FragmentMember extends Fragment {
 
             }
         });
-    }
-
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        private ArrayList<User> mDataset;
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public CircleImageView passengerPic;
-            public TextView passengerName;
-            public ImageView passengerStar1, passengerStar2, passengerStar3, passengerStar4, passengerStar5;
-            public LinearLayout passenger_rating_star;
-            public TextView passenger_rate_me;
-            public LinearLayout passenger_star;
-
-            public ViewHolder(View v) {
-                super(v);
-                passengerName = v.findViewById(R.id.passenger_name);
-                passengerPic = v.findViewById(R.id.passenger_pic);
-                passengerStar1 = v.findViewById(R.id.star1_passenger);
-                passengerStar2 = v.findViewById(R.id.star2_passenger);
-                passengerStar3 = v.findViewById(R.id.star3_passenger);
-                passengerStar4 = v.findViewById(R.id.star4_passenger);
-                passengerStar5 = v.findViewById(R.id.star5_passenger);
-                passenger_rating_star = v.findViewById(R.id.passenger_rating_star);
-                passenger_rate_me = v.findViewById(R.id.rate_me_passenger);
-                passenger_star = v.findViewById(R.id.passenger_rating_star);
-
-                passenger_star.setOnClickListener(view -> {
-                    String passenger_id = passengerID.get(getAdapterPosition());
-                    startActivity(new Intent(getActivity(), RatingActivity.class).putExtra("rating_user_id", passenger_id));
-                });
-            }
-        }
-
-        public MyAdapter(ArrayList<User> mDataset) {
-            this.mDataset = mDataset;
-        }
-
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.passenger_card, parent, false);
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
-
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.passengerName.setText(mDataset.get(position).getUsername());
-            Picasso.get().load(mDataset.get(position).getAvatar()).into(holder.passengerPic);
-            mDatabase.child("users").child(passengerID.get(position)).child("rating").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    showStarFromRating(mDataset.get(position).getRating(), holder.passenger_rate_me, holder.passengerStar1, holder.passengerStar2, holder.passengerStar3, holder.passengerStar4, holder.passengerStar5);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        public int getItemCount() {
-            return mDataset.size();
-        }
     }
 
     public void showStarFromRating(String rating, TextView words, ImageView star1, ImageView star2, ImageView star3, ImageView star4, ImageView star5) {
@@ -307,6 +244,68 @@ public class FragmentMember extends Fragment {
                 star3.setImageResource(R.drawable.star_none);
                 star4.setImageResource(R.drawable.star_none);
                 star5.setImageResource(R.drawable.star_none);
+            }
+        }
+    }
+
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+        private ArrayList<User> mDataset;
+
+        public MyAdapter(ArrayList<User> mDataset) {
+            this.mDataset = mDataset;
+        }
+
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.passenger_card, parent, false);
+            ViewHolder vh = new ViewHolder(v);
+            return vh;
+        }
+
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.passengerName.setText(mDataset.get(position).getUsername());
+            Picasso.get().load(mDataset.get(position).getAvatar()).into(holder.passengerPic);
+            mDatabase.child("users").child(passengerID.get(position)).child("rating").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    showStarFromRating(mDataset.get(position).getRating(), holder.passenger_rate_me, holder.passengerStar1, holder.passengerStar2, holder.passengerStar3, holder.passengerStar4, holder.passengerStar5);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+        public int getItemCount() {
+            return mDataset.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public CircleImageView passengerPic;
+            public TextView passengerName;
+            public ImageView passengerStar1, passengerStar2, passengerStar3, passengerStar4, passengerStar5;
+            public LinearLayout passenger_rating_star;
+            public TextView passenger_rate_me;
+            public LinearLayout passenger_star;
+
+            public ViewHolder(View v) {
+                super(v);
+                passengerName = v.findViewById(R.id.passenger_name);
+                passengerPic = v.findViewById(R.id.passenger_pic);
+                passengerStar1 = v.findViewById(R.id.star1_passenger);
+                passengerStar2 = v.findViewById(R.id.star2_passenger);
+                passengerStar3 = v.findViewById(R.id.star3_passenger);
+                passengerStar4 = v.findViewById(R.id.star4_passenger);
+                passengerStar5 = v.findViewById(R.id.star5_passenger);
+                passenger_rating_star = v.findViewById(R.id.passenger_rating_star);
+                passenger_rate_me = v.findViewById(R.id.rate_me_passenger);
+                passenger_star = v.findViewById(R.id.passenger_rating_star);
+
+                passenger_star.setOnClickListener(view -> {
+                    String passenger_id = passengerID.get(getAdapterPosition());
+                    startActivity(new Intent(getActivity(), RatingActivity.class).putExtra("rating_user_id", passenger_id));
+                });
             }
         }
     }

@@ -22,8 +22,8 @@
             android:title="Second destination" />
 
         <CheckBoxPreference
-            android:key="retrace"
             android:defaultValue="false"
+            android:key="retrace"
             android:summary="Use reversed location for second schedule"
             android:title="Retrace" />
 

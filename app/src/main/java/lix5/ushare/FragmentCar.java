@@ -66,7 +66,7 @@ public class FragmentCar extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Event tempEvent = dataSnapshot.getValue(Event.class);
-                if(isAfterToday(tempEvent)) {
+                if (isAfterToday(tempEvent)) {
                     int positionToInsert = sorting(tempEvent);
                     myDataset.add(positionToInsert, tempEvent);
                     myDatasetID.add(positionToInsert, dataSnapshot.getKey());
@@ -117,11 +117,11 @@ public class FragmentCar extends Fragment {
         return rv;
     }
 
-    public boolean isAfterToday(Event event){
+    public boolean isAfterToday(Event event) {
         Date eventDateTime = null;
         DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
         try {
-            eventDateTime= formatter.parse(event.getDateTime());
+            eventDateTime = formatter.parse(event.getDateTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -134,28 +134,27 @@ public class FragmentCar extends Fragment {
         return eventDateTimeToCalendar.after(currentTimeToCalendar);
     }
 
-    public int sorting(Event event){
+    public int sorting(Event event) {
         int locationToInsert = 0;
         Date event1DateTime = null;
         Date event2DateTime = null;
         DateFormat formatter = new SimpleDateFormat("EE, dd MMMM, HH:mm", Locale.US);
 
-        if(myDataset.isEmpty()){      // no element
+        if (myDataset.isEmpty()) {      // no element
             return 0;
-        }
-        else{
-            for(int i = 0 ; i < myDataset.size() ; i++){
+        } else {
+            for (int i = 0; i < myDataset.size(); i++) {
                 try {
                     event1DateTime = formatter.parse(event.getDateTime());
                     event2DateTime = formatter.parse(myDataset.get(i).getDateTime());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if(event2DateTime.compareTo(event1DateTime) == 0 || event2DateTime.compareTo(event1DateTime) == 1) {
+                if (event2DateTime.compareTo(event1DateTime) == 0 || event2DateTime.compareTo(event1DateTime) == 1) {
                     locationToInsert = i;
                     break;
                 }
-                if(i == myDataset.size() - 1){      // add at the last position
+                if (i == myDataset.size() - 1) {      // add at the last position
                     locationToInsert = myDataset.size();
                 }
             }

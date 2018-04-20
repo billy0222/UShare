@@ -3,10 +3,6 @@ package lix5.ushare;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Kevin on 25/3/2018.
- */
-
 public class User {
     public String username;
     public String email;

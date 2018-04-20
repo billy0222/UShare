@@ -71,10 +71,10 @@ public class FragmentScheduler extends PreferenceFragmentCompat {
                 secDes.setSummary(firstLoc.getSummary());
                 secLocID = firstDesID;
                 secDesID = firstLocID;
-                dataPasser.onDataPass(details.SECLOC,secLoc.getSummary().toString());
-                dataPasser.onDataPass(details.SECDES,secDes.getSummary().toString());
-                dataPasser.onDataPass(details.SECLOCID,secLocID);
-                dataPasser.onDataPass(details.SECDESID,secDesID);
+                dataPasser.onDataPass(details.SECLOC, secLoc.getSummary().toString());
+                dataPasser.onDataPass(details.SECDES, secDes.getSummary().toString());
+                dataPasser.onDataPass(details.SECLOCID, secLocID);
+                dataPasser.onDataPass(details.SECDESID, secDesID);
             }
             if (!retrace.isChecked()) {
                 secLoc.setEnabled(true);
@@ -122,18 +122,18 @@ public class FragmentScheduler extends PreferenceFragmentCompat {
     private void load() {
         SharedPreferences loadSchedulePreferences = getActivity().getSharedPreferences("loadSchedule", MODE_PRIVATE);
         firstLoc.setSummary(loadSchedulePreferences.getString("fl", ""));
-        firstDes.setSummary(loadSchedulePreferences.getString("fd",""));
-        secLoc.setSummary(loadSchedulePreferences.getString("sl",""));
-        secDes.setSummary(loadSchedulePreferences.getString("sd",""));
-        type.setSummary(loadSchedulePreferences.getString("type",""));
-        type.setValue(loadSchedulePreferences.getString("type",""));
-        seats.setSummary(loadSchedulePreferences.getString("seats",""));
-        preference.setSummary(loadSchedulePreferences.getString("pref",""));
-        if(!loadSchedulePreferences.getBoolean("isTwice", false)){
+        firstDes.setSummary(loadSchedulePreferences.getString("fd", ""));
+        secLoc.setSummary(loadSchedulePreferences.getString("sl", ""));
+        secDes.setSummary(loadSchedulePreferences.getString("sd", ""));
+        type.setSummary(loadSchedulePreferences.getString("type", ""));
+        type.setValue(loadSchedulePreferences.getString("type", ""));
+        seats.setSummary(loadSchedulePreferences.getString("seats", ""));
+        preference.setSummary(loadSchedulePreferences.getString("pref", ""));
+        if (!loadSchedulePreferences.getBoolean("isTwice", false)) {
             secLoc.setEnabled(false);
             secDes.setEnabled(false);
             retrace.setEnabled(false);
-        }else {
+        } else {
             secLoc.setEnabled(true);
             secDes.setEnabled(true);
             retrace.setEnabled(true);
@@ -161,7 +161,7 @@ public class FragmentScheduler extends PreferenceFragmentCompat {
                         firstLocID = results.getString("placeID");
                         dataPasser.onDataPass(details.FIRSTLOC, result.toString());
                         dataPasser.onDataPass(details.FIRSTLOCID, firstLocID);
-                }
+                    }
                     firstLoc.setSummary(result);
                     if (retrace.isChecked()) {
                         secDes.setSummary(result);

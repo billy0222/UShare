@@ -3,10 +3,6 @@ package lix5.ushare;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by Kevin on 3/4/2018.
- */
-
 public class ChatMessage implements Serializable {
     private String messageText;
     private String messageUser;

@@ -105,11 +105,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/placeInfo"
-            android:layout_toEndOf="@id/placeInfo_distance"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_toEndOf="@id/placeInfo_distance"
             android:background="@android:color/transparent"
             android:hint="@string/distance" />
 
@@ -130,11 +130,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/placeInfo_distance"
-            android:layout_toEndOf="@id/placeInfo_duration"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_toEndOf="@id/placeInfo_duration"
             android:background="@android:color/transparent"
             android:hint="@string/duration" />
 
@@ -155,11 +155,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/placeInfo_duration"
-            android:layout_toEndOf="@id/placeInfo_taxiFare"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_toEndOf="@id/placeInfo_taxiFare"
             android:background="@android:color/transparent"
             android:hint="@string/taxi_fare" />
 

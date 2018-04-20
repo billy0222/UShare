@@ -10,10 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -95,35 +93,24 @@ public class FragmentChatroom extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         mRecyclerView.scrollToPosition(myDataset.size() - 1);
     }
 
-    public class MyAdapter extends RecyclerView.Adapter<FragmentChatroom.MyAdapter.ViewHolder>{
+    public class MyAdapter extends RecyclerView.Adapter<FragmentChatroom.MyAdapter.ViewHolder> {
         private ArrayList<ChatMessage> mDataset;
 
-        public class ViewHolder extends RecyclerView.ViewHolder{
-            public CircleImageView pic;
-            public TextView message_user, message_time, message_text;
-
-            public ViewHolder(View v){
-                super(v);
-                pic = v.findViewById(R.id.message_pic);
-                message_user = v.findViewById(R.id.message_user);
-                message_time = v.findViewById(R.id.message_time);
-                message_text = v.findViewById(R.id.message_text);
-            }
+        public MyAdapter(ArrayList<ChatMessage> mDataset) {
+            this.mDataset = mDataset;
         }
 
-        public MyAdapter(ArrayList<ChatMessage> mDataset){this.mDataset = mDataset;}
-
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message, parent, false);
             ViewHolder vh = new ViewHolder(v);
             return vh;
         }
 
-        public void onBindViewHolder(ViewHolder holder, int position){
+        public void onBindViewHolder(ViewHolder holder, int position) {
             mDatabase.child("users").child(mDataset.get(position).getMessageUser()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -140,8 +127,21 @@ public class FragmentChatroom extends Fragment {
             holder.message_time.setText(mDataset.get(position).getMessageTime().substring(0, 19));
         }
 
-        public int getItemCount(){
+        public int getItemCount() {
             return mDataset.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public CircleImageView pic;
+            public TextView message_user, message_time, message_text;
+
+            public ViewHolder(View v) {
+                super(v);
+                pic = v.findViewById(R.id.message_pic);
+                message_user = v.findViewById(R.id.message_user);
+                message_time = v.findViewById(R.id.message_time);
+                message_text = v.findViewById(R.id.message_text);
+            }
         }
     }
 }
