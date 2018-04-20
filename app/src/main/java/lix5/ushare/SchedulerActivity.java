@@ -1,5 +1,7 @@
 package lix5.ushare;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -21,14 +23,21 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class SchedulerActivity extends AppCompatActivity {
     RecyclerView mList;
     private List<Schedule> schedules;
+    private List<PendingIntent> intentArray;
+    private Calendar alarmCalendar = Calendar.getInstance();
+    private AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +45,7 @@ public class SchedulerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_schedular);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         schedules = readData();
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         MyAdapter myAdapter = new MyAdapter(schedules);
         mList = (RecyclerView) findViewById(R.id.rv_schedule);
@@ -50,6 +60,94 @@ public class SchedulerActivity extends AppCompatActivity {
             startActivity(new Intent(SchedulerActivity.this, AddScheduleActivity.class));
             finish();
         });
+
+        intentArray = new ArrayList<PendingIntent>();
+        for (int i = 0; i < schedules.size(); i++) {
+            ArrayList<Integer> weekdays = schedules.get(i).getWeekdaysArray();
+            if (schedules.get(i).getOn()) {
+                for (int j = 0; j < weekdays.size(); j++) {
+                    alarmCalendar.setTimeInMillis(System.currentTimeMillis());
+                    alarmCalendar.set(Calendar.DAY_OF_WEEK, weekdays.get(j));
+                    alarmCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(schedules.get(i).getDaytime().substring(0, 2)));
+                    alarmCalendar.set(Calendar.MINUTE, Integer.parseInt(schedules.get(i).getDaytime().substring(3, 5)));
+                    alarmCalendar.set(Calendar.SECOND, 0);
+                    alarmCalendar.set(Calendar.MILLISECOND, 0);
+                    if (alarmCalendar.getTimeInMillis() < System.currentTimeMillis())
+                        alarmCalendar.add(Calendar.DAY_OF_YEAR, 7);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("scheduleID", i);
+                    bundle.putBoolean("isDaytime", true);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    ObjectOutputStream out = null;
+                    try {
+                        out = new ObjectOutputStream(bos);
+                        out.writeObject(schedules.get(i));
+                        out.flush();
+                        byte[] data = bos.toByteArray();
+                        bundle.putByteArray("schedule", data);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            bos.close();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    Intent intent = new Intent(SchedulerActivity.this, AlarmReceiver.class).putExtras(bundle).setAction(Long.toString(System.currentTimeMillis())).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+                }
+            }
+        }
+        int k = schedules.size();
+        for (int i = 0; i < schedules.size(); i++) {
+            if (schedules.get(i).getTwice())
+                k++;
+        }
+        for (int x = 0; x < schedules.size(); x++) {
+            for (int i = schedules.size(); i < k; i++) {
+                if (schedules.get(x).getTwice() && schedules.get(x).getOn()) {
+                    ArrayList<Integer> weekdays = schedules.get(x).getWeekdaysArray();
+                    for (int j = 0; j < weekdays.size(); j++) {
+                        alarmCalendar.setTimeInMillis(System.currentTimeMillis());
+                        alarmCalendar.set(Calendar.DAY_OF_WEEK, weekdays.get(j));
+                        alarmCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(schedules.get(x).getNighttime().substring(0, 2)));
+                        alarmCalendar.set(Calendar.MINUTE, Integer.parseInt(schedules.get(x).getNighttime().substring(3, 5)));
+                        alarmCalendar.set(Calendar.SECOND, 0);
+                        alarmCalendar.set(Calendar.MILLISECOND, 0);
+                        if (alarmCalendar.getTimeInMillis() < System.currentTimeMillis())
+                            alarmCalendar.add(Calendar.DAY_OF_YEAR, 7);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("scheduleID", i);
+                        bundle.putBoolean("isDaytime", false);
+
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        ObjectOutputStream out = null;
+                        try {
+                            out = new ObjectOutputStream(bos);
+                            out.writeObject(schedules.get(x));
+                            out.flush();
+                            byte[] data = bos.toByteArray();
+                            bundle.putByteArray("schedule", data);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                bos.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                        Intent intent = new Intent(SchedulerActivity.this, AlarmReceiver.class).putExtras(bundle).setAction(Long.toString(System.currentTimeMillis())).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -82,18 +180,9 @@ public class SchedulerActivity extends AppCompatActivity {
         return schedules;
     }
 
-//    private void setTextViewDrawableColor(TextView textView, int color) {
-//        for (Drawable drawable : textView.getCompoundDrawables()) {
-//            if (drawable != null)
-//                drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-//        }
-//    }
-
     private void setupByState(MyAdapter.ViewHolder holder, String color) {
         holder.daytime.setTextColor(Color.parseColor(color));
         holder.nighttime.setTextColor(Color.parseColor(color));
-//        setTextViewDrawableColor(holder.daytime, Color.parseColor(color));
-//        setTextViewDrawableColor(holder.nighttime, Color.parseColor(color));
         holder.sun.setColorFilter(Color.parseColor(color), PorterDuff.Mode.SRC_IN);
         holder.moon.setColorFilter(Color.parseColor(color), PorterDuff.Mode.SRC_IN);
         holder.weekday.setTextColor(Color.parseColor(color));

@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\Kevin\AndroidStudioProjects\UShare(B)\UShare.iml" filepath="C:\Users\Kevin\AndroidStudioProjects\UShare(B)\UShare.iml" />
-      <module fileurl="file://$PROJECT_DIR$/UShare(B).iml" filepath="$PROJECT_DIR$/UShare(B).iml" />
+      <module fileurl="file://$PROJECT_DIR$/UShare.iml" filepath="$PROJECT_DIR$/UShare.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
