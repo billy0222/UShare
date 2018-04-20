@@ -72,7 +72,7 @@ public class PlaceService {
         urlString.append(Double.toString(latitude));
         urlString.append(",");
         urlString.append(Double.toString(longitude));
-        urlString.append("&radius=500");
+        urlString.append("&radius=1500");
         urlString.append("&key=" + API_KEY);
 
         return urlString.toString();
@@ -96,7 +96,7 @@ public class PlaceService {
 
     private String getUrlContents(String theUrl) {
         StringBuilder content = new StringBuilder();
-        Thread a = new Thread((Runnable) () -> {
+        Thread a = new Thread(() -> {
             try {
                 URL url = new URL(theUrl);
                 URLConnection urlConnection = url.openConnection();

@@ -122,9 +122,6 @@ public class EventActivity extends AppCompatActivity {
                 new AlertDialog.Builder(EventActivity.this).setMessage("You are not the host or the passenger!").show();
             }
             return true;
-        } else if (id == R.id.share) {
-            //TODO share event
-            return true;
         } else if (id == R.id.join_event) {
             Event event = (Event) getIntent().getSerializableExtra("event");
             String event_key = (String) getIntent().getStringExtra("event_key");
