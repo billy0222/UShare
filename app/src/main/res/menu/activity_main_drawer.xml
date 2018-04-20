@@ -9,10 +9,6 @@
             android:icon="@drawable/profile"
             android:title="Profile" />
         <item
-            android:id="@+id/nav_follow"
-            android:icon="@drawable/following"
-            android:title="Following" />
-        <item
             android:id="@+id/liveView"
             android:icon="@drawable/liveview"
             android:title="Live View of Bus Stations" />
@@ -20,19 +16,15 @@
             android:id="@+id/nav_scheduler"
             android:icon="@drawable/schedule"
             android:title="Scheduler System" />
-    </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_trip"
-                android:icon="@drawable/history"
-                android:title="My trip" />
-            <item
-                android:id="@+id/nav_logout"
-                android:icon="@drawable/logout"
-                android:title="Sign out" />
-        </menu>
-    </item>
+        <item
+            android:id="@+id/nav_trip"
+            android:icon="@drawable/history"
+            android:title="My trip" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/logout"
+            android:title="Sign out" />
+    </group>
 
 </menu>

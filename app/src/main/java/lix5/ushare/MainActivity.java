@@ -45,6 +45,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -106,12 +107,12 @@ public class MainActivity extends AppCompatActivity
         uIcon = HeaderView.findViewById(R.id.uicon);
         uName = HeaderView.findViewById(R.id.uname);
         uEmail = HeaderView.findViewById(R.id.uemail);
-        mDatabase.child("users/").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("users/").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 uName.setText(dataSnapshot.child("username").getValue(String.class));   //set the name
                 uEmail.setText(dataSnapshot.child("email").getValue(String.class));    //set the email
-                    if(!dataSnapshot.child("avatar").getValue(String.class).equals(""))
+                if(!dataSnapshot.child("avatar").getValue(String.class).equals(""))
                     Picasso.get().load(dataSnapshot.child("avatar").getValue(String.class)).into(uIcon);
             }
 
@@ -433,8 +434,6 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()){
             case R.id.nav_profile:
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                break;
-            case R.id.nav_follow:
                 break;
             case R.id.liveView:
                 startActivity(new Intent(MainActivity.this, LiveView.class));
