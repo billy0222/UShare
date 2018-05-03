@@ -59,6 +59,11 @@ public class SchedulerActivity extends AppCompatActivity {
             finish();
         });
 
+        setSchedule();
+    }
+
+    private void setSchedule() {
+        schedules = readData();
         for (int i = 0; i < schedules.size(); i++) {
             ArrayList<Integer> weekdays = schedules.get(i).getWeekdaysArray();
             if (schedules.get(i).getOn()) {
@@ -99,7 +104,7 @@ public class SchedulerActivity extends AppCompatActivity {
             }
             if (!schedules.get(i).getOn()) {
                 Intent intent = new Intent(SchedulerActivity.this, AlarmReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, i, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                 alarmManager.cancel(pendingIntent);
             }
         }
@@ -150,7 +155,7 @@ public class SchedulerActivity extends AppCompatActivity {
                 }
                 if (!schedules.get(x).getOn()) {
                     Intent intent = new Intent(SchedulerActivity.this, AlarmReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, x, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, x, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                     alarmManager.cancel(pendingIntent);
                 }
             }
@@ -232,8 +237,7 @@ public class SchedulerActivity extends AppCompatActivity {
                     setupByState(holder, "#DDDDDD");
                 }
                 saveData(schedules);
-                startActivity(new Intent(SchedulerActivity.this, SchedulerActivity.class));
-                finish();
+                setSchedule();
             });
             if (mData.get(position).getOn())
                 setupByState(holder, "#000000");

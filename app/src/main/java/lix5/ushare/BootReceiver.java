@@ -81,7 +81,7 @@ public class BootReceiver extends BroadcastReceiver {
             }
             if (!schedules.get(i).getOn()) {
                 Intent intent = new Intent(context, AlarmReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                 alarmManager.cancel(pendingIntent);
             }
         }
@@ -132,7 +132,7 @@ public class BootReceiver extends BroadcastReceiver {
                 }
                 if (!schedules.get(x).getOn()) {
                     Intent intent = new Intent(context, AlarmReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, x, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, x, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                     alarmManager.cancel(pendingIntent);
                 }
             }
