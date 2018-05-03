@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,6 @@ import java.util.List;
 public class SchedulerActivity extends AppCompatActivity {
     RecyclerView mList;
     private List<Schedule> schedules;
-    private List<PendingIntent> intentArray;
     private Calendar alarmCalendar = Calendar.getInstance();
     private AlarmManager alarmManager;
 
@@ -48,20 +46,19 @@ public class SchedulerActivity extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         MyAdapter myAdapter = new MyAdapter(schedules);
-        mList = (RecyclerView) findViewById(R.id.rv_schedule);
+        mList = findViewById(R.id.rv_schedule);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mList.setLayoutManager(layoutManager);
         mList.setAdapter(myAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_schedule);
+        FloatingActionButton fab = findViewById(R.id.add_schedule);
         fab.setOnClickListener(v -> {
             getSharedPreferences("loadSchedule", MODE_PRIVATE).edit().clear().apply();
             startActivity(new Intent(SchedulerActivity.this, AddScheduleActivity.class));
             finish();
         });
 
-        intentArray = new ArrayList<PendingIntent>();
         for (int i = 0; i < schedules.size(); i++) {
             ArrayList<Integer> weekdays = schedules.get(i).getWeekdaysArray();
             if (schedules.get(i).getOn()) {
@@ -99,6 +96,11 @@ public class SchedulerActivity extends AppCompatActivity {
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
                 }
+            }
+            if (!schedules.get(i).getOn()) {
+                Intent intent = new Intent(SchedulerActivity.this, AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmManager.cancel(pendingIntent);
             }
         }
         int k = schedules.size();
@@ -146,6 +148,11 @@ public class SchedulerActivity extends AppCompatActivity {
                         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
                     }
                 }
+                if (!schedules.get(x).getOn()) {
+                    Intent intent = new Intent(SchedulerActivity.this, AlarmReceiver.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(SchedulerActivity.this, x, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmManager.cancel(pendingIntent);
+                }
             }
         }
     }
@@ -176,7 +183,6 @@ public class SchedulerActivity extends AppCompatActivity {
             }.getType();
             schedules = gson.fromJson(json, type);
         }
-        Log.i("LOAD", json);
         return schedules;
     }
 
@@ -226,6 +232,8 @@ public class SchedulerActivity extends AppCompatActivity {
                     setupByState(holder, "#DDDDDD");
                 }
                 saveData(schedules);
+                startActivity(new Intent(SchedulerActivity.this, SchedulerActivity.class));
+                finish();
             });
             if (mData.get(position).getOn())
                 setupByState(holder, "#000000");

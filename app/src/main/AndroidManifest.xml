@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -13,10 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA" />
+            android:value="@string/api_key" />
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="MainActivity" />
@@ -32,61 +32,54 @@
                 <action android:name="android.intent.action.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".CreateActivity"
             android:label="@string/create_event" />
-
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".RegActivity"
             android:label="Register" />
-
         <activity
             android:name=".ProfileActivity"
             android:label="Profile" />
-
         <activity
             android:name=".ProfileEditActivity"
             android:label="@string/title_activity_profile_edit" />
-
         <activity
             android:name=".EventActivity"
             android:label="@string/title_activity_event"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".LiveView"
             android:label="Bus Station Live View" />
-
         <activity
             android:name=".AutocompleteActivity"
             android:label="Search" />
-
         <activity
             android:name=".RateUserActivity"
             android:label="@string/title_activity_rate_user" />
-
         <activity
             android:name=".RatingActivity"
             android:label="RatingActivity" />
-
         <activity
             android:name=".SchedulerActivity"
             android:label="My Scheduler" />
-
         <activity
             android:name=".AddScheduleActivity"
             android:label="New schedule" />
 
-        <receiver android:name=".AlarmReceiver">
+        <receiver android:name=".AlarmReceiver" />
+
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

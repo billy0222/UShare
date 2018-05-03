@@ -88,7 +88,7 @@ public class FragmentInfo extends Fragment {
     }
 
     public PlaceDistance findPlaceInfo(String pickUpPlaceID, String dropOffPlaceID) {
-        PlaceService service = new PlaceService("AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA");
+        PlaceService service = new PlaceService(getString(R.string.api_key));
         return service.findPlacesInfo(pickUpPlaceID, dropOffPlaceID);
     }
 

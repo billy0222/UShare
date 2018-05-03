@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">UShare</string>
+    <string name="api_key">AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="private_car">Private Car</string>
@@ -70,5 +71,4 @@
     <string name="distance">Distance:</string>
     <string name="duration">Duration</string>
     <string name="taxi_fare">Taxi Fare</string>
-    <string name="cancel">cancel</string>
 </resources>

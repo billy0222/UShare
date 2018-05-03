@@ -278,7 +278,7 @@ public class FragmentCar extends Fragment {
     }
 
     private void findPickUpNear(double lat, double lng) {
-        PlaceService service = new PlaceService("AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA");
+        PlaceService service = new PlaceService(getString(R.string.api_key));
         ArrayList<String> nearPlaceID = new ArrayList<>();
 
         @SuppressLint("RestrictedApi")
@@ -290,7 +290,7 @@ public class FragmentCar extends Fragment {
     }
 
     private void findDropOffNear(double lat, double lng) {
-        PlaceService service = new PlaceService("AIzaSyDpZ9qPYIuA86y1EnpkFgJMOYvB4NxJcEA");
+        PlaceService service = new PlaceService(getString(R.string.api_key));
         ArrayList<String> nearPlaceID = new ArrayList<>();
 
         @SuppressLint("RestrictedApi") List<Place> findPlaces = service.findPlaces(lat, lng);

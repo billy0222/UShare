@@ -67,15 +67,15 @@ public class CreateActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        seats = (EditText) findViewById(R.id.number_of_seats);
+        seats = findViewById(R.id.number_of_seats);
         remarks_input = findViewById(R.id.remarks_input);
-        add = (ImageView) findViewById(R.id.add_seat);
-        remove = (ImageView) findViewById(R.id.remove_seat);
-        taxiButton = (ImageButton) findViewById(R.id.taxi_button);
-        carButton = (ImageButton) findViewById(R.id.car_button);
-        boys = (CheckBox) findViewById(R.id.boys);
-        girls = (CheckBox) findViewById(R.id.girls);
-        isRequest = (CheckBox) findViewById(R.id.isRequest);
+        add = findViewById(R.id.add_seat);
+        remove = findViewById(R.id.remove_seat);
+        taxiButton = findViewById(R.id.taxi_button);
+        carButton = findViewById(R.id.car_button);
+        boys = findViewById(R.id.boys);
+        girls = findViewById(R.id.girls);
+        isRequest = findViewById(R.id.isRequest);
         create = findViewById(R.id.create);
         errorMessage = findViewById(R.id.errorMessage_createEvent);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -96,34 +96,44 @@ public class CreateActivity extends AppCompatActivity {
                 pickUpID = loadedSchedule.getSecLocID();
                 dropOffID = loadedSchedule.getSecDesID();
             }
-            if (loadedSchedule.getType().equals("Taxi")) {
-                taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_icon));
-                carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_gray_48dp));
-                taxiButton.setSelected(true);
-                isRequest.setChecked(true);
-                isRequest.setClickable(false);
-                eventIsRequest = true;
-                typeIsTaxi = true;
-                typeIsCar = false;
+            if (loadedSchedule.getType() != null) {
+                if (loadedSchedule.getType().equals("Taxi")) {
+                    taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_icon));
+                    carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_gray_48dp));
+                    taxiButton.setSelected(true);
+                    isRequest.setChecked(true);
+                    isRequest.setClickable(false);
+                    eventIsRequest = true;
+                    typeIsTaxi = true;
+                    typeIsCar = false;
+                }
+                if (loadedSchedule.getType().equals("Private car")) {
+                    carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_black_48dp));
+                    taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_gray));
+                    carButton.setSelected(true);
+                    typeIsTaxi = false;
+                    typeIsCar = true;
+                }
             }
-            if (loadedSchedule.getType().equals("Private car")) {
-                carButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_car_black_48dp));
-                taxiButton.setImageDrawable(getResources().getDrawable(R.drawable.taxi_sign_gray));
-                carButton.setSelected(true);
-                typeIsTaxi = false;
-                typeIsCar = true;
+            if (loadedSchedule.getPreference() != null) {
+                if (loadedSchedule.getPreference().equals("Men only")) {
+                    boys.setChecked(true);
+                    boysOnly = true;
+                }
+                if (loadedSchedule.getPreference().equals("Women only")) {
+                    girls.setChecked(true);
+                    girlsOnly = true;
+                }
             }
-            if (loadedSchedule.getPreference().equals("Men only")) {
-                boys.setChecked(true);
-                boysOnly = true;
-            }
-            if (loadedSchedule.getPreference().equals("Women only")) {
-                girls.setChecked(true);
-                girlsOnly = true;
-            }
-            if (!loadedSchedule.getSeats().equals(""))
+            if (loadedSchedule.getSeats() != null && !loadedSchedule.getSeats().equals("")) {
                 seats.setText(loadedSchedule.getSeats());
-
+                if (loadedSchedule.getSeats().equals("10"))
+                    add.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_circle_outline_gray_18dp));
+                if (loadedSchedule.getSeats().equals("1"))
+                    remove.setImageDrawable(getResources().getDrawable(R.drawable.ic_remove_circle_outline_gray_18dp));
+                if (!loadedSchedule.getSeats().equals("1"))
+                    remove.setImageDrawable(getResources().getDrawable(R.drawable.ic_remove_circle_outline_black_18dp));
+            }
         }
 
         seats.setFilters(new InputFilter[]{new InputFilterMinMax("1", "10")});
@@ -179,17 +189,17 @@ public class CreateActivity extends AppCompatActivity {
     private void setupRouteInputBar() {
         // Setup autocomplete
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry("HK").build();
-        createPickup = (TextView) findViewById(R.id.create_pick_up);
+        createPickup = findViewById(R.id.create_pick_up);
         createPickup.setOnClickListener(v -> {
             Intent intent = new Intent(CreateActivity.this, AutocompleteActivity.class);
             startActivityForResult(intent, PICKUP_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
-        createDropoff = (TextView) findViewById(R.id.create_drop_off);
+        createDropoff = findViewById(R.id.create_drop_off);
         createDropoff.setOnClickListener(v -> {
             Intent intent = new Intent(CreateActivity.this, AutocompleteActivity.class);
             startActivityForResult(intent, DROPOFF_PLACE_AUTOCOMPLETE_REQUEST_CODE);
         });
-        createTime = (TextView) findViewById(R.id.create_time);
+        createTime = findViewById(R.id.create_time);
         createTime.setOnClickListener(v -> datePicker());
 
         // Set icons
@@ -258,7 +268,7 @@ public class CreateActivity extends AppCompatActivity {
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dpd = new DatePickerDialog(this, (DatePickerDialog.OnDateSetListener) (DatePicker view, int year, int monthOfYear, int dayOfMonth) -> {
+        DatePickerDialog dpd = new DatePickerDialog(this, (DatePicker view, int year, int monthOfYear, int dayOfMonth) -> {
             Date date = new Date(year - 1900, monthOfYear, dayOfMonth);
             timePicker(date);
         }, mYear, mMonth, mDay);
